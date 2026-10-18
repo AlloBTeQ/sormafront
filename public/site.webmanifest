@@ -1,0 +1,101 @@
+{
+  "name": "SORMALITICS - Global Business Financial Tools",
+  "short_name": "SORMALITICS",
+  "description": "Professional invoice generator for 40+ countries. Create tax-compliant invoices with automatic VAT calculations, multi-currency support, and blockchain verification.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FBF7EA",
+  "theme_color": "#143152",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": [
+    "business",
+    "finance",
+    "productivity",
+    "utilities"
+  ],
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Generate Invoice",
+      "short_name": "Invoice",
+      "description": "Create a new invoice quickly",
+      "url": "/invoice/generate"
+    },
+    {
+      "name": "Generate Payslip",
+      "short_name": "Payslip",
+      "description": "Create a new payslip quickly",
+      "url": "/payslip/generate"
+    },
+    {
+      "name": "Dashboard",
+      "short_name": "Dashboard",
+      "description": "View your financial dashboard",
+      "url": "/dashboard"
+    }
+  ],
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "https://sormalitics.com"
+    }
+  ],
+  "prefer_related_applications": false,
+  "iarc_rating_id": "e84b072d-71b3-4d3e-86ae-31a8ce4e53b7",
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
+  "launch_handler": {
+    "client_mode": "focus-existing"
+  },
+  "protocol_handlers": [
+    {
+      "protocol": "web+sormalitics",
+      "url": "/invoice/generate?data=%s"
+    }
+  ],
+  "file_handlers": [
+    {
+      "action": "/import",
+      "accept": {
+        "application/json": [
+          ".json"
+        ],
+        "text/csv": [
+          ".csv"
+        ],
+        "application/pdf": [
+          ".pdf"
+        ]
+      }
+    }
+  ]
+}

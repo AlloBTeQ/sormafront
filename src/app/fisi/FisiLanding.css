@@ -1,0 +1,566 @@
+/* FisiLanding.css — FISI marketing page (editorial dark brand)
+   MOBILE-FIRST: base styles target the phone; desktop layers up via min-width.
+   Fonts: imported here for drop-in convenience. For the mobile-first audience
+   (slower networks), move these to <link rel="preconnect"> + stylesheet in
+   index.html and delete this @import — render-blocking @import hurts first paint. */
+/* Fonts come from @fontsource in app/layout.tsx — no Google Fonts request (CSP blocks it). */
+
+.fisi {
+  --ed-bg: #11151D;
+  --ed-bg-2: #11151D;
+  --ed-surface: #11151D;
+  --ed-surface-2: #11151D;
+  --ed-border: rgba(255,255,255,0.09);
+  --ed-border-strong: rgba(255,255,255,0.16);
+  --ed-text: #FAF8F3;
+  --ed-muted: rgba(244,244,241,0.58);
+  --ed-faint: rgba(244,244,241,0.38);
+  --ed-accent: #4B71A0;
+  --ed-accent-2: #2B5480;
+  --ed-accent-dim: rgba(201, 162, 39,0.12);
+  --ed-accent-line: rgba(201, 162, 39,0.30);
+
+  --ed-display: 'Outfit', system-ui, sans-serif;
+  --ed-mono: 'DM Mono', 'SFMono-Regular', Menlo, monospace;
+
+  --ed-max: 1180px;
+  --ed-gut: clamp(18px, 5vw, 64px);
+
+  background: var(--ed-bg);
+  color: var(--ed-text);
+  font-family: var(--ed-display);
+  font-weight: 400;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+  overflow-x: hidden;
+}
+
+.fisi *, .fisi *::before, .fisi *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+.fisi a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: rgba(201, 162, 39,0.18); }
+
+.fisi :focus-visible {
+  outline: 2px solid var(--ed-accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.fisi .wrap {
+  max-width: var(--ed-max);
+  margin: 0 auto;
+  padding-left: var(--ed-gut);
+  padding-right: var(--ed-gut);
+}
+
+.fisi .eyebrow {
+  font-family: var(--ed-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ed-accent);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+}
+.fisi .eyebrow::before {
+  content: "";
+  width: 22px;
+  height: 1px;
+  background: var(--ed-accent-line);
+  display: inline-block;
+}
+
+/* ---------- NAV (mobile: collapsed behind toggle) ---------- */
+.fisi .nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  background: rgba(17, 21, 29,0.82);
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.3s ease, background 0.3s ease;
+}
+.fisi .nav.scrolled { border-bottom-color: var(--ed-border); }
+.fisi .nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+}
+.fisi .brand { display: flex; align-items: baseline; gap: 0.55rem; flex-wrap: wrap; }
+.fisi .brand .mark {
+  font-weight: 700;
+  font-size: 1.3rem;
+  letter-spacing: 0.04em;
+}
+.fisi .brand .mark b { color: var(--ed-accent); font-weight: 700; }
+.fisi .brand .sub {
+  font-family: var(--ed-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ed-faint);
+}
+
+/* mobile: hidden; opens as full-width dropdown */
+.fisi .nav-links { display: none; }
+.fisi .nav-links.open {
+  display: flex; flex-direction: column; align-items: stretch; gap: 0.25rem;
+  position: absolute; top: 60px; left: 0; right: 0;
+  background: rgba(17, 21, 29,0.98); padding: 0.6rem var(--ed-gut) 1.2rem;
+  border-bottom: 1px solid var(--ed-border);
+}
+.fisi .nav-links a {
+  font-size: 1rem;
+  color: var(--ed-muted);
+  transition: color 0.2s ease;
+  padding: 0.85rem 0;            /* generous tap targets */
+  border-bottom: 1px solid var(--ed-border);
+}
+.fisi .nav-links a:last-child { border-bottom: 0; }
+.fisi .nav-links a:hover, .fisi .nav-links a:active { color: var(--ed-text); }
+.fisi .nav-cta {
+  font-family: var(--ed-mono);
+  font-size: 0.9rem !important;
+  color: var(--ed-accent) !important;
+  margin-top: 0.6rem;
+  border: 1px solid var(--ed-accent-line);
+  border-radius: 999px;
+  text-align: center;
+  padding: 0.85rem 1rem !important;
+}
+.fisi .nav-toggle {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 44px; height: 44px;        /* min touch target */
+  margin-right: -10px;
+  background: none; border: 0; color: var(--ed-text); cursor: pointer;
+}
+
+/* ---------- BUTTONS (mobile: full-width, thumb-friendly) ---------- */
+.fisi .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55em;
+  font-family: var(--ed-display);
+  font-weight: 500;
+  font-size: 1rem;
+  min-height: 48px;
+  padding: 0.9rem 1.5rem;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+  border: 1px solid transparent;
+}
+.fisi .btn-primary { background: var(--ed-accent); color: #11151D; }
+.fisi .btn-ghost { border-color: var(--ed-border-strong); color: var(--ed-text); }
+.fisi .btn .arr { transition: transform 0.2s ease; }
+
+/* ---------- HERO ---------- */
+.fisi .hero { position: relative; padding: clamp(32px, 8vw, 96px) 0 clamp(48px, 9vw, 110px); }
+.fisi .hero::before {
+  content: "";
+  position: absolute;
+  top: -80px; left: 50%;
+  transform: translateX(-45%);
+  width: 380px; height: 380px;
+  background: radial-gradient(circle, rgba(201, 162, 39,0.16), transparent 62%);
+  filter: blur(16px);
+  pointer-events: none;
+  z-index: 0;
+}
+.fisi .hero-grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(32px, 8vw, 72px);
+  align-items: center;
+}
+.fisi .hero h1 {
+  font-weight: 600;
+  font-size: clamp(2.15rem, 8.5vw, 4rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin: 1.2rem 0 1.1rem;
+}
+.fisi .hero h1 em { font-style: normal; color: var(--ed-accent); }
+.fisi .hero p.lead {
+  font-size: clamp(1rem, 4.4vw, 1.18rem);
+  color: var(--ed-muted);
+  max-width: 32em;
+  margin-bottom: 1.8rem;
+}
+.fisi .hero-actions { display: flex; flex-direction: column; gap: 0.7rem; }
+.fisi .hero-actions .btn { width: 100%; }
+.fisi .hero-note {
+  margin-top: 1.4rem;
+  font-family: var(--ed-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.03em;
+  line-height: 1.7;
+  color: var(--ed-faint);
+}
+
+/* ---------- SIGNATURE: LIVE RECORD PANEL ---------- */
+.fisi .record {
+  background: linear-gradient(180deg, var(--ed-surface), var(--ed-bg-2));
+  border: 1px solid var(--ed-border);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 30px 60px -36px rgba(0,0,0,0.9);
+}
+.fisi .record-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.8rem 1rem;
+  border-bottom: 1px solid var(--ed-border);
+  font-family: var(--ed-mono);
+  font-size: 0.68rem;
+  color: var(--ed-faint);
+  letter-spacing: 0.03em;
+}
+.fisi .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--ed-accent); box-shadow: 0 0 0 0 var(--ed-accent); flex-shrink: 0; }
+.fisi .dot.live { animation: fisi-pulse 2.4s ease-out infinite; }
+@keyframes fisi-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(201, 162, 39,0.5); }
+  70% { box-shadow: 0 0 0 7px rgba(201, 162, 39,0); }
+  100% { box-shadow: 0 0 0 0 rgba(201, 162, 39,0); }
+}
+.fisi .record-bar .url { color: var(--ed-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fisi .record-head, .fisi .record-row {
+  display: grid;
+  grid-template-columns: 0.7fr 1.15fr 0.95fr 0.85fr;
+  gap: 0.4rem;
+  padding: 0.7rem 1rem;
+  font-family: var(--ed-mono);
+  font-size: 0.72rem;
+  align-items: center;
+}
+.fisi .record-head {
+  color: var(--ed-faint);
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--ed-border);
+}
+.fisi .record-row { border-bottom: 1px solid rgba(255,255,255,0.045); }
+.fisi .record-row .amt { color: var(--ed-text); }
+.fisi .record-row .tag {
+  color: var(--ed-accent);
+  display: inline-flex; align-items: center; gap: 0.35em;
+  white-space: nowrap;
+}
+.fisi .record-row .tick { font-size: 0.9em; }
+.fisi .record-foot {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.9rem;
+  padding: 1rem;
+  background: var(--ed-bg-2);
+  border-top: 1px solid var(--ed-border);
+}
+.fisi .record-foot .mtd { font-family: var(--ed-mono); font-size: 0.7rem; color: var(--ed-faint); letter-spacing: 0.05em; }
+.fisi .record-foot .mtd b { display: block; font-size: 1.2rem; color: var(--ed-text); letter-spacing: 0; margin-top: 0.15rem; }
+.fisi .reminders { display: flex; flex-direction: column; gap: 0.45rem; align-items: flex-start; }
+.fisi .chip {
+  font-family: var(--ed-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.02em;
+  padding: 0.34rem 0.7rem;
+  border-radius: 999px;
+  border: 1px solid var(--ed-border);
+  color: var(--ed-muted);
+  white-space: nowrap;
+}
+.fisi .chip.due { color: var(--ed-accent); border-color: var(--ed-accent-line); background: var(--ed-accent-dim); }
+
+/* ---------- SECTION SHELL ---------- */
+.fisi .section { padding: clamp(56px, 13vw, 130px) 0; }
+.fisi .section-head { max-width: 46rem; margin-bottom: clamp(32px, 9vw, 64px); }
+.fisi .section-head h2 {
+  font-weight: 600;
+  font-size: clamp(1.7rem, 6.5vw, 2.7rem);
+  line-height: 1.12;
+  letter-spacing: -0.015em;
+  margin: 1rem 0 0;
+}
+.fisi .section-head p {
+  color: var(--ed-muted);
+  font-size: clamp(1rem, 4.2vw, 1.05rem);
+  margin-top: 0.9rem;
+  max-width: 38em;
+}
+
+/* ---------- PROBLEM ---------- */
+.fisi .problem { border-top: 1px solid var(--ed-border); border-bottom: 1px solid var(--ed-border); background: var(--ed-bg-2); }
+.fisi .problem .wrap { display: grid; grid-template-columns: 1fr; gap: clamp(24px, 7vw, 64px); align-items: center; }
+.fisi .problem-lead {
+  font-weight: 500;
+  font-size: clamp(1.45rem, 6.5vw, 2.1rem);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+.fisi .problem-lead .strike { color: var(--ed-faint); text-decoration: line-through; text-decoration-color: var(--ed-accent-line); }
+.fisi .problem-body p { color: var(--ed-muted); font-size: clamp(1rem, 4.2vw, 1.05rem); margin-bottom: 1rem; }
+.fisi .problem-body p:last-child { margin-bottom: 0; }
+.fisi .problem-body strong { color: var(--ed-text); font-weight: 500; }
+
+/* ---------- TOOLS ---------- */
+.fisi .tools-grid { display: grid; grid-template-columns: 1fr; gap: 1px; background: var(--ed-border); border: 1px solid var(--ed-border); border-radius: 14px; overflow: hidden; }
+.fisi .tool { background: var(--ed-bg); padding: clamp(24px, 6vw, 44px); transition: background 0.25s ease; }
+.fisi .tool:active { background: var(--ed-surface); }
+.fisi .tool .tname { display: flex; align-items: baseline; gap: 0.7rem; margin-bottom: 0.7rem; }
+.fisi .tool .tname h3 { font-weight: 600; font-size: 1.3rem; letter-spacing: 0.01em; }
+.fisi .tool .tname .idx { font-family: var(--ed-mono); font-size: 0.72rem; color: var(--ed-accent); }
+.fisi .tool .role { font-family: var(--ed-mono); font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ed-faint); margin-bottom: 0.8rem; }
+.fisi .tool p { color: var(--ed-muted); font-size: 0.98rem; }
+
+/* ---------- BENEFITS ---------- */
+.fisi .benefits-grid { display: grid; grid-template-columns: 1fr; gap: clamp(22px, 6vw, 36px); }
+.fisi .benefit { border-top: 1px solid var(--ed-accent-line); padding-top: 1.3rem; }
+.fisi .benefit .num { font-family: var(--ed-mono); font-size: 0.72rem; color: var(--ed-accent); letter-spacing: 0.08em; }
+.fisi .benefit h3 { font-weight: 600; font-size: 1.2rem; margin: 0.7rem 0 0.5rem; line-height: 1.2; }
+.fisi .benefit p { color: var(--ed-muted); font-size: 0.95rem; }
+
+/* ---------- TRUST ---------- */
+.fisi .trust { background: var(--ed-bg-2); border-top: 1px solid var(--ed-border); }
+.fisi .trust-card {
+  border: 1px solid var(--ed-border);
+  border-radius: 16px;
+  padding: clamp(28px, 8vw, 64px);
+  background:
+    radial-gradient(circle at 100% 0%, rgba(201, 162, 39,0.08), transparent 45%),
+    var(--ed-surface);
+  text-align: center;
+}
+.fisi .trust-card h2 { font-weight: 600; font-size: clamp(1.7rem, 6.5vw, 2.6rem); letter-spacing: -0.015em; margin: 0.9rem auto; max-width: 16em; line-height: 1.14; }
+.fisi .trust-card h2 em { font-style: normal; color: var(--ed-accent); }
+.fisi .trust-card p { color: var(--ed-muted); font-size: clamp(1rem, 4.4vw, 1.08rem); max-width: 34em; margin: 0 auto; }
+.fisi .trust-tags { display: flex; flex-wrap: wrap; gap: 0.6rem; justify-content: center; margin-top: 1.8rem; }
+
+/* ---------- PRICING ---------- */
+.fisi .price-grid { display: grid; grid-template-columns: 1fr; gap: clamp(28px, 8vw, 64px); align-items: center; }
+.fisi .price-card {
+  border: 1px solid var(--ed-accent-line);
+  border-radius: 16px;
+  padding: clamp(28px, 7vw, 48px);
+  background: linear-gradient(180deg, var(--ed-surface), var(--ed-bg-2));
+}
+.fisi .price-card .plan { font-family: var(--ed-mono); font-size: 0.72rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ed-accent); }
+.fisi .price-tag { display: flex; align-items: baseline; gap: 0.5rem; margin: 1.1rem 0 0.4rem; }
+.fisi .price-tag .amt { font-family: var(--ed-mono); font-weight: 500; font-size: clamp(2.8rem, 13vw, 3.6rem); letter-spacing: -0.02em; }
+.fisi .price-tag .per { color: var(--ed-muted); font-family: var(--ed-mono); font-size: 0.95rem; }
+.fisi .price-card .standalone { color: var(--ed-muted); font-size: 0.98rem; margin-bottom: 1.6rem; }
+.fisi .price-card .btn { width: 100%; }
+.fisi .includes { list-style: none; }
+.fisi .includes li { display: flex; gap: 0.8rem; padding: 0.8rem 0; border-bottom: 1px solid var(--ed-border); color: var(--ed-muted); font-size: 0.98rem; }
+.fisi .includes li:last-child { border-bottom: 0; }
+.fisi .includes .ck { color: var(--ed-accent); flex-shrink: 0; }
+
+/* ---------- FINAL CTA ---------- */
+.fisi .final { text-align: center; padding: clamp(64px, 16vw, 150px) 0; position: relative; }
+.fisi .final::before {
+  content: "";
+  position: absolute; inset: 0;
+  background: radial-gradient(circle at 50% 120%, rgba(201, 162, 39,0.12), transparent 55%);
+  pointer-events: none;
+}
+.fisi .final-inner { position: relative; }
+.fisi .final h2 { font-weight: 600; font-size: clamp(1.9rem, 8vw, 3.4rem); letter-spacing: -0.02em; line-height: 1.1; max-width: 16em; margin: 1rem auto 1.4rem; }
+.fisi .final h2 em { font-style: normal; color: var(--ed-accent); }
+.fisi .final .btn { width: 100%; max-width: 22rem; }
+
+/* ---------- FOOTER ---------- */
+.fisi footer { border-top: 1px solid var(--ed-border); padding: clamp(40px, 9vw, 64px) 0; }
+.fisi .foot-inner { display: flex; flex-direction: column; gap: 2rem; justify-content: space-between; align-items: flex-start; }
+.fisi .foot-brand .mark { font-weight: 700; font-size: 1.3rem; letter-spacing: 0.04em; }
+.fisi .foot-brand .mark b { color: var(--ed-accent); }
+.fisi .foot-brand p { color: var(--ed-faint); font-family: var(--ed-mono); font-size: 0.74rem; letter-spacing: 0.05em; margin-top: 0.6rem; }
+.fisi .foot-cols { display: flex; gap: clamp(40px, 14vw, 80px); flex-wrap: wrap; }
+.fisi .foot-col h4 { font-family: var(--ed-mono); font-size: 0.64rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ed-faint); margin-bottom: 0.9rem; }
+.fisi .foot-col a { display: block; color: var(--ed-muted); font-size: 0.95rem; padding: 0.45rem 0; transition: color 0.2s ease; }
+.fisi .foot-col a:hover, .fisi .foot-col a:active { color: var(--ed-accent); }
+.fisi .foot-base { margin-top: 2.2rem; padding-top: 1.4rem; border-top: 1px solid var(--ed-border); display: flex; flex-wrap: wrap; gap: 0.8rem; justify-content: space-between; color: var(--ed-faint); font-family: var(--ed-mono); font-size: 0.7rem; letter-spacing: 0.03em; }
+
+/* ---------- REVEAL ---------- */
+.fisi .reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.fisi .reveal.in { opacity: 1; transform: none; }
+
+/* ====================================================================
+   TABLET — min-width: 620px
+   ==================================================================== */
+@media (min-width: 620px) {
+  .fisi .hero-actions { flex-direction: row; flex-wrap: wrap; gap: 0.9rem; }
+  .fisi .hero-actions .btn { width: auto; }
+  .fisi .record-head, .fisi .record-row { grid-template-columns: 1fr 1.4fr 1fr 0.9fr; gap: 0.5rem; padding: 0.7rem 1.1rem; font-size: 0.78rem; }
+  .fisi .record-head { font-size: 0.64rem; }
+  .fisi .record-foot { flex-direction: row; align-items: center; justify-content: space-between; padding: 1rem 1.1rem; }
+  .fisi .reminders { align-items: flex-end; }
+  .fisi .tools-grid { grid-template-columns: repeat(2, 1fr); }
+  .fisi .benefits-grid { grid-template-columns: repeat(2, 1fr); }
+  .fisi .foot-inner { flex-direction: row; flex-wrap: wrap; }
+}
+
+/* ====================================================================
+   DESKTOP — min-width: 900px
+   ==================================================================== */
+@media (min-width: 900px) {
+  .fisi .nav-inner { height: 68px; }
+  .fisi .nav-toggle { display: none; }
+  .fisi .nav-links {
+    display: flex; flex-direction: row; align-items: center; gap: 2rem;
+    position: static; padding: 0; background: none; border: 0;
+  }
+  .fisi .nav-links a { font-size: 0.92rem; padding: 0; border-bottom: 0; }
+  .fisi .nav-cta {
+    font-size: 0.8rem !important;
+    color: var(--ed-text) !important;
+    margin-top: 0;
+    border-color: var(--ed-border-strong);
+    padding: 0.5rem 1rem !important;
+    transition: border-color 0.2s ease, color 0.2s ease;
+  }
+  .fisi .nav-cta:hover { border-color: var(--ed-accent); color: var(--ed-accent) !important; }
+
+  .fisi .btn-primary:hover { transform: translateY(-2px); background: #4B71A0; }
+  .fisi .btn-ghost:hover { border-color: var(--ed-accent); color: var(--ed-accent); }
+  .fisi .btn:hover .arr { transform: translateX(3px); }
+
+  .fisi .hero::before { top: -120px; transform: translateX(-30%); width: 720px; height: 720px; filter: blur(20px); }
+  .fisi .hero-grid { grid-template-columns: 1.05fr 0.95fr; }
+  .fisi .hero h1 { font-size: clamp(2.6rem, 5.4vw, 4rem); }
+
+  .fisi .tool:hover { background: var(--ed-surface); }
+
+  .fisi .problem .wrap { grid-template-columns: 0.9fr 1.1fr; }
+  .fisi .benefits-grid { grid-template-columns: repeat(4, 1fr); }
+  .fisi .price-grid { grid-template-columns: 1fr 1fr; }
+  .fisi .foot-inner { align-items: flex-start; }
+}
+
+/* ====================================================================
+   REGISTRATION / SIGNUP  (/fisi/signup)
+   Employer-type picker + SORMALITICS-pipeline account creation.
+   ==================================================================== */
+.fisi .reg {
+  max-width: 560px;
+  margin: 0 auto;
+  min-height: 100dvh;
+  padding: clamp(28px, 8vw, 64px) var(--ed-gut) clamp(48px, 12vw, 96px);
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.fisi .reg-brand { display: flex; align-items: center; gap: 0.6rem; font-weight: 700; font-size: 1.15rem; letter-spacing: 0.06em; margin-bottom: clamp(20px, 6vw, 40px); }
+.fisi .reg-mark {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 30px; height: 30px; border-radius: 8px;
+  background: var(--ed-accent); color: #11151D; font-weight: 700; font-size: 1rem;
+}
+.fisi .reg-title { font-weight: 600; font-size: clamp(1.6rem, 6vw, 2.2rem); letter-spacing: -0.02em; line-height: 1.12; }
+.fisi .reg-sub { color: var(--ed-muted); font-size: clamp(0.95rem, 3.6vw, 1.02rem); margin-top: 0.4rem; }
+
+.fisi .reg-grid { display: grid; grid-template-columns: 1fr; gap: 0.7rem; margin: clamp(20px, 6vw, 32px) 0 0.4rem; }
+.fisi .type-card {
+  display: flex; align-items: center; gap: 0.9rem; text-align: left; width: 100%;
+  padding: 1rem 1.1rem; border: 1px solid var(--ed-border); border-radius: 14px;
+  background: var(--ed-surface); color: var(--ed-text); cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+.fisi .type-card:hover { border-color: var(--ed-border-strong); }
+.fisi .type-card.on { border-color: var(--ed-accent); background: var(--ed-accent-dim); }
+.fisi .type-icon { font-size: 1.5rem; flex-shrink: 0; line-height: 1; }
+.fisi .type-body { display: flex; flex-direction: column; gap: 0.2rem; flex: 1; min-width: 0; }
+.fisi .type-label { font-weight: 600; font-size: 1rem; }
+.fisi .type-blurb { color: var(--ed-muted); font-size: 0.85rem; line-height: 1.4; }
+.fisi .type-radio {
+  flex-shrink: 0; width: 20px; height: 20px; border-radius: 50%;
+  border: 2px solid var(--ed-border-strong); transition: border-color 0.2s ease;
+  position: relative;
+}
+.fisi .type-card.on .type-radio { border-color: var(--ed-accent); }
+.fisi .type-card.on .type-radio::after {
+  content: ""; position: absolute; inset: 3px; border-radius: 50%; background: var(--ed-accent);
+}
+
+.fisi .reg-tax { display: grid; grid-template-columns: 1fr; gap: 0.6rem; margin-top: 0.9rem; }
+.fisi .tax-opt {
+  display: flex; flex-direction: column; gap: 0.25rem; text-align: left; width: 100%;
+  padding: 0.9rem 1rem; border: 1px solid var(--ed-border); border-radius: 12px;
+  background: var(--ed-surface); color: var(--ed-text); cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+.fisi .tax-opt.on { border-color: var(--ed-accent); background: var(--ed-accent-dim); }
+.fisi .tax-opt strong { font-weight: 600; font-size: 0.95rem; }
+.fisi .tax-opt span { color: var(--ed-muted); font-size: 0.82rem; line-height: 1.4; }
+
+.fisi .reg-field { display: flex; flex-direction: column; gap: 0.4rem; margin-top: 0.9rem; }
+.fisi .reg-field label { font-size: 0.82rem; font-weight: 500; color: var(--ed-muted); }
+.fisi .reg-input {
+  width: 100%; padding: 0.75rem 0.95rem; border: 1px solid var(--ed-border); border-radius: 11px;
+  background: var(--ed-surface); color: var(--ed-text); font-family: var(--ed-display); font-size: 1rem;
+  transition: border-color 0.2s ease;
+}
+.fisi .reg-input::placeholder { color: var(--ed-faint); }
+.fisi .reg-input:focus { outline: none; border-color: var(--ed-accent); }
+.fisi .reg-row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.7rem; }
+.fisi .reg-row2 .reg-field { margin-top: 0.9rem; }
+.fisi .reg-hint { font-size: 0.78rem; color: var(--ed-muted); }
+.fisi .reg-hint-warn { color: var(--ed-accent); }
+
+.fisi .reg-divider {
+  display: flex; align-items: center; gap: 0.9rem; margin: 1.6rem 0 0.2rem;
+  color: var(--ed-faint); font-family: var(--ed-mono); font-size: 0.68rem;
+  letter-spacing: 0.14em; text-transform: uppercase;
+}
+.fisi .reg-divider::before, .fisi .reg-divider::after {
+  content: ""; flex: 1; height: 1px; background: var(--ed-border);
+}
+
+.fisi .reg-cta {
+  width: 100%; margin-top: 1.4rem; padding: 0.95rem 1.2rem; border: 0; border-radius: 12px;
+  background: var(--ed-accent); color: #11151D; font-family: var(--ed-display);
+  font-weight: 600; font-size: 1rem; cursor: pointer; transition: background 0.2s ease, opacity 0.2s ease;
+}
+.fisi .reg-cta:hover:not(:disabled) { background: #4B71A0; }
+.fisi .reg-cta:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.fisi .reg-sent-icon { font-size: 2.6rem; margin: clamp(16px, 6vw, 32px) 0 0.4rem; }
+
+@media (min-width: 620px) {
+  .fisi .reg-grid { grid-template-columns: 1fr 1fr; }
+  .fisi .reg-tax { grid-template-columns: 1fr 1fr; }
+}
+
+/* ---------- MOTION ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .fisi .reveal { opacity: 1; transform: none; }
+  .fisi * { animation: none !important; transition: none !important; }
+}
+
+/* Mobile type floor — nothing below 12px on a phone.
+   Desktop keeps the original editorial micro-type. */
+@media (max-width: 767px) {
+  .fisi .eyebrow { font-size: 0.75rem; }
+  .fisi .brand .sub { font-size: 0.75rem; }
+  .fisi .hero-note { font-size: 0.75rem; }
+  .fisi .record-bar { font-size: 0.75rem; }
+  .fisi .record-head, .fisi .record-row { font-size: 0.75rem; }
+  .fisi .record-head { font-size: 0.75rem; }
+  .fisi .record-foot .mtd { font-size: 0.75rem; }
+  .fisi .chip { font-size: 0.75rem; }
+  .fisi .tool .tname .idx { font-size: 0.75rem; }
+  .fisi .tool .role { font-size: 0.75rem; }
+  .fisi .benefit .num { font-size: 0.75rem; }
+  .fisi .price-card .plan { font-size: 0.75rem; }
+  .fisi .foot-brand p { font-size: 0.75rem; }
+  .fisi .foot-col h4 { font-size: 0.75rem; }
+  .fisi .foot-base { font-size: 0.75rem; }
+  .fisi .reg-divider { font-size: 0.75rem; }
+}

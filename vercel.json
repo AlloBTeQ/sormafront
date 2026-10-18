@@ -1,0 +1,230 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "nextjs",
+  "installCommand": "pnpm install",
+  "buildCommand": "pnpm build",
+  "outputDirectory": "out",
+  "cleanUrls": true,
+  "redirects": [
+    {
+      "source": "/dashboard",
+      "destination": "https://app.sormalitics.com/dashboard",
+      "permanent": true
+    },
+    {
+      "source": "/dashboard/:path*",
+      "destination": "https://app.sormalitics.com/dashboard/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/auth",
+      "destination": "https://app.sormalitics.com/auth",
+      "permanent": true
+    },
+    {
+      "source": "/auth/:path*",
+      "destination": "https://app.sormalitics.com/auth/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/checkout",
+      "destination": "https://app.sormalitics.com/checkout",
+      "permanent": true
+    },
+    {
+      "source": "/checkout/:path*",
+      "destination": "https://app.sormalitics.com/checkout/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/verify",
+      "destination": "https://app.sormalitics.com/verify",
+      "permanent": true
+    },
+    {
+      "source": "/verify/:path*",
+      "destination": "https://app.sormalitics.com/verify/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/invite",
+      "destination": "https://app.sormalitics.com/invite",
+      "permanent": true
+    },
+    {
+      "source": "/invite/:path*",
+      "destination": "https://app.sormalitics.com/invite/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/agreements",
+      "destination": "https://app.sormalitics.com/agreements",
+      "permanent": true
+    },
+    {
+      "source": "/agreements/:path*",
+      "destination": "https://app.sormalitics.com/agreements/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/docs",
+      "destination": "https://app.sormalitics.com/docs",
+      "permanent": true
+    },
+    {
+      "source": "/docs/:path*",
+      "destination": "https://app.sormalitics.com/docs/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/plans",
+      "destination": "https://app.sormalitics.com/plans",
+      "permanent": true
+    },
+    {
+      "source": "/plans/:path*",
+      "destination": "https://app.sormalitics.com/plans/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/quotes",
+      "destination": "https://app.sormalitics.com/quotes",
+      "permanent": true
+    },
+    {
+      "source": "/quotes/:path*",
+      "destination": "https://app.sormalitics.com/quotes/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/staff",
+      "destination": "https://app.sormalitics.com/staff",
+      "permanent": true
+    },
+    {
+      "source": "/staff/:path*",
+      "destination": "https://app.sormalitics.com/staff/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/subscribe",
+      "destination": "https://app.sormalitics.com/subscribe",
+      "permanent": true
+    },
+    {
+      "source": "/subscribe/:path*",
+      "destination": "https://app.sormalitics.com/subscribe/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/team",
+      "destination": "https://app.sormalitics.com/team",
+      "permanent": true
+    },
+    {
+      "source": "/team/:path*",
+      "destination": "https://app.sormalitics.com/team/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/practice",
+      "destination": "https://app.sormalitics.com/practice",
+      "permanent": true
+    },
+    {
+      "source": "/practice/:path*",
+      "destination": "https://app.sormalitics.com/practice/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/landing",
+      "destination": "https://app.sormalitics.com/landing",
+      "permanent": true
+    },
+    {
+      "source": "/landing/:path*",
+      "destination": "https://app.sormalitics.com/landing/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/api",
+      "destination": "https://app.sormalitics.com/api",
+      "permanent": true
+    },
+    {
+      "source": "/api/:path*",
+      "destination": "https://app.sormalitics.com/api/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/store/:path+",
+      "destination": "https://app.sormalitics.com/store/:path+",
+      "permanent": true
+    },
+    {
+      "source": "/fisi/:path+",
+      "destination": "https://app.sormalitics.com/fisi/:path+",
+      "permanent": true
+    },
+    {
+      "source": "/pricing/:path+",
+      "destination": "https://app.sormalitics.com/pricing/:path+",
+      "permanent": true
+    },
+    {
+      "source": "/health",
+      "destination": "https://app.sormalitics.com/health",
+      "permanent": false
+    },
+    {
+      "source": "/manifest.json",
+      "destination": "/site.webmanifest",
+      "permanent": true
+    },
+    {
+      "source": "/support",
+      "destination": "/help",
+      "permanent": true
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self' https://app.sormalitics.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self' https://app.sormalitics.com; object-src 'none'; upgrade-insecure-requests"
+        },
+        {
+          "key": "Strict-Transport-Security",
+          "value": "max-age=63072000; includeSubDomains; preload"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=()"
+        }
+      ]
+    },
+    {
+      "source": "/_next/static/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    }
+  ]
+}
