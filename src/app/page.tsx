@@ -5,6 +5,7 @@ import { ArrowRight } from 'lucide-react';
 import { JURISDICTIONS, codeList } from '@/lib/payroll/jurisdictionStatus';
 import { app } from '@/lib/site';
 import { PricingSection } from '@/components/PricingSection';
+import { LedgerFlow } from '@/components/LedgerFlow';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Landing — direction F, chosen 16 Oct 2026 from five proposals.
@@ -137,6 +138,9 @@ export default function SORMALITICSLanding() {
           </div>
         </div>
       </section>
+
+      {/* ── SORM … ALITICS — the whole cycle on one spine (board G) ── */}
+      <LedgerFlow />
 
       {/* ── MODULES + FINANCE-TEAM DASHBOARD ── */}
       <section id="modules" className="py-16 lg:py-24" style={{ borderTop: `1px solid ${RULE}` }}>
