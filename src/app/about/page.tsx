@@ -18,31 +18,22 @@ const cheapestDocument = {
   GBP: Math.min(...ALL_PRODUCTS.map((p) => p.price.GBP)),
 };
 
-// Fallback components if UI library fails
-let Card, CardContent;
-try {
-  const ui = require('@/components/ui/card');
-  Card = ui.Card;
-  CardContent = ui.CardContent;
-} catch (error) {
-  Card = ({ children, className }: { children: React.ReactNode; className?: string }) => (
-    <div className={`border rounded-lg shadow-sm ${className}`}>{children}</div>
-  );
-  CardContent = ({ children, className }: { children: React.ReactNode; className?: string }) => (
-    <div className={`p-6 ${className}`}>{children}</div>
-  );
-}
-
-// Create simplified motion components if framer-motion fails
-let motion = {
-  div: ({ children, ...props }: { children: React.ReactNode; [key: string]: any }) => <div {...props}>{children}</div>
+// Plain components. The app version require()'d '@/components/ui/card' and
+// 'framer-motion' inside try/catch; neither exists in this repo, so every build
+// warned "Module not found" and the page logged an error on load. These are what
+// it fell back to anyway — motion props are dropped instead of leaking onto <div>.
+const Card = ({ children, className = '' }: { children: React.ReactNode; className?: string }) => (
+  <div className={`border rounded-lg shadow-sm ${className}`}>{children}</div>
+);
+const CardContent = ({ children, className = '' }: { children: React.ReactNode; className?: string }) => (
+  <div className={`p-6 ${className}`}>{children}</div>
+);
+const MOTION_PROPS = new Set(['initial', 'animate', 'exit', 'transition', 'variants', 'whileHover', 'whileTap', 'whileInView', 'viewport', 'layout']);
+const motion = {
+  div: ({ children, ...props }: { children?: React.ReactNode; [key: string]: any }) => (
+    <div {...Object.fromEntries(Object.entries(props).filter(([k]) => !MOTION_PROPS.has(k)))}>{children}</div>
+  ),
 };
-
-try {
-  motion = require('framer-motion').motion;
-} catch (error) {
-  console.error("Motion library not available, using fallback");
-}
 
 // Interface for platform statistics
 interface PlatformStats {
