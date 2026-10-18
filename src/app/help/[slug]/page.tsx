@@ -25,6 +25,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: `${article.title} — SORMALITICS Help`,
       description: article.summary,
       type: 'article',
+      url: `/help/${slug}`,
     },
   };
 }

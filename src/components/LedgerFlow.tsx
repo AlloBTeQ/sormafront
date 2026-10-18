@@ -114,7 +114,7 @@ export function LedgerFlow() {
         <div className="flex flex-wrap items-end justify-between gap-6">
           <div aria-hidden="true" style={WORD}>SORM</div>
           <div className="max-w-[420px] pb-3">
-            <p id="flow-heading" className="text-xs tracking-[0.18em] mb-2.5" style={{ ...MONO, color: GOLD }}>HOW IT FLOWS</p>
+            <h2 id="flow-heading" className="text-xs tracking-[0.18em] mb-2.5 font-normal" style={{ ...MONO, color: GOLD }}>HOW IT FLOWS</h2>
             <p className="text-[19px] leading-relaxed" style={{ color: BODY }}>
               Everything between the first budget and the board pack happens in one ledger — and every
               step ends in a journal someone signed for.

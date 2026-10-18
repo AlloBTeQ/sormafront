@@ -1,4 +1,5 @@
-'use client';
+// Server component: this page has no state or handlers of its own, so it ships
+// as HTML. PricingSection is the one interactive island and marks itself 'use client'.
 
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
@@ -6,6 +7,7 @@ import { JURISDICTIONS, codeList } from '@/lib/payroll/jurisdictionStatus';
 import { app } from '@/lib/site';
 import { PricingSection } from '@/components/PricingSection';
 import { LedgerFlow } from '@/components/LedgerFlow';
+import { softwareLd, ld } from '@/lib/seo';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Landing — direction F, chosen 16 Oct 2026 from five proposals.
@@ -85,6 +87,7 @@ export default function SORMALITICSLanding() {
 
   return (
     <div style={{ ...DISPLAY, color: TEXT, background: NAVY }}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: ld(softwareLd) }} />
 
       {/* ── HERO ── */}
       <section>
@@ -128,9 +131,9 @@ export default function SORMALITICSLanding() {
                 return (
                   <div key={c.step} className={`px-6 py-7 ${last ? '' : 'border-b lg:border-b-0 lg:border-r'}`}
                     style={{ borderColor: RULE, background: last ? GOLD_WASH : undefined }}>
-                    <p className="text-[11px] tracking-[0.1em] mb-4" style={{ ...MONO, color: last ? GOLD : MUTED }}>{c.step}</p>
+                    <p className="text-[11px] tracking-[0.1em] mb-4" style={{ ...MONO, color: last ? GOLD_SOFT : MUTED }}>{c.step}</p>
                     <p className="font-semibold text-[17px] mb-1">{c.who}</p>
-                    <p className="text-xs" style={{ ...MONO, color: MUTED }}>{c.meta}</p>
+                    <p className="text-xs" style={{ ...MONO, color: last ? BODY : MUTED }}>{c.meta}</p>
                   </div>
                 );
               })}

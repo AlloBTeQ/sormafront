@@ -9,6 +9,7 @@ import '@fontsource/dm-mono/500.css';
 import './globals.css';
 import { SormaliticsLayout } from '@/components/layout/SormaliticsLayout';
 import { SITE_URL } from '@/lib/site';
+import { organizationLd, websiteLd, ld } from '@/lib/seo';
 import { Toaster } from 'sonner';
 
 // No analytics on this origin yet, so no cookies are set and no consent banner
@@ -17,12 +18,14 @@ import { Toaster } from 'sonner';
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
+  // The <title> carries the search terms; the tagline lives on the social card
+  // (openGraph/twitter below), where people read it rather than Google.
   title: {
-    default: 'SORMALITICS — Nothing posts until someone signs for it',
+    default: 'Payroll & Accounting Software South Africa — SORMALITICS',
     template: '%s | SORMALITICS',
   },
   description:
-    'The finance stack for teams that get audited: invoicing, payroll, accounting, agreements and financial statements — with segregation of duties and a full audit trail built in.',
+    'Payroll with EMP201 and IRP5, invoicing, VAT, accounting and IFRS for SMEs financial statements on one ledger — with approvals and a full audit trail. Start free.',
   applicationName: 'SORMALITICS',
   alternates: { canonical: '/' },
   robots: { index: true, follow: true },
@@ -46,6 +49,11 @@ export const metadata: Metadata = {
     apple: '/apple-touch-icon.png',
   },
   manifest: '/site.webmanifest',
+  // Google Search Console: paste the token from "HTML tag" verification into
+  // NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION on Vercel and redeploy. Unset → no tag.
+  ...(process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
+    ? { verification: { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION } }
+    : {}),
 };
 
 export const viewport: Viewport = {
@@ -56,8 +64,10 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en-ZA">
       <body className="min-h-screen font-sans antialiased" suppressHydrationWarning>
+        {/* Who we are, sitewide. The product + prices are on / and /pricing. */}
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: ld([organizationLd, websiteLd]) }} />
         <SormaliticsLayout>{children}</SormaliticsLayout>
         <Toaster richColors position="top-center" />
       </body>

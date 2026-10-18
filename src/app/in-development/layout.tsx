@@ -6,6 +6,7 @@ export const metadata: Metadata = {
   description: 'The SORMALITICS app is in its final stage of development. Get early access.',
   // A holding page: never in search results, and it disappears at launch.
   robots: { index: false, follow: true },
+  alternates: { canonical: '/in-development' },
 };
 
 export default function Layout({ children }: { children: ReactNode }) {
