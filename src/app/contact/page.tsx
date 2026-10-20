@@ -53,6 +53,8 @@ const Contact: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    // The honeypot is uncontrolled (bots fill it, React state never sees it); read it off the form.
+    const honeypot = ((e.currentTarget as HTMLFormElement).elements.namedItem('website') as HTMLInputElement | null)?.value ?? '';
     setIsSubmitting(true);
 
     // Until the app is live there is no endpoint to post to — hand the message
@@ -73,7 +75,7 @@ const Contact: React.FC = () => {
         method: 'POST',
         // FormData keeps this a "simple" cross-origin request (no preflight);
         // the app's /api/contact/submit accepts it. See lib/http/marketingCors.ts.
-        body: (() => { const fd = new FormData(); Object.entries(formData).forEach(([k, v]) => fd.append(k, String(v))); return fd; })()
+        body: (() => { const fd = new FormData(); Object.entries(formData).forEach(([k, v]) => fd.append(k, String(v))); if (honeypot) fd.append('website', honeypot); return fd; })()
       });
 
       if (response.ok) {
@@ -253,6 +255,11 @@ const Contact: React.FC = () => {
                   </div>
                 ) : (
                   <form onSubmit={handleSubmit} className="space-y-6">
+                  {/* Honeypot — invisible to people and screen readers; bots fill it, and the
+                      app quietly drops anything that arrives with it set. */}
+                  <div aria-hidden="true" style={{ position: 'absolute', left: '-10000px', width: 1, height: 1, overflow: 'hidden' }}>
+                    <label>Website<input type="text" name="website" tabIndex={-1} autoComplete="off" defaultValue="" /></label>
+                  </div>
                     {/* Name and Email */}
                     <div className="grid md:grid-cols-2 gap-6">
                       <div>
@@ -263,6 +270,7 @@ const Contact: React.FC = () => {
                           type="text"
                           id="name"
                           name="name"
+                          maxLength={120}
                           value={formData.name}
                           onChange={handleInputChange}
                           required
@@ -278,6 +286,7 @@ const Contact: React.FC = () => {
                           type="email"
                           id="email"
                           name="email"
+                          maxLength={254}
                           value={formData.email}
                           onChange={handleInputChange}
                           required
@@ -297,6 +306,7 @@ const Contact: React.FC = () => {
                           type="text"
                           id="company"
                           name="company"
+                          maxLength={160}
                           value={formData.company}
                           onChange={handleInputChange}
                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
@@ -311,6 +321,7 @@ const Contact: React.FC = () => {
                           type="tel"
                           id="phone"
                           name="phone"
+                          maxLength={40}
                           value={formData.phone}
                           onChange={handleInputChange}
                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
@@ -362,6 +373,7 @@ const Contact: React.FC = () => {
                         type="text"
                         id="subject"
                         name="subject"
+                        maxLength={160}
                         value={formData.subject}
                         onChange={handleInputChange}
                         required
@@ -378,6 +390,7 @@ const Contact: React.FC = () => {
                       <textarea
                         id="message"
                         name="message"
+                        maxLength={5000}
                         value={formData.message}
                         onChange={handleInputChange}
                         required

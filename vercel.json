@@ -190,7 +190,11 @@
       "headers": [
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self' https://app.sormalitics.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self' https://app.sormalitics.com; object-src 'none'; upgrade-insecure-requests"
+          "value": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self' https://app.sormalitics.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self' https://app.sormalitics.com; object-src 'none'; upgrade-insecure-requests; report-uri https://app.sormalitics.com/api/csp-report; report-to csp-endpoint"
+        },
+        {
+          "key": "Reporting-Endpoints",
+          "value": "csp-endpoint=\"https://app.sormalitics.com/api/csp-report\""
         },
         {
           "key": "Strict-Transport-Security",
@@ -210,7 +214,7 @@
         },
         {
           "key": "Permissions-Policy",
-          "value": "camera=(), microphone=(), geolocation=()"
+          "value": "camera=(), microphone=(), geolocation=(), payment=(), usb=(), browsing-topics=(), interest-cohort=()"
         }
       ]
     },

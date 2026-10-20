@@ -4,8 +4,8 @@ import { PricingSection } from '@/components/PricingSection';
 
 export const metadata: Metadata = pageMeta({
   path: '/pricing',
-  title: 'Pricing — Payroll & Accounting Plans in Rand',
-  description: 'SORMALITICS plans — Free, Professional, Business and Practitioner. Priced in rand, billed monthly or yearly.',
+  title: 'Pricing — Payroll & Accounting Plans',
+  description: 'SORMALITICS plans — Free, Professional, Business and Practitioner, billed monthly or yearly. Prices are in South African rand; cards in other currencies are converted by your card provider.',
 });
 
 export default function PricingPage() {

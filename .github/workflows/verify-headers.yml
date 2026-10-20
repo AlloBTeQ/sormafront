@@ -1,0 +1,17 @@
+name: verify-headers
+on:
+  deployment_status:
+  schedule:
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+jobs:
+  verify:
+    # For deployment_status, only run on successful production deploys.
+    if: github.event_name != 'deployment_status' || (github.event.deployment_status.state == 'success' && github.event.deployment.environment == 'Production')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node scripts/verify-headers.mjs https://sormalitics.com

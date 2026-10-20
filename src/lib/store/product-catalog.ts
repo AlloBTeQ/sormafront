@@ -30,7 +30,7 @@ export const PAYSLIP_PRODUCTS: Product[] = [
     name: 'RSA Payslip',
     category: 'payslip',
     jurisdiction: 'RSA',
-    description: 'South African compliant payslip with PAYE, UIF, and all statutory deductions calculated automatically',
+    description: 'South African payslip with PAYE, UIF and other deductions calculated for you to review',
     features: [
       'SARS PAYE calculations',
       'UIF deductions (1%)',
@@ -64,7 +64,7 @@ export const PAYSLIP_PRODUCTS: Product[] = [
     name: 'UK Payslip',
     category: 'payslip',
     jurisdiction: 'UK',
-    description: 'HMRC compliant UK payslip with automatic PAYE, NI, and pension calculations',
+    description: 'UK payslip with PAYE, NI and pension calculated for you to review',
     features: [
       'HMRC PAYE calculations',
       'National Insurance (Class 1)',
@@ -138,11 +138,11 @@ export const INVOICE_PRODUCTS: Product[] = [
     name: 'UK Invoice (VAT)',
     category: 'invoice',
     jurisdiction: 'UK',
-    description: 'HMRC compliant UK invoice with automatic VAT calculation at 20%',
+    description: 'UK VAT invoice with VAT calculated at 20%',
     features: [
       'Automatic 20% VAT calculation',
       'VAT registration number field',
-      'HMRC compliant format',
+      'UK VAT-invoice fields included',
       'Multiple line items',
       'Subtotal + VAT breakdown',
       'Payment terms',
@@ -171,11 +171,11 @@ export const INVOICE_PRODUCTS: Product[] = [
     name: 'RSA Invoice (VAT)',
     category: 'invoice',
     jurisdiction: 'RSA',
-    description: 'SARS compliant South African invoice with 15% VAT calculation',
+    description: 'South African tax invoice with VAT calculated at 15%',
     features: [
       'Automatic 15% VAT calculation',
       'VAT registration number',
-      'SARS compliant format',
+      'SARS tax-invoice fields included',
       'Multiple line items',
       'Subtotal + VAT breakdown',
       'Tax invoice declaration',
@@ -237,7 +237,7 @@ export const INVOICE_PRODUCTS: Product[] = [
     name: 'EU Invoice (VAT)',
     category: 'invoice',
     jurisdiction: 'EU',
-    description: 'EU compliant invoice with configurable VAT rates for different countries',
+    description: 'EU invoice with configurable VAT rates for different countries',
     features: [
       'Configurable VAT rates',
       'VAT ID validation',
@@ -245,7 +245,7 @@ export const INVOICE_PRODUCTS: Product[] = [
       'Multi-country support',
       'Intra-community supply',
       'Currency selection (EUR)',
-      'Compliant with EU directives',
+      'Fields for EU VAT invoices',
       'Professional format'
     ],
     complexity: 'standard',
@@ -374,16 +374,16 @@ export const AGREEMENT_PRODUCTS: Product[] = [
     name: 'Employment Contract - UK',
     category: 'agreement',
     jurisdiction: 'UK',
-    description: 'ACAS compliant UK employment contract',
+    description: 'UK employment contract drafted with ACAS guidance in mind',
     features: [
-      'ACAS guidelines compliant',
+      'Drafted with ACAS guidance in mind',
       'Terms and conditions',
       'Notice periods',
       'Holiday entitlement',
       'Probation clauses',
       'Pension auto-enrollment',
       'E-signature ready',
-      'UK law compliant'
+      'Written for UK employment'
     ],
     complexity: 'complex',
     price: {
@@ -577,16 +577,16 @@ export const SCHEDULE_PRODUCTS: Product[] = [
     name: 'VAT 201 (RSA)',
     category: 'schedule',
     jurisdiction: 'RSA',
-    description: 'SARS VAT 201 return schedule with automatic calculations',
+    description: 'Schedule of the figures for your VAT201 return, calculated from your entries',
     features: [
-      'SARS compliant format',
+      'Figures arranged in VAT201 field order, for you to capture on eFiling',
       'Input tax calculation',
       'Output tax calculation',
       'Automatic nett VAT',
       'Zero-rated supplies',
       'Exempt supplies',
       'Capital goods adjustments',
-      'Period-end reconciliation'
+      'Period-end reconciliation schedule'
     ],
     complexity: 'complex',
     price: {
@@ -609,15 +609,15 @@ export const SCHEDULE_PRODUCTS: Product[] = [
     name: 'EMP 201 (RSA)',
     category: 'schedule',
     jurisdiction: 'RSA',
-    description: 'SARS EMP 201 monthly employer return',
+    description: 'Schedule of the figures for your EMP201 monthly employer declaration',
     features: [
-      'SARS compliant format',
+      'Figures arranged in EMP201 field order, for you to capture on eFiling',
       'PAYE calculation',
       'SDL calculation',
       'UIF calculation',
       'Total liability',
       'Multi-employee support',
-      'Reconciliation',
+      'Reconciliation schedule',
       'Period tracking'
     ],
     complexity: 'complex',
@@ -641,7 +641,7 @@ export const SCHEDULE_PRODUCTS: Product[] = [
     name: 'VAT Return (UK)',
     category: 'schedule',
     jurisdiction: 'UK',
-    description: 'HMRC VAT return schedule for MTD compliance',
+    description: 'Schedule of the figures for your UK VAT return (MTD)',
     features: [
       'HMRC MTD compatible',
       'Box-by-box calculation',

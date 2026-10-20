@@ -21,17 +21,18 @@ export const metadata: Metadata = {
   // The <title> carries the search terms; the tagline lives on the social card
   // (openGraph/twitter below), where people read it rather than Google.
   title: {
-    default: 'Payroll & Accounting Software South Africa — SORMALITICS',
+    default: 'Payroll, Accounting & Financial Reporting Software — SORMALITICS',
     template: '%s | SORMALITICS',
   },
   description:
-    'Payroll with EMP201 and IRP5, invoicing, VAT, accounting and IFRS for SMEs financial statements on one ledger — with approvals and a full audit trail. Start free.',
+    'Multi-country payroll, invoicing, VAT and sales tax, accounting and IFRS financial statements on one ledger — with approvals and a full audit trail. Start free.',
   applicationName: 'SORMALITICS',
   alternates: { canonical: '/' },
   robots: { index: true, follow: true },
   openGraph: {
     type: 'website',
-    locale: 'en_ZA',
+    locale: 'en_GB',
+    alternateLocale: ['en_US', 'en_ZA'],
     url: SITE_URL,
     siteName: 'SORMALITICS',
     title: 'SORMALITICS — Nothing posts until someone signs for it',
@@ -64,7 +65,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en-ZA">
+    <html lang="en">
       <body className="min-h-screen font-sans antialiased" suppressHydrationWarning>
         {/* Who we are, sitewide. The product + prices are on / and /pricing. */}
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: ld([organizationLd, websiteLd]) }} />

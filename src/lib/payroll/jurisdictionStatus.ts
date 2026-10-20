@@ -178,7 +178,7 @@ export function readinessFor(region: PayrollRegion): JurisdictionReadiness | und
  * for them does not discover otherwise until a penalty arrives.
  */
 export const FILING_NOTE_GENERAL =
-  'SORMALITICS prepares and reconciles your returns. You submit them to the authority yourself.';
+  'SORMALITICS produces reports and schedules to support your filings. You review them, and you submit to the authority yourself.';
 
 const FILING_PORTAL: Partial<Record<PayrollRegion, string>> = {
   RSA: 'SARS eFiling',

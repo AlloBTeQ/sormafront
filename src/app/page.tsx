@@ -43,13 +43,13 @@ const CHAIN = [
   { step: '01 · PREPARED', who: 'Payroll officer',                  meta: '14 Oct · 09:12' },
   { step: '02 · REVIEWED', who: 'Variance check',                   meta: '2 changes vs Sept · flagged' },
   { step: '03 · APPROVED', who: 'Finance manager',                  meta: '14 Oct · 15:40 · not the preparer' },
-  { step: '04 · RELEASED', who: 'Payslips sent · journals posted',  meta: 'EMP201 prepared for eFiling' },
+  { step: '04 · RELEASED', who: 'Payslips sent · journals posted',  meta: 'Filing schedule generated' },
 ];
 
 const MODULES = [
   { title: 'Invoicing',  body: 'Quotes, invoices, credit notes, recurring schedules.' },
-  { title: 'Payroll',    body: 'Runs, payslips, EMP201 and IRP5 — run ≠ release.' },
-  { title: 'Accounting', body: 'Double entry, VAT, trial balance with approval to post.' },
+  { title: 'Payroll',    body: 'Runs, payslips and the schedules behind your employer filings — run ≠ release.' },
+  { title: 'Accounting', body: 'Double entry, VAT and sales tax, trial balance with approval to post.' },
   { title: 'Agreements', body: 'Templates, e-signature, tamper-evident record.' },
   { title: 'Reporting',  body: 'Annual financial statements in PDF and Word.' },
 ];
@@ -57,8 +57,8 @@ const MODULES = [
 const FINANCE_NAV = ['Dashboard', 'Invoices', 'Bills', 'Journals', 'Trial balance', 'Financial statements', 'Agreements'];
 
 const KPIS = [
-  { label: 'Receivables',       value: 'R 312 840' },
-  { label: 'VAT201 due',        value: 'R 46 210' },
+  { label: 'Receivables',       value: '312 840.00' },
+  { label: 'VAT due',           value: '46 210.00' },
   { label: 'Unposted journals', value: '7' },
 ];
 
@@ -70,11 +70,21 @@ const PENDING = [
 // `key` flags the approve/release events, which the log picks out in aurum.
 const AUDIT = [
   { t: '09:12', ev: 'payroll.run.created',  meta: 'by t.nkosi' },
-  { t: '11:03', ev: 'invoice.raised',       meta: 'INV-0412 · R 18 400.00' },
+  { t: '11:03', ev: 'invoice.raised',       meta: 'INV-0412 · 18 400.00' },
   { t: '14:27', ev: 'journal.reviewed',     meta: 'by a.petersen' },
   { t: '15:40', ev: 'journal.approved',     meta: 'by finance.manager', key: true },
   { t: '15:41', ev: 'payroll.run.released', meta: 'by finance.manager', key: true },
   { t: '15:41', ev: 'payslips.sent',        meta: '14 of 14' },
+];
+
+// The intro's "audit file": what a quality assurer, a counterparty or SARS asks
+// for, each with who signed it and when. Illustrative records.
+const AUDIT_FILE = [
+  { doc: 'Quotation → invoice', ref: 'QUO-0098 · INV-0412', proof: 'Converted, not re-typed', who: 'Accountant · 09 Oct' },
+  { doc: 'Service agreement',   ref: 'A Ltd ⇄ B Ltd',        proof: 'Signed by both parties',  who: 'E-signed · 10 Oct' },
+  { doc: 'Payroll run',         ref: 'PR-2026-10-004',        proof: 'Released by a second person', who: 'Finance manager · 14 Oct' },
+  { doc: 'Budget vs actual',    ref: 'FY2027 · October',      proof: 'Variance explained',      who: 'Finance manager · 31 Oct' },
+  { doc: 'Annual financial statements', ref: 'IFRS for SMEs', proof: 'Engagement report attached', who: 'Approved · 28 Feb' },
 ];
 
 const WRAP = 'max-w-[1240px] mx-auto px-4 sm:px-8 lg:px-12';
@@ -89,32 +99,87 @@ export default function SORMALITICSLanding() {
     <div style={{ ...DISPLAY, color: TEXT, background: NAVY }}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: ld(softwareLd) }} />
 
-      {/* ── HERO ── */}
-      <section>
-        <div className={`${WRAP} pt-16 pb-14 lg:pt-28`}>
+      {/* ── INTRO — the why. Everyone chases the next rand; few keep records that
+             survive scrutiny. The pillars sit above the headline as the lockup. ── */}
+      <section aria-labelledby="intro-h">
+        <div className={`${WRAP} pt-14 pb-16 lg:pt-24 lg:pb-24 grid lg:grid-cols-12 gap-12 items-center`}>
+          <div className="lg:col-span-7">
+            <p className="mb-7 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+              <span className="text-sm font-bold tracking-[0.14em]">SORMALITICS</span>
+              <span className="text-xs tracking-[0.06em]" style={{ ...MONO, color: GOLD }}>
+                Invoicing <span style={{ color: MUTED }}>|</span> Contracting <span style={{ color: MUTED }}>|</span> Payroll <span style={{ color: MUTED }}>|</span> Financial Reporting
+              </span>
+            </p>
+            <h1 id="intro-h" className="font-extrabold mb-7"
+              style={{ fontSize: 'clamp(38px, 5.4vw, 76px)', lineHeight: 1.02, letterSpacing: '-0.03em' }}>
+              Everyone&rsquo;s chasing the next R,&nbsp;$, £ and&nbsp;KSh.{' '}
+              <span style={{ color: GOLD }}>We keep the records that survive scrutiny.</span>
+            </h1>
+            <p className="text-lg sm:text-[19px] leading-relaxed mb-5 max-w-[620px]" style={{ color: BODY }}>
+              In the rush to earn, the paperwork is what gets skipped — until a quality assurer, a counterparty
+              or SARS asks for it. SORMALITICS keeps invoicing, contracts, budgets, financial reporting and payroll
+              connected on one ledger, with the audit trail intact from the first quote to the signed statements.
+            </p>
+            <p className="text-xs mb-9" style={{ ...MONO, color: MUTED }}>
+              For finance teams — and for the business owner who means to keep clean books.
+            </p>
+            <div className="flex flex-wrap gap-3">
+              <a href={app('/auth/register')} className="inline-flex items-center gap-2 px-6 py-4 text-[15px] font-semibold transition-transform hover:-translate-y-px"
+                style={{ background: GOLD, color: NAVY }}>
+                Start free — no card <ArrowRight className="w-4 h-4" />
+              </a>
+              <a href="#flow" className="inline-flex items-center px-6 py-4 text-[15px] font-medium transition-colors hover:bg-[rgba(251,247,234,0.06)]"
+                style={{ border: `1px solid ${EDGE}`, color: TEXT }}>
+                See how it flows
+              </a>
+            </div>
+          </div>
+
+          {/* The audit file — what's ready when someone asks */}
+          <div className="lg:col-span-5" style={{ background: CARD, border: `1px solid ${EDGE}`, boxShadow: SHADOW }}>
+            <div className="flex justify-between gap-3 px-5 py-4 text-[11px] tracking-[0.12em]"
+              style={{ ...MONO, color: MUTED, borderBottom: `1px solid ${RULE}` }}>
+              <span>THE AUDIT FILE</span><span style={{ color: GOLD }}>Ready when they ask</span>
+            </div>
+            <ul>
+              {AUDIT_FILE.map((r, i) => (
+                <li key={r.doc} className="px-5 py-4 grid grid-cols-[18px_minmax(0,1fr)] gap-3"
+                  style={{ borderTop: i ? `1px solid ${RULE}` : undefined }}>
+                  <span aria-hidden="true" className="mt-1 w-[18px] h-[18px] rounded-full grid place-items-center text-[11px] font-bold"
+                    style={{ background: GOLD, color: NAVY }}>✓</span>
+                  <div className="min-w-0">
+                    <div className="flex flex-wrap justify-between gap-x-3">
+                      <span className="font-semibold text-[15px]">{r.doc}</span>
+                      <span className="text-[11px]" style={{ ...MONO, color: MUTED }}>{r.ref}</span>
+                    </div>
+                    <div className="flex flex-wrap justify-between gap-x-3 mt-0.5 text-[13px]">
+                      <span style={{ color: BODY }}>{r.proof}</span>
+                      <span className="text-[11px]" style={{ ...MONO, color: GOLD_SOFT }}>{r.who}</span>
+                    </div>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      {/* ── CONTROLS — the enticement: segregation of duties + the payroll card ── */}
+      <section style={{ borderTop: `1px solid ${RULE}` }}>
+        <div className={`${WRAP} pt-16 pb-14 lg:pt-24`}>
           <div className="inline-flex items-center gap-2 px-3 py-1.5 mb-7 text-xs"
             style={{ ...MONO, border: `1px solid ${GOLD}`, background: GOLD_WASH, color: GOLD_SOFT }}>
             <span className="w-1.5 h-1.5 rounded-full" style={{ background: GOLD }} />
             Segregation of duties, built in
           </div>
-          <h1 className="font-extrabold mb-6 max-w-[1000px]"
-            style={{ fontSize: 'clamp(42px, 6.6vw, 92px)', lineHeight: 0.98, letterSpacing: '-0.03em' }}>
+          <h2 className="font-extrabold mb-6 max-w-[1000px]"
+            style={{ fontSize: 'clamp(40px, 6vw, 84px)', lineHeight: 0.98, letterSpacing: '-0.03em' }}>
             Nothing posts until<br />someone <span style={{ color: GOLD }}>signs for it.</span>
-          </h1>
-          <p className="text-lg sm:text-[19px] leading-relaxed mb-9 max-w-[600px]" style={{ color: BODY }}>
-            The finance stack for teams that get audited. Accountants prepare, the finance manager
+          </h2>
+          <p className="text-lg sm:text-[19px] leading-relaxed mb-2 max-w-[600px]" style={{ color: BODY }}>
+            The finance stack for teams that get audited, wherever they operate. Accountants prepare, the finance manager
             approves, payroll is run by one person and released by another — and every step is on the record.
           </p>
-          <div className="flex flex-wrap gap-3">
-            <a href={app('/auth/register')} className="inline-flex items-center gap-2 px-6 py-4 text-[15px] font-semibold transition-transform hover:-translate-y-px"
-              style={{ background: GOLD, color: NAVY }}>
-              Start free — no card <ArrowRight className="w-4 h-4" />
-            </a>
-            <a href="/contact" className="inline-flex items-center px-6 py-4 text-[15px] font-medium transition-colors hover:bg-[rgba(251,247,234,0.06)]"
-              style={{ border: `1px solid ${EDGE}`, color: TEXT }}>
-              Book a walkthrough
-            </a>
-          </div>
         </div>
 
         {/* Approval chain */}
@@ -122,7 +187,7 @@ export default function SORMALITICSLanding() {
           <div style={{ border: `1px solid ${EDGE}`, background: CARD, boxShadow: SHADOW }}>
             <div className="flex flex-wrap justify-between gap-3 px-6 py-4 text-xs"
               style={{ ...MONO, borderBottom: `1px solid ${RULE}`, color: MUTED }}>
-              <span>PAYROLL · PR-2026-10-004 · 14 employees · R 412 880.00</span>
+              <span>PAYROLL · PR-2026-10-004 · 14 employees · 412 880.00</span>
               <span style={{ color: GOLD }}>● Released</span>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">

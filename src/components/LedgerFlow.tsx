@@ -37,13 +37,13 @@ const SALE: Line[] = [
 const PAYROLL: Line[] = [
   { side: 'Dr', account: 'Salaries & wages',  amount: '412 880.00' },
   { side: 'Cr', account: 'Salaries payable',  amount: '334 432.80' },
-  { side: 'Cr', account: 'SARS — PAYE',       amount: '78 447.20' },
+  { side: 'Cr', account: 'Employee tax payable', amount: '78 447.20' },
 ];
 
 const EXCO = [
   { label: 'Revenue vs budget · YTD', value: '94%', bar: 94 },
-  { label: 'Payroll cost · October',  value: 'R 412 880' },
-  { label: 'Receivables outstanding', value: 'R 312 840' },
+  { label: 'Payroll cost · October',  value: '412 880.00' },
+  { label: 'Receivables outstanding', value: '312 840.00' },
 ];
 
 // The dot on the spine. Offset matches the list's padding-left so it sits on the line.
@@ -137,7 +137,7 @@ export function LedgerFlow() {
 
           <li className="relative rounded-[14px] px-[26px] py-[22px]" style={card}>
             <Node />
-            <StepHead n="02" title="Quotation" sub="QUO-0098 to B Ltd · R 18 400.00" who="Accountant" />
+            <StepHead n="02" title="Quotation" sub="QUO-0098 to B Ltd · 18 400.00" who="Accountant" />
           </li>
 
           <li className="relative rounded-[14px] px-[26px] py-6" style={{ background: CARD, border: `1px solid ${GOLD}` }}>
@@ -169,10 +169,10 @@ export function LedgerFlow() {
 
           <li className="relative rounded-[14px] px-[26px] py-6" style={card}>
             <Node />
-            <StepHead n="05" title="Payroll · A Ltd EMP201" sub="October run · 14 employees" who="Run by payroll · released by finance" />
+            <StepHead n="05" title="Payroll · A Ltd" sub="October run · 14 employees" who="Run by payroll · released by finance" />
             <Journal lines={PAYROLL} />
             <p className="mt-3.5 text-xs" style={{ ...MONO, color: MUTED }}>
-              EMP201 prepared for eFiling — you submit it to SARS yourself.
+              A filing schedule is generated from the approved run — you review it and submit to the tax authority yourself.
             </p>
           </li>
 

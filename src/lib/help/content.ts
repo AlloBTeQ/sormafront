@@ -36,7 +36,7 @@ export const categories: Category[] = [
   {
     slug: 'invoicing',
     title: 'Invoicing',
-    description: 'Create tax-compliant invoices with multi-currency support and automatic VAT calculations.',
+    description: 'Create VAT invoices with multi-currency support and automatic VAT calculations.',
     icon: '📄',
   },
   {
@@ -124,7 +124,7 @@ export const faqs: FAQ[] = [
   {
     question: 'What is an EMP201 and when do I need to submit it?',
     answer:
-      'The EMP201 is a South African monthly employer declaration submitted to SARS. It declares the PAYE, UIF, and SDL withheld and owed for the month. It must be filed and paid by the 7th of the following month. SORMALITICS generates a pre-filled EMP201 from your approved payroll run.',
+      'The EMP201 is a South African monthly employer declaration submitted to SARS. It declares the PAYE, UIF, and SDL withheld and owed for the month. It must be filed and paid by the 7th of the following month. SORMALITICS generates an EMP201 schedule from your approved payroll run, for you to check and submit on eFiling.',
     categorySlug: 'tax-compliance',
   },
   {
@@ -245,11 +245,11 @@ export const articles: Article[] = [
   // Invoicing
   {
     slug: 'tax-compliant-invoices-vat',
-    title: 'Creating Tax-Compliant Invoices with VAT',
+    title: 'Creating VAT Invoices',
     summary:
       'Configure VAT rates, apply reverse charge for cross-border transactions, and ensure your invoices meet local requirements.',
     body: [
-      'A tax-compliant invoice must include specific information required by each jurisdiction. SORMALITICS\'s invoice generator automatically populates mandatory fields based on your country setting — VAT number placement, invoice number sequencing, and the appropriate tax label (VAT, GST, or Sales Tax).',
+      'A VAT invoice has to carry specific information, and the list differs by jurisdiction. SORMALITICS\'s invoice generator fills in the fields most VAT invoices require based on your country setting — VAT number placement, invoice number sequencing, and the appropriate tax label (VAT, GST, or Sales Tax).',
       'To create a new invoice, go to Invoice → New invoice. Select your client, add line items, and choose the tax jurisdiction from the dropdown. SORMALITICS applies the correct rate — 15% for South Africa, 20% for the UK, 16% for Kenya. For cross-border sales to VAT-registered businesses, tick "Reverse charge" to apply the zero-rate rule.',
       'Each line item can carry its own tax code, useful when your invoice includes both taxable and exempt supplies. The invoice total, VAT subtotal, and amount due are calculated automatically and update in real time as you edit.',
       'Click "Generate PDF" when ready. The PDF is created server-side with your logo, company details, and client information. Download it directly or send it to the client by email using the built-in delivery feature. All sent invoices are logged in document history with timestamps.',
@@ -279,7 +279,7 @@ export const articles: Article[] = [
     summary:
       'Produce a pre-filled EMP201 monthly PAYE declaration from your approved South African payroll run.',
     body: [
-      'The EMP201 is a mandatory monthly return submitted to SARS declaring the PAYE, UIF, and SDL withheld from employees and owed by the employer. It must be filed and paid by the 7th of the month following the payroll period. SORMALITICS generates a pre-filled EMP201 directly from your approved payroll run.',
+      'The EMP201 is a mandatory monthly return submitted to SARS declaring the PAYE, UIF, and SDL withheld from employees and owed by the employer. It must be filed and paid by the 7th of the month following the payroll period. SORMALITICS generates an EMP201 schedule directly from your approved payroll run.',
       'To generate the EMP201, ensure your payroll run for the relevant month is in Approved status. Navigate to Payroll → Tax Compliance → EMP201, select the period (e.g. May 2025), and click "Generate". SORMALITICS pulls the approved figures and maps them to the correct EMP201 fields automatically.',
       'The generated form shows your employer PAYE reference number, the total PAYE deducted, employer and employee UIF contributions, and the SDL levy. Verify these figures against your payroll summary before submission. If any figure looks incorrect, check the underlying payroll run — you cannot edit the EMP201 directly.',
       'Download the EMP201 as a PDF for your records. You must submit the actual return via SARS eFiling — SORMALITICS does not connect directly to eFiling. The generated PDF serves as a reference to ensure you enter the correct amounts on eFiling. After submission, upload the SARS receipt to your compliance document history.',
@@ -309,10 +309,9 @@ export const articles: Article[] = [
     summary:
       'A side-by-side breakdown of what each SORMALITICS plan includes — documents, regions, team seats, and features.',
     body: [
-      'SORMALITICS offers four tiers: Free, Professional, Business, and Enterprise. The right plan depends on how many documents you generate per month, whether you need multi-region payroll, and whether you need team access.',
-      'The Free plan allows 5 documents per month — a good starting point for freelancers exploring the platform. You get access to the standard payslip generator, the invoice generator, and PDF download. Email delivery, tax compliance forms, and multi-region payroll are not included on Free.',
-      'Professional gives you 50 documents per month, all 7 payroll regions, full invoice generator with email delivery, custom templates, and tax form generation (EMP201, P32, P60, Form 941). This tier is designed for solo operators and small businesses with a single user.',
-      'Business unlocks 200 documents per month, 5 team seats, payroll run management, all 7 tax compliance forms, advanced financial reporting, and unlimited document history. Enterprise removes all limits and adds API access, white-label options, custom integrations, and dedicated support with SLA guarantees.',
+      'SORMALITICS offers four plans: Free, Professional, Business and Practitioner. The right one depends on how many people will use it, whether you run payroll, and whether you look after clients as a practice.',
+      'Free is for trying the platform on your own. Professional is for a single business with up to three users. Business adds teams — Finance, Payroll and Exco each see their own work, with segregation of duties between preparing and approving. Practitioner is for accounting practices and is billed per client.',
+      'Limits, features and prices change as the product grows, so the Pricing page is always the current reference for what each plan includes.',
     ],
     categorySlug: 'billing-plans',
     tags: ['plans', 'Free', 'Professional', 'Business', 'Enterprise', 'pricing', 'comparison'],

@@ -149,7 +149,7 @@ const SORMALITICSAbout = () => {
               </div>
               <div className="flex items-center bg-white px-4 py-2 rounded-full shadow-sm">
                 <Globe className="h-4 w-4 mr-2 text-purple-600" />
-                <span>UK & SA Tax Compliant</span>
+                <span>Built for UK & SA payroll</span>
               </div>
             </div>
 
@@ -215,7 +215,7 @@ const SORMALITICSAbout = () => {
                 </div>
                 <div>
                   <h4 className="font-semibold text-gray-900">Professional Invoicing</h4>
-                  <p className="text-gray-600 text-sm">Beautiful, tax-compliant invoices that get you paid faster</p>
+                  <p className="text-gray-600 text-sm">Professional invoices with the VAT details laid out for you</p>
                 </div>
               </div>
               
@@ -225,7 +225,7 @@ const SORMALITICSAbout = () => {
                 </div>
                 <div>
                   <h4 className="font-semibold text-gray-900">Smart Payroll</h4>
-                  <p className="text-gray-600 text-sm">HMRC/SARS compliant payslips with automatic tax calculations</p>
+                  <p className="text-gray-600 text-sm">UK and South African payslips with tax calculated for you to review</p>
                 </div>
               </div>
               
@@ -273,7 +273,7 @@ const SORMALITICSAbout = () => {
               {
                 icon: Scale,
                 title: "Accountants",
-                description: "Multi-client payroll, HMRC compliance, tax calculations",
+                description: "Multi-client payroll, HMRC reporting support, tax calculations",
                 needs: ["Client invoicing", "Payroll processing", "Tax compliance", "Professional image"]
               },
               {
@@ -414,8 +414,8 @@ const SORMALITICSAbout = () => {
                 },
                 {
                   icon: <Shield className="h-6 w-6 text-blue-500" />,
-                  title: "Tax Compliant by Default",
-                  description: "UK and SA tax requirements built in. Stay compliant without becoming a tax expert."
+                  title: "Tax Rules You Can See",
+                  description: "UK and SA rates and thresholds are applied for you and shown on every calculation, so you or your accountant can check them."
                 },
                 {
                   icon: <Clock className="h-6 w-6 text-purple-500" />,

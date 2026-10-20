@@ -335,13 +335,13 @@ export default function FisiLandingPage() {
             </h2>
             <p>
               It is a record, not a wallet and not a payment rail. Your money stays where it already is.
-              What FISI produces is the evidence that it was there — dated, itemised and ready to
-              reconcile against your own bank statement.
+              What FISI produces is the evidence that it was there — dated, itemised and easy to
+              check against your own bank statement.
             </p>
             <div className="trust-tags">
               <span className="chip">No payments held</span>
               <span className="chip">Your data, your account</span>
-              <span className="chip">Reconciles to your bank</span>
+              <span className="chip">Check it against your bank</span>
             </div>
           </div>
         </div>

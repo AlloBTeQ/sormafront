@@ -116,6 +116,8 @@ const CareersPage: React.FC = () => {
   // ✅ SECURE: Submit application via server API
   const handleSubmitApplication = async (e: React.FormEvent) => {
     e.preventDefault();
+    // The honeypot is uncontrolled (bots fill it, React state never sees it); read it off the form.
+    const honeypot = ((e.currentTarget as HTMLFormElement).elements.namedItem('website') as HTMLInputElement | null)?.value ?? '';
     setIsSubmitting(true);
     setValidationErrors([]);
 
@@ -143,6 +145,8 @@ const CareersPage: React.FC = () => {
           formDataToSend.append(key, value);
         }
       });
+
+      if (honeypot) formDataToSend.append('website', honeypot);
 
       const response = await fetch(`${APP_ORIGIN}/api/careers`, {
         method: 'POST',
@@ -405,6 +409,11 @@ const CareersPage: React.FC = () => {
               ) : (
                 // Application Form
                 <form onSubmit={handleSubmitApplication} className="space-y-6">
+                  {/* Honeypot — invisible to people and screen readers; bots fill it, and the
+                      app quietly drops anything that arrives with it set. */}
+                  <div aria-hidden="true" style={{ position: 'absolute', left: '-10000px', width: 1, height: 1, overflow: 'hidden' }}>
+                    <label>Website<input type="text" name="website" tabIndex={-1} autoComplete="off" defaultValue="" /></label>
+                  </div>
                   {/* General Error Message */}
                   {validationErrors.length > 0 && (
                     <div className="bg-red-50 border border-red-200 rounded-lg p-4">
@@ -431,6 +440,7 @@ const CareersPage: React.FC = () => {
                         type="text"
                         id="name"
                         name="name"
+                        maxLength={120}
                         value={formData.name}
                         onChange={handleInputChange}
                         required
@@ -452,6 +462,7 @@ const CareersPage: React.FC = () => {
                         type="email"
                         id="email"
                         name="email"
+                        maxLength={254}
                         value={formData.email}
                         onChange={handleInputChange}
                         required
@@ -475,6 +486,7 @@ const CareersPage: React.FC = () => {
                         type="tel"
                         id="phone"
                         name="phone"
+                        maxLength={40}
                         value={formData.phone}
                         onChange={handleInputChange}
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -490,6 +502,7 @@ const CareersPage: React.FC = () => {
                         type="text"
                         id="location"
                         name="location"
+                        maxLength={120}
                         value={formData.location}
                         onChange={handleInputChange}
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -506,6 +519,7 @@ const CareersPage: React.FC = () => {
                       type="text"
                       id="position"
                       name="position"
+                      maxLength={120}
                       value={formData.position}
                       onChange={handleInputChange}
                       required
@@ -553,6 +567,7 @@ const CareersPage: React.FC = () => {
                       type="url"
                       id="portfolio"
                       name="portfolio"
+                      maxLength={500}
                       value={formData.portfolio}
                       onChange={handleInputChange}
                       className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
@@ -594,6 +609,7 @@ const CareersPage: React.FC = () => {
                     <textarea
                       id="coverLetter"
                       name="coverLetter"
+                      maxLength={8000}
                       value={formData.coverLetter}
                       onChange={handleInputChange}
                       required

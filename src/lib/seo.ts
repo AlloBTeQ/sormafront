@@ -15,6 +15,10 @@
 import type { Metadata } from 'next';
 import { TIERS } from '@/config/plans';
 import { SITE_URL } from '@/lib/site';
+import { JURISDICTIONS } from '@/lib/payroll/jurisdictionStatus';
+
+// Countries payroll is live in — derived, never hand-typed (same source as the home page).
+const LIVE_CODES = JURISDICTIONS.filter(j => j.status === 'live').map(j => j.code);
 
 export const BRAND = 'SORMALITICS';
 const OG_IMAGE = { url: '/og-image.jpg', width: 1200, height: 630, alt: BRAND };
@@ -27,7 +31,8 @@ export function pageMeta({ path, title, description }: { path: string; title: st
     alternates: { canonical: path },
     openGraph: {
       type: 'website',
-      locale: 'en_ZA',
+      locale: 'en_GB',
+      alternateLocale: ['en_US', 'en_ZA'],
       siteName: BRAND,
       url: path,
       title: full,
@@ -49,7 +54,7 @@ export const organizationLd = {
   logo: `${SITE_URL}/icon-512.png`,
   email: 'hello@sormalitics.com',
   address: { '@type': 'PostalAddress', addressCountry: 'ZA' },
-  contactPoint: [{ '@type': 'ContactPoint', contactType: 'customer support', email: 'support@sormalitics.com', areaServed: 'ZA' }],
+  contactPoint: [{ '@type': 'ContactPoint', contactType: 'customer support', email: 'support@sormalitics.com', areaServed: LIVE_CODES }],
 };
 
 export const websiteLd = {
@@ -58,7 +63,7 @@ export const websiteLd = {
   '@id': `${SITE_URL}/#website`,
   url: SITE_URL,
   name: BRAND,
-  inLanguage: 'en-ZA',
+  inLanguage: 'en',
   publisher: { '@id': `${SITE_URL}/#organization` },
 };
 

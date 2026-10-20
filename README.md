@@ -21,6 +21,32 @@ pnpm dev          # http://localhost:3001
 pnpm build        # writes out/
 ```
 
+## Security headers
+
+- **`vercel.json` is the only source of security headers.** With `output: 'export'`, `headers()` in
+  `next.config.mjs` does nothing. If hosting or export mode changes, re-establish every header there.
+- **CSP keeps `'unsafe-inline'`** on `script-src`/`style-src`: the static export emits inline hydration
+  scripts with no per-request nonce, and there is no server to inject one. Residual risk is low (no cookies,
+  no user content, tight `connect-src`). If dynamic/user content is ever added, switch to build-time sha256
+  hashes of each inline script and drop `'unsafe-inline'`. Try dropping it from `style-src` first (test a build).
+- **CSP violation reports** go to `https://app.sormalitics.com/api/csp-report` (`report-uri` + `report-to`).
+  The app must implement that endpoint (accept `application/csp-report` and `application/reports+json`, return 204).
+- **HSTS `preload`**: confirm this domain is submitted/accepted at https://hstspreload.org.
+- **DNS hygiene (one-time, then after any project removal)**: audit for stale CNAMEs (app., support., www.)
+  pointing at Vercel projects that no longer exist. `includeSubDomains` HSTS means a taken-over subdomain inherits trust.
+- **Dependencies**: Dependabot (`.github/dependabot.yml`) and a `pnpm audit` workflow (`.github/workflows/audit.yml`) run automatically.
+  The audit workflow needs a committed `pnpm-lock.yaml`.
+
+### Verification and operations
+- `node scripts/verify-headers.mjs [url]` compares live headers to `vercel.json`; the `verify-headers` workflow runs it
+  after production deploys and every 6 hours (needs Vercel's GitHub integration to emit deployment events).
+- `secret-scan` workflow runs gitleaks. Also enable GitHub secret scanning + push protection in repo settings.
+- `public/.well-known/security.txt` — **update `Expires` yearly**, create the `security@` mailbox, and publish the `/security` policy page it links to.
+- Outside this repo (do in GitHub/Vercel): require MFA, branch protection with mandatory review on `main`, least-privilege
+  access, and keep production secrets out of Preview environment variables.
+- The authenticated app (login, MFA, sessions, tenant isolation/IDOR, payments, webhooks, rate limits, audit logging)
+  must be tested in the `SORMALITICS` repo; this static site cannot validate it.
+
 ## Before the app is live (today)
 
 `NEXT_PUBLIC_APP_LIVE` is unset, so every app link (Sign in, Start free, Get started,

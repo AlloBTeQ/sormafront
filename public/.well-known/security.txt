@@ -1,0 +1,5 @@
+Contact: mailto:security@sormalitics.com
+Expires: 2027-10-18T00:00:00.000Z
+Preferred-Languages: en
+Canonical: https://sormalitics.com/.well-known/security.txt
+Policy: https://sormalitics.com/security

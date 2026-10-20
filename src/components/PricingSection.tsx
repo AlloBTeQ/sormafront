@@ -109,7 +109,7 @@ export function PricingSection({ asPage = false }: { asPage?: boolean }) {
             })}
           </div>
           <p className="mt-6 text-xs" style={{ ...MONO, color: MUTED }}>
-            We prepare and reconcile your returns. You submit them to the authority yourself.
+            Prices are in South African rand (ZAR). Cards in other currencies are converted by your card provider, who may charge a fee. SORMALITICS produces reports and schedules to support your tax filings — you review them, and you remain responsible for what you submit.
           </p>
         </div>
       </section>
