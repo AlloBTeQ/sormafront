@@ -70,7 +70,7 @@ export const faqs: FAQ[] = [
   {
     question: 'Do I need a credit card to get started?',
     answer:
-      'No. The Free plan is completely free with no credit card required. You can generate up to 5 documents per month, including payslips and invoices, at no cost. A card is only needed when you upgrade to Professional or Business.',
+      'No. The Free plan needs no credit card. It lets your business try SORMALITICS on real documents — 3 invoices, 2 quotations, 1 payslip and 1 agreement. That allowance is once-off, not monthly, and it belongs to your company: accounts that share a registration, tax or VAT number share it. A card is only needed when you upgrade to Professional or Business.',
     categorySlug: 'getting-started',
   },
   {
@@ -192,7 +192,7 @@ export const articles: Article[] = [
       'Creating your SORMALITICS account takes under two minutes. Visit sormalitics.com and click the "Get started" button in the top navigation. Enter your email address and choose a strong password — at least 8 characters with a mix of letters and numbers is recommended.',
       'After submitting the registration form, check your inbox for a verification email from noreply@sormalitics.com. Click the "Verify email" link inside. If the email does not arrive within a few minutes, check your spam folder or use the "Resend verification" link on the login page.',
       'Once verified, you will be prompted to complete your organisation profile. Enter your company name, country of operation, and preferred currency. This information pre-fills your documents and determines which payroll tax engines are available to you.',
-      'Your account starts on the Free plan with 5 documents per month — no credit card required. You can upgrade to Professional or Business from the Billing page at any time to unlock more capacity and features.',
+      'Your account starts on the Free plan — no credit card required — with 3 invoices, 2 quotations, 1 payslip and 1 agreement to try the product. You can upgrade to Professional or Business from the Billing page at any time to keep going and unlock more features.',
     ],
     categorySlug: 'getting-started',
     tags: ['account', 'registration', 'verification', 'setup', 'onboarding'],

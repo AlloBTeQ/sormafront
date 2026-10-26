@@ -251,6 +251,16 @@ export interface PlanDefinition {
   /** Not offered on the pricing page — legacy records only. */
   legacy?: boolean;
   /**
+   * Limits that are a once-off allowance, not a monthly ceiling.
+   *
+   * A key listed here is counted over the account's whole life, and across
+   * every account that shares a company registration, tax or VAT number
+   * (lib/billing/freeAllowance.ts) — so the allowance belongs to the COMPANY,
+   * not to an email address, and deleting a document does not hand it back.
+   * Absent = every limit is monthly, which is the case for every paid plan.
+   */
+  lifetimeLimits?: readonly (keyof PlanLimits)[];
+  /**
    * How far into the payroll lifecycle this plan may go. Only meaningful when
    * `access` includes 'payroll'. Undefined on a payroll plan is read as 'full'
    * by `payrollModeFor`, so an omission cannot silently lock a paying customer
@@ -292,27 +302,31 @@ export const PLANS: Record<Plan, PlanDefinition> = {
   free: {
     key:     'free',
     name:    'Starter',
-    tagline: 'For side hustles & freelancers getting started',
-    badge:   'FREE FOREVER',
+    tagline: 'Try SORMALITICS on real documents, free',
+    badge:   'FREE TO TRY',
+    // The four document limits below are a ONCE-OFF trial allowance, not a
+    // monthly ceiling — see `lifetimeLimits`. Owner's rule, 2026-10-26: Starter
+    // is a marketing tool. It exists so a business can see the quality of what
+    // we produce on its own data — 3 invoices, 2 quotes, 1 payslip and 1
+    // agreement, once, per company — not as a permanent free tier. A monthly
+    // "1 payslip" would run a one-employee business's payroll forever.
     limits: {
-      invoices: 3, quotes: 5, payslips: 0, agreements: 2,
+      invoices: 3, quotes: 2, payslips: 1, agreements: 1,
       issuers: 1, employees: 0, teamMembers: 1,
       reportExports: 2, pdfUploads: 5, signatureRequests: 3, templates: 2,
     },
+    lifetimeLimits: ['invoices', 'quotes', 'payslips', 'agreements'],
     access: ['invoicing'],
     monthlyPrice: { ZAR: 0, GBP: 0, USD: 0, EUR: 0 },
     annualMonths: 10,
     features: [
-      '3 invoices per month',
-      // Higher than the invoice ceiling on purpose: quoting is how a freelancer
-      // wins the work that becomes an invoice, and a lost quote should not cost
-      // them the ability to bill. Rationing the sales activity to ration the
-      // billing activity throttles the wrong end of the funnel.
-      '5 quotations per month',
-      'Save and reuse your client list',
-      'Your logo and details on every invoice',
+      '3 invoices to try',
+      '2 quotations to try',
+      '1 payslip to try',
+      '1 legal agreement to try',
+      'Your logo and details on every document',
       'PDF generation & email delivery',
-      'Multi-currency support',
+      'No card needed',
     ],
     cta:    'Start Free',
     accent: 'emerald',
@@ -552,6 +566,11 @@ export function getPlan(plan: string | null | undefined): PlanDefinition {
 /** Limits for a plan. Falls back to `free` for anything unrecognised. */
 export function getPlanLimits(plan: string | null | undefined): PlanLimits {
   return getPlan(plan).limits;
+}
+
+/** Is this limit a once-off allowance on this plan, rather than monthly? */
+export function isLifetimeLimit(plan: string | null | undefined, key: keyof PlanLimits): boolean {
+  return getPlan(plan).lifetimeLimits?.includes(key) ?? false;
 }
 
 /** Modules a plan grants. */
