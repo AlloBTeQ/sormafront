@@ -2,8 +2,11 @@
 export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://sormalitics.com').replace(/\/$/, '');
 export const APP_ORIGIN = (process.env.NEXT_PUBLIC_APP_URL ?? 'https://app.sormalitics.com').replace(/\/$/, '');
 
-// Until NEXT_PUBLIC_APP_LIVE=true, links into the app land on /in-development.
-export const APP_LIVE = process.env.NEXT_PUBLIC_APP_LIVE === 'true';
+// The app is open (2026-10-27): every link goes straight into it. Set
+// NEXT_PUBLIC_APP_LIVE=false to send links back to the /in-development holding
+// page — the switch is kept for an emergency, but on is now the default, so a
+// missing variable can never hide the product again.
+export const APP_LIVE = process.env.NEXT_PUBLIC_APP_LIVE !== 'false';
 
 export const APP_URL = APP_LIVE ? APP_ORIGIN : '/in-development#';
 

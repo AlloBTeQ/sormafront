@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { ArrowRight, Mail } from 'lucide-react';
+import { APP_LIVE, APP_ORIGIN } from '@/lib/site';
 
 const NAVY = '#143152';
 const DEEP = '#0E2540';
@@ -36,6 +37,15 @@ function intentFor(target: string): Intent {
 
 export default function InDevelopment() {
   const [intent, setIntent] = useState<Intent>(intentFor(''));
+  // Once the app is open, an old "early access" link goes where it was headed:
+  // /in-development#/auth/register → the app's registration page.
+  useEffect(() => {
+    if (!APP_LIVE) return;
+    const target = decodeURIComponent(window.location.hash.slice(1));
+    const path = target.startsWith('/') ? target : '/auth/register';
+    window.location.replace(`${APP_ORIGIN}${path}`);
+  }, []);
+
   useEffect(() => {
     const read = () => setIntent(intentFor(decodeURIComponent(window.location.hash.slice(1))));
     read();

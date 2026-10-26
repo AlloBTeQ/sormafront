@@ -23,7 +23,7 @@ import {
 type SortOption = 'price-low' | 'price-high' | 'popular' | 'newest';
 
 const AdvancedStore = () => {
-  const [selectedCurrency, setSelectedCurrency] = useState<Currency>('GBP');
+  const [selectedCurrency, setSelectedCurrency] = useState<Currency>('ZAR');
   const [selectedCategory, setSelectedCategory] = useState<ProductCategory | 'all'>('all');
   const searchParams = useSearchParams();
 
@@ -146,7 +146,7 @@ const AdvancedStore = () => {
 
           <div className="flex justify-center mb-6">
             <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur rounded-lg p-1">
-              {(['GBP', 'USD', 'EUR', 'ZAR'] as Currency[]).map((currency) => (
+              {(['ZAR', 'GBP', 'USD', 'EUR'] as Currency[]).map((currency) => (
                 <button
                   key={currency}
                   onClick={() => setSelectedCurrency(currency)}
@@ -161,6 +161,13 @@ const AdvancedStore = () => {
               ))}
             </div>
           </div>
+
+          <p className="text-center text-sm text-blue-100 mb-6">
+            Already bought?{' '}
+            <a href={`${APP_URL}/store?resend=1#already-bought`} className="underline font-semibold text-white">
+              Get your download link again
+            </a>
+          </p>
 
           <div className="max-w-2xl mx-auto">
             <div className="relative">
