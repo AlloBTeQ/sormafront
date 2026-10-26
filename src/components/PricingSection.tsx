@@ -7,9 +7,6 @@ import { OFFERED_CURRENCIES } from '@/lib/plans';
 import type { SupportedCurrency } from '@/config/plans';
 import { checkoutHref } from '@/lib/site';
 
-// The pricing block, shared by / (as a section) and /pricing (as the page).
-// Prices come from config/plans.ts (synced from the app) — never typed here.
-
 const NAVY = '#143152';
 const TEXT = '#FBF7EA';
 const BODY = '#ADC4DC';
@@ -22,6 +19,7 @@ const MONO: React.CSSProperties = { fontFamily: 'var(--font-dm-mono), ui-monospa
 const WRAP = 'max-w-[1240px] mx-auto px-4 sm:px-8 lg:px-12';
 type BillingPeriod = 'monthly' | 'yearly';
 
+// Prices come from config/plans.ts — never type them here.
 export function PricingSection({ asPage = false }: { asPage?: boolean }) {
   const [currency, setCurrency] = useState<SupportedCurrency>('ZAR');
   const [period, setPeriod] = useState<BillingPeriod>('monthly');
@@ -34,7 +32,6 @@ export function PricingSection({ asPage = false }: { asPage?: boolean }) {
             {React.createElement(asPage ? 'h1' : 'h2', { className: 'font-extrabold', style: { fontSize: 'clamp(30px, 3.8vw, 50px)', letterSpacing: '-0.025em' } }, 'Priced by what you run.')}
             <div className="flex flex-wrap gap-2 text-xs" style={MONO}>
               {OFFERED_CURRENCIES.length > 1 && <div className="flex" style={{ border: `1px solid ${RULE}` }}>
-                {/* OFFERED_CURRENCIES, not a hand-typed list — see lib/plans.ts. */}
                 {OFFERED_CURRENCIES.map(c => (
                   <button key={c} type="button" onClick={() => setCurrency(c)} aria-pressed={currency === c}
                     className="px-3 py-2.5 transition-colors"
@@ -55,9 +52,6 @@ export function PricingSection({ asPage = false }: { asPage?: boolean }) {
             </div>
           </div>
 
-          {/* One open sheet, not four boxes: gold rule on top, hairlines between
-              plans, a double rule underneath like a ledger total. Only the
-              featured plan gets a filled button; the rest are text links. */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 items-stretch">
             {TIERS.map((tier) => {
               const isFree = tier.id === 'free';
@@ -82,6 +76,14 @@ export function PricingSection({ asPage = false }: { asPage?: boolean }) {
                   <span className="text-[38px] font-extrabold leading-none tracking-[-0.02em]">
                     {isFree ? 'Free' : <>{sym}{price.toFixed(2)}<span className="text-sm font-normal tracking-normal" style={{ color: MUTED }}>{unit}{per}</span></>}
                   </span>
+                  {/* Starter is a once-off trial, not a free monthly tier (owner's rule,
+                      2026-10-26). Said on the card, beside the price, so nobody reads
+                      "Free" next to "3 invoices" and assumes three a month. */}
+                  {isFree && (
+                    <span className="text-[11px] tracking-[0.06em]" style={{ ...MONO, color: GOLD }}>
+                      ONCE-OFF TRIAL · PER COMPANY · NO CARD
+                    </span>
+                  )}
                   <span className="text-sm" style={{ color: BODY }}>{tier.tagline}</span>
                   <ul className="flex flex-col gap-2 my-3 text-[13px]" style={{ color: BODY }}>
                     {tier.features.slice(0, 4).map(f => (
@@ -90,7 +92,6 @@ export function PricingSection({ asPage = false }: { asPage?: boolean }) {
                       </li>
                     ))}
                   </ul>
-                  {/* Checkout runs on the app origin — see checkoutHref in lib/site.ts. */}
                   {featured ? (
                     <a href={checkoutHref(tier.id, period, currency)}
                       className="mt-auto text-center text-sm font-semibold py-3.5 rounded-lg transition-transform hover:-translate-y-px"
