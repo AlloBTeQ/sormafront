@@ -16,13 +16,9 @@ export interface Product {
   previewImage: string;
   templatePath: string;
   editableFields: string[];
-  requiredFields: string[]; // Fields needed for teaser preview
+  requiredFields: string[];
   tags: string[];
 }
-
-
-// PAYSLIPS
-
 
 export const PAYSLIP_PRODUCTS: Product[] = [
   {
@@ -56,7 +52,7 @@ export const PAYSLIP_PRODUCTS: Product[] = [
       'overtime', 'bonus', 'deductions', 'medicalAid',
       'pensionFund', 'bankDetails'
     ],
-    requiredFields: ['employeeName', 'basicSalary', 'payPeriod'], // For teaser
+    requiredFields: ['employeeName', 'basicSalary', 'payPeriod'],
     tags: ['south-africa', 'sars', 'paye', 'uif', 'compliance']
   },
   {
@@ -127,10 +123,6 @@ export const PAYSLIP_PRODUCTS: Product[] = [
     tags: ['universal', 'manual', 'flexible', 'any-country']
   }
 ];
-
-
-// INVOICES
-
 
 export const INVOICE_PRODUCTS: Product[] = [
   {
@@ -298,10 +290,6 @@ export const INVOICE_PRODUCTS: Product[] = [
     tags: ['universal', 'manual', 'flexible', 'any-country']
   }
 ];
-
-
-// AGREEMENTS / CONTRACTS (NO DUPLICATES)
-
 
 export const AGREEMENT_PRODUCTS: Product[] = [
   {
@@ -567,10 +555,6 @@ export const AGREEMENT_PRODUCTS: Product[] = [
   }
 ];
 
-
-// SCHEDULES / TAX FORMS
-
-
 export const SCHEDULE_PRODUCTS: Product[] = [
   {
     id: 'schedule-vat201-rsa',
@@ -734,13 +718,6 @@ export const SCHEDULE_PRODUCTS: Product[] = [
     tags: ['payroll', 'schedule', 'uk', 'hmrc', 'summary']
   },
   {
-    // The first catalogue product whose form is not a flat list of scalars.
-    // `editableFields` below is DESCRIPTIVE ONLY — /store/edit renders this
-    // product from src/lib/store/rentalScheduleSchema.ts, which has the
-    // repeating rows (twelve months of rent, open-ended expense and asset sets,
-    // up to three properties) that a flat string list cannot express. The list
-    // is kept populated so search, the preview modal and anything else that
-    // reads `editableFields` still describe the product accurately.
     id: 'schedule-rental-za',
     name: 'Rental Income & Expense Schedule (ITR12)',
     category: 'schedule',
@@ -765,9 +742,6 @@ export const SCHEDULE_PRODUCTS: Product[] = [
       ZAR: 149
     },
     previewImage: '/templates/previews/schedule-rental-za.png',
-    // Empty on purpose, like every other entry — see getProductPageRoute below.
-    // This document is rendered only by /api/store/generate-document, which
-    // will not run until a paid Stripe session has been confirmed.
     templatePath: '',
     editableFields: [
       'fullName', 'idNumber', 'taxNumber', 'yearOfAssessment', 'maritalRegime',
@@ -777,10 +751,6 @@ export const SCHEDULE_PRODUCTS: Product[] = [
     tags: ['rental', 'property', 'itr12', 'sars', 'south-africa', '4210', '4211', 'landlord', 'schedule']
   }
 ];
-
-
-// COMBINED CATALOG
-
 
 export const ALL_PRODUCTS = [
   ...PAYSLIP_PRODUCTS,
@@ -814,16 +784,6 @@ export function searchProducts(query: string): Product[] {
   );
 }
 
-/* ────────────────────────────────────────────────────────────────────────────
-   Route + price helpers
-   ---------------------------------------------------------------------------
-   `templatePath` is stored WITHOUT the `/store` prefix and is empty for
-   products that have no page of their own. Resolve it through
-   getProductPageRoute / getProductLink rather than reading it directly — that
-   is what let the marketing pages drift onto routes like `/payslip/ukpayslip`
-   that were never built.
-   ──────────────────────────────────────────────────────────────────────────── */
-
 export const CURRENCY_SYMBOLS: Record<Currency, string> = {
   GBP: '\u00a3',
   USD: '$',
@@ -831,36 +791,10 @@ export const CURRENCY_SYMBOLS: Record<Currency, string> = {
   ZAR: 'R',
 };
 
-/**
- * The storefront page for a product, or null when it has none.
- *
- * SECURITY — every `templatePath` is currently `''` on purpose, so this always
- * returns null and every buy/open action falls through to checkout.
- *
- * The standalone generator pages under /store/product/payslip/* and
- * /store/product/contracts/templates/* render a COMPLETE, UNPAID document:
- * the payslip pages build a real PDF client-side with jsPDF, and the contract
- * pages render the full clause text next to a window.print() button. Neither
- * checks for an entitlement.
- *
- * They are sealed in `src/middleware.ts` — see SEALED_PREFIXES, which redirects
- * the whole /store/product subtree to /store before the public-path check.
- *
- * This comment previously said they were "blocked at the edge in next.config.js".
- * That was false for as long as it stood: the headers/redirects/rewrites block in
- * next.config.js is inside a /* ... *\/ comment, so the only live redirects() is
- * the FISI one and it carries no store rules. The pages were served to anyone who
- * knew the URL, and this comment was vouching for a protection that did not
- * exist. If you move the seal, change this line in the same commit.
- *
- * Do NOT repopulate templatePath until that page's document is rendered by
- * /api/store/generate-document, which requires a paid Stripe session.
- */
 export function getProductPageRoute(product: Product): string | null {
   return product.templatePath ? `/store${product.templatePath}` : null;
 }
 
-/** Where a buy/open click should land: the product page, else straight to checkout. */
 export function getProductLink(product: Product, currency: Currency = 'ZAR'): string {
   return (
     getProductPageRoute(product) ??
@@ -868,7 +802,6 @@ export function getProductLink(product: Product, currency: Currency = 'ZAR'): st
   );
 }
 
-/** Always a checkout URL, regardless of whether the product has its own page. */
 export function getCheckoutLink(productId: string, currency: Currency = 'ZAR'): string {
   return `${APP_URL}/store/checkout?product=${encodeURIComponent(productId)}&currency=${currency}`;
 }
@@ -877,7 +810,6 @@ export function formatPrice(amount: number, currency: Currency): string {
   return `${CURRENCY_SYMBOLS[currency]}${amount.toFixed(2)}`;
 }
 
-/** Cheapest price in a category — what the marketing pages mean by "from X". */
 export function getCheapestPrice(
   category: ProductCategory,
   currency: Currency,
@@ -886,11 +818,6 @@ export function getCheapestPrice(
   return prices.length ? Math.min(...prices) : null;
 }
 
-/**
- * "from R29.00" for a category, or null if the category is empty. Marketing
- * pages render this instead of hardcoding a figure, so the headline price can
- * never disagree with what checkout actually charges.
- */
 export function formatFromPrice(
   category: ProductCategory,
   currency: Currency,

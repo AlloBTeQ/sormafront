@@ -1,35 +1,20 @@
-// Server component: this page has no state or handlers of its own, so it ships
-// as HTML. PricingSection is the one interactive island and marks itself 'use client'.
 
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
-import { JURISDICTIONS, codeList } from '@/lib/payroll/jurisdictionStatus';
+import { JURISDICTIONS } from '@/lib/payroll/jurisdictionStatus';
 import { app } from '@/lib/site';
 import { PricingSection } from '@/components/PricingSection';
 import { LedgerFlow } from '@/components/LedgerFlow';
 import { softwareLd, ld } from '@/lib/seo';
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Landing — direction F, chosen 16 Oct 2026 from five proposals.
-//
-//   Content & nav:  "Control Room" (B) — segregation of duties is the pitch.
-//   Ground:         brand ink #143152, full bleed. Parchment type, aurum accent.
-//   Type:           Outfit (--font-syne) + DM Mono (--font-dm-mono), as A.
-//   Dashboard:      the Finance-team panel from "The Workspace" (E).
-//
-// Everything that is a public CLAIM is derived, not typed: jurisdictions from
-// lib/payroll/jurisdictionStatus.ts, plans and prices from config/plans.ts.
-// The approval chain, dashboard and audit log are illustrative product shots.
-// ─────────────────────────────────────────────────────────────────────────────
-
-const NAVY = '#143152';        // page ground
-const DEEP = '#0E2540';        // the one deeper band (audit trail) + offset shadow
-const CARD = '#183A5F';        // raised surfaces
-const TEXT = '#FBF7EA';        // parchment
+const NAVY = '#143152';
+const DEEP = '#0E2540';
+const CARD = '#183A5F';
+const TEXT = '#FBF7EA';
 const BODY = '#ADC4DC';
 const MUTED = '#8FA9C8';
 const RULE = '#2B4A70';
-const EDGE = '#4B71A0';        // strong border (the old ink rule)
+const EDGE = '#4B71A0';
 const GOLD = '#C9A227';
 const GOLD_SOFT = '#E5C55E';
 const GOLD_WASH = 'rgba(201,162,39,0.10)';
@@ -37,7 +22,6 @@ const SHADOW = `12px 12px 0 ${DEEP}`;
 
 const DISPLAY: React.CSSProperties = { fontFamily: 'var(--font-syne), ui-sans-serif, system-ui, sans-serif' };
 const MONO: React.CSSProperties = { fontFamily: 'var(--font-dm-mono), ui-monospace, monospace' };
-
 
 const CHAIN = [
   { step: '01 · PREPARED', who: 'Payroll officer',                  meta: '14 Oct · 09:12' },
@@ -67,7 +51,6 @@ const PENDING = [
   { ref: 'BILL-1204 · Eskom',           by: 'M. Dlamini' },
 ];
 
-// `key` flags the approve/release events, which the log picks out in aurum.
 const AUDIT = [
   { t: '09:12', ev: 'payroll.run.created',  meta: 'by t.nkosi' },
   { t: '11:03', ev: 'invoice.raised',       meta: 'INV-0412 · 18 400.00' },
@@ -77,8 +60,6 @@ const AUDIT = [
   { t: '15:41', ev: 'payslips.sent',        meta: '14 of 14' },
 ];
 
-// The intro's "audit file": what a quality assurer, a counterparty or SARS asks
-// for, each with who signed it and when. Illustrative records.
 const AUDIT_FILE = [
   { doc: 'Quotation → invoice', ref: 'QUO-0098 · INV-0412', proof: 'Converted, not re-typed', who: 'Accountant · 09 Oct' },
   { doc: 'Service agreement',   ref: 'A Ltd ⇄ B Ltd',        proof: 'Signed by both parties',  who: 'E-signed · 10 Oct' },
@@ -89,18 +70,15 @@ const AUDIT_FILE = [
 
 const WRAP = 'max-w-[1240px] mx-auto px-4 sm:px-8 lg:px-12';
 
+// Server component: PricingSection is the only client island.
 export default function SORMALITICSLanding() {
 
-
   const live = JURISDICTIONS.filter(j => j.status === 'live');
-  const inDev = codeList('in-development');
 
   return (
     <div style={{ ...DISPLAY, color: TEXT, background: NAVY }}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: ld(softwareLd) }} />
 
-      {/* ── INTRO — the why. Everyone chases the next rand; few keep records that
-             survive scrutiny. The pillars sit above the headline as the lockup. ── */}
       <section aria-labelledby="intro-h">
         <div className={`${WRAP} pt-14 pb-16 lg:pt-24 lg:pb-24 grid lg:grid-cols-12 gap-12 items-center`}>
           <div className="lg:col-span-7">
@@ -135,7 +113,6 @@ export default function SORMALITICSLanding() {
             </div>
           </div>
 
-          {/* The audit file — what's ready when someone asks */}
           <div className="lg:col-span-5" style={{ background: CARD, border: `1px solid ${EDGE}`, boxShadow: SHADOW }}>
             <div className="flex justify-between gap-3 px-5 py-4 text-[11px] tracking-[0.12em]"
               style={{ ...MONO, color: MUTED, borderBottom: `1px solid ${RULE}` }}>
@@ -164,7 +141,6 @@ export default function SORMALITICSLanding() {
         </div>
       </section>
 
-      {/* ── CONTROLS — the enticement: segregation of duties + the payroll card ── */}
       <section style={{ borderTop: `1px solid ${RULE}` }}>
         <div className={`${WRAP} pt-16 pb-14 lg:pt-24`}>
           <div className="inline-flex items-center gap-2 px-3 py-1.5 mb-7 text-xs"
@@ -182,7 +158,6 @@ export default function SORMALITICSLanding() {
           </p>
         </div>
 
-        {/* Approval chain */}
         <div id="controls" className={`${WRAP} pb-16 lg:pb-24`}>
           <div style={{ border: `1px solid ${EDGE}`, background: CARD, boxShadow: SHADOW }}>
             <div className="flex flex-wrap justify-between gap-3 px-6 py-4 text-xs"
@@ -207,10 +182,8 @@ export default function SORMALITICSLanding() {
         </div>
       </section>
 
-      {/* ── SORM … ALITICS — the whole cycle on one spine (board G) ── */}
       <LedgerFlow />
 
-      {/* ── MODULES + FINANCE-TEAM DASHBOARD ── */}
       <section id="modules" className="py-16 lg:py-24" style={{ borderTop: `1px solid ${RULE}` }}>
         <div className={WRAP}>
           <div className="flex flex-wrap justify-between items-end gap-6 mb-11">
@@ -238,7 +211,6 @@ export default function SORMALITICSLanding() {
             })}
           </div>
 
-          {/* Illustrative Finance-team dashboard */}
           <div className="flex flex-wrap" style={{ background: CARD, border: `1px solid ${EDGE}`, boxShadow: SHADOW }}>
             <div className="flex-[1_1_200px] p-5 flex flex-col gap-1 text-sm" style={{ background: '#16365A', borderRight: `1px solid ${RULE}` }}>
               <div className="text-[11px] tracking-[0.08em] px-2.5 pb-2.5" style={{ ...MONO, color: MUTED }}>FINANCE TEAM</div>
@@ -282,7 +254,6 @@ export default function SORMALITICSLanding() {
         </div>
       </section>
 
-      {/* ── AUDIT TRAIL — the one deeper band ── */}
       <section id="audit" className="py-16 lg:py-24" style={{ background: DEEP }}>
         <div className={`${WRAP} grid lg:grid-cols-2 gap-12 items-center`}>
           <div>
@@ -308,7 +279,6 @@ export default function SORMALITICSLanding() {
         </div>
       </section>
 
-      {/* ── JURISDICTIONS — one quiet line. Derived; do not hand-type. ── */}
       <section id="jurisdictions" style={{ borderBottom: `1px solid ${RULE}` }}>
         <div className={`${WRAP} py-[18px] flex flex-wrap items-center justify-between gap-3 text-xs`} style={MONO}>
           <span className="tracking-[0.1em]" style={{ color: MUTED }}>PAYROLL LIVE IN</span>
@@ -318,16 +288,12 @@ export default function SORMALITICSLanding() {
                 {j.code}
               </span>
             ))}
-            {inDev && (
-              <span className="pl-1.5" style={{ color: MUTED }}>· {inDev.split(' · ').join(', ')} in development</span>
-            )}
           </div>
         </div>
       </section>
 
       <PricingSection />
 
-      {/* ── CLOSER ── */}
       <section className="py-16 lg:py-24" style={{ borderTop: `1px solid ${RULE}` }}>
         <div className={WRAP}>
           <h2 className="font-extrabold mb-7" style={{ fontSize: 'clamp(36px, 5.4vw, 76px)', letterSpacing: '-0.03em', lineHeight: 1 }}>

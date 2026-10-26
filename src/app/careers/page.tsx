@@ -32,10 +32,6 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 
-// ========================================
-// TYPES (SHARED WITH BACKEND)
-// ========================================
-
 interface ApplicationFormData {
   name: string;
   email: string;
@@ -52,10 +48,6 @@ interface ValidationError {
   field: string;
   message: string;
 }
-
-// ========================================
-// MAIN COMPONENT
-// ========================================
 
 const CareersPage: React.FC = () => {
   const [showApplicationForm, setShowApplicationForm] = useState(false);
@@ -75,7 +67,6 @@ const CareersPage: React.FC = () => {
     resume: null
   });
 
-  // ✅ SECURE: Handle form input changes (client-side only)
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -83,17 +74,14 @@ const CareersPage: React.FC = () => {
       [name]: value
     }));
     
-    // Clear validation errors for this field
     setValidationErrors(prev => prev.filter(error => error.field !== name));
   };
 
-  // ✅ SECURE: Handle file selection (client-side only)
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
     
-    // Basic client-side validation for UX
     if (file) {
-      if (file.size > 10 * 1024 * 1024) { // 10MB
+      if (file.size > 10 * 1024 * 1024) {
         toast.error('File size must be less than 10MB');
         e.target.value = '';
         return;
@@ -113,16 +101,12 @@ const CareersPage: React.FC = () => {
     }));
   };
 
-  // ✅ SECURE: Submit application via server API
   const handleSubmitApplication = async (e: React.FormEvent) => {
     e.preventDefault();
-    // The honeypot is uncontrolled (bots fill it, React state never sees it); read it off the form.
     const honeypot = ((e.currentTarget as HTMLFormElement).elements.namedItem('website') as HTMLInputElement | null)?.value ?? '';
     setIsSubmitting(true);
     setValidationErrors([]);
 
-    // Until the app is live the upload endpoint does not exist. Open an email to
-    // careers@ with the details; the applicant attaches their CV there.
     if (!APP_LIVE) {
       const body = [
         `Name: ${formData.name}`, `Email: ${formData.email}`, `Phone: ${formData.phone}`,
@@ -136,10 +120,8 @@ const CareersPage: React.FC = () => {
     }
 
     try {
-      // ✅ ALL PROCESSING HAPPENS ON SERVER
       const formDataToSend = new FormData();
       
-      // Add all form fields
       Object.entries(formData).forEach(([key, value]) => {
         if (value !== null && value !== '') {
           formDataToSend.append(key, value);
@@ -150,28 +132,24 @@ const CareersPage: React.FC = () => {
 
       const response = await fetch(`${APP_ORIGIN}/api/careers`, {
         method: 'POST',
-        body: formDataToSend // Send as FormData for file upload
+        body: formDataToSend
       });
 
       const result = await response.json();
 
       if (response.ok && result.success) {
-        // Success - show confirmation
         setIsSubmitted(true);
         toast.success('Application submitted successfully! Check your email for confirmation.');
         
-        // Reset form
         setFormData({
           name: '', email: '', phone: '', position: '', experience: '',
           location: '', portfolio: '', coverLetter: '', resume: null
         });
         
-        // Clear file input
         const fileInput = document.getElementById('resume') as HTMLInputElement;
         if (fileInput) fileInput.value = '';
         
       } else {
-        // Handle validation errors from server
         if (result.details && Array.isArray(result.details)) {
           setValidationErrors(result.details);
           toast.error('Please fix the errors and try again');
@@ -188,7 +166,6 @@ const CareersPage: React.FC = () => {
     }
   };
 
-  // ✅ CLIENT-SIDE: Basic form validation for UX
   const getFieldError = (fieldName: string): string | undefined => {
     return validationErrors.find(error => error.field === fieldName)?.message;
   };
@@ -205,7 +182,6 @@ const CareersPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Hero Section */}
       <div className="relative bg-gradient-to-br from-blue-600 via-purple-600 to-purple-800 overflow-hidden">
         <div className="absolute inset-0 bg-black opacity-10"></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
@@ -240,7 +216,6 @@ const CareersPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Company Mission */}
       <div className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
@@ -287,7 +262,6 @@ const CareersPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Culture Section - Shortened for brevity */}
       <div id="culture" className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
@@ -296,11 +270,9 @@ const CareersPage: React.FC = () => {
               We've built a culture where innovation thrives, diversity is celebrated, and every voice matters
             </p>
           </div>
-          {/* Culture content here - same as before */}
         </div>
       </div>
 
-      {/* Open Positions */}
       <div className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
@@ -330,7 +302,6 @@ const CareersPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Contact Section */}
       <div className="py-20 bg-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
@@ -363,7 +334,6 @@ const CareersPage: React.FC = () => {
         </div>
       </div>
 
-      {/* ✅ SECURE APPLICATION MODAL - FRONTEND ONLY */}
       {showApplicationForm && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex flex-wrap items-center justify-center p-4 z-50">
           <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
@@ -385,7 +355,6 @@ const CareersPage: React.FC = () => {
               </div>
 
               {isSubmitted ? (
-                // Success State
                 <div className="text-center py-8">
                   <div className="w-16 h-16 bg-green-100 rounded-full flex flex-wrap items-center justify-center mx-auto mb-6">
                     <CheckCircle className="w-8 h-8 text-green-600" />
@@ -407,14 +376,10 @@ const CareersPage: React.FC = () => {
                   </button>
                 </div>
               ) : (
-                // Application Form
                 <form onSubmit={handleSubmitApplication} className="space-y-6">
-                  {/* Honeypot — invisible to people and screen readers; bots fill it, and the
-                      app quietly drops anything that arrives with it set. */}
                   <div aria-hidden="true" style={{ position: 'absolute', left: '-10000px', width: 1, height: 1, overflow: 'hidden' }}>
                     <label>Website<input type="text" name="website" tabIndex={-1} autoComplete="off" defaultValue="" /></label>
                   </div>
-                  {/* General Error Message */}
                   {validationErrors.length > 0 && (
                     <div className="bg-red-50 border border-red-200 rounded-lg p-4">
                       <div className="flex items-start space-x-3">

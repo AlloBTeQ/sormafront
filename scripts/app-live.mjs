@@ -1,8 +1,3 @@
-// Switches the old-URL redirects in vercel.json between the app and the
-// holding page. Pair it with NEXT_PUBLIC_APP_LIVE in Vercel (see lib/site.ts).
-//
-//   pnpm app-live off   → /dashboard, /auth/… land on /in-development   (today)
-//   pnpm app-live on    → they 308 to https://app.sormalitics.com/…     (launch)
 import { readFileSync, writeFileSync } from 'node:fs';
 
 const mode = process.argv[2];
@@ -10,7 +5,7 @@ if (mode !== 'on' && mode !== 'off') { console.error('Usage: pnpm app-live on|of
 
 const APP = 'https://app.sormalitics.com';
 const APP_ONLY = ['dashboard', 'auth', 'checkout', 'verify', 'invite', 'agreements', 'docs', 'plans', 'quotes', 'staff', 'subscribe', 'team', 'practice', 'landing', 'api'];
-const SUB_ROUTES_ONLY = ['store', 'fisi', 'pricing']; // the page lives here, its sub-routes are the app's
+const SUB_ROUTES_ONLY = ['store', 'fisi', 'pricing'];
 const live = mode === 'on';
 const to = (p) => (live ? `${APP}${p}` : '/in-development');
 

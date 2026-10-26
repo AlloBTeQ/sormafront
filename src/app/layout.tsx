@@ -12,16 +12,10 @@ import { SITE_URL } from '@/lib/site';
 import { organizationLd, websiteLd, ld } from '@/lib/seo';
 import { Toaster } from 'sonner';
 
-// No analytics on this origin yet, so no cookies are set and no consent banner
-// is needed. If GA/Clarity is added here, port CookieBanner + lib/legal/consent
-// from the app first — never load a tag unconditionally.
-
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  // The <title> carries the search terms; the tagline lives on the social card
-  // (openGraph/twitter below), where people read it rather than Google.
   title: {
-    default: 'Payroll, Accounting & Financial Reporting Software — SORMALITICS',
+    default: 'Agreements, Payroll, Accounting & Financial Reporting Software — SORMALITICS',
     template: '%s | SORMALITICS',
   },
   description:
@@ -50,8 +44,7 @@ export const metadata: Metadata = {
     apple: '/apple-touch-icon.png',
   },
   manifest: '/site.webmanifest',
-  // Google Search Console: paste the token from "HTML tag" verification into
-  // NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION on Vercel and redeploy. Unset → no tag.
+  // Search Console token, set on Vercel. Unset: no tag.
   ...(process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
     ? { verification: { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION } }
     : {}),
@@ -67,7 +60,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className="min-h-screen font-sans antialiased" suppressHydrationWarning>
-        {/* Who we are, sitewide. The product + prices are on / and /pricing. */}
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: ld([organizationLd, websiteLd]) }} />
         <SormaliticsLayout>{children}</SormaliticsLayout>
         <Toaster richColors position="top-center" />

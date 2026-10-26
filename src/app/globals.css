@@ -1,21 +1,17 @@
-/* Marketing-site styles. Fonts are self-hosted via @fontsource (imported in
-   layout.tsx) — no request to fonts.googleapis.com, which also means no
-   third-party call to disclose in the cookie/privacy notice. */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  /* Same variable names the app uses, so components copied from it work as-is. */
+  
   --font-syne: 'Outfit', ui-sans-serif, system-ui, sans-serif;
   --font-outfit: var(--font-syne);
   --font-dm-mono: 'DM Mono', ui-monospace, SFMono-Regular, monospace;
 }
 
 html { scroll-behavior: smooth; }
-/* Sticky 64px nav — keep #pricing etc. from landing under it. */
+
 section[id], div[id] { scroll-margin-top: 72px; }
-/* Default type is ink on white. The navy pages (home, pricing, FISI, footer)
-   set their own parchment colour; everything ported from the app (legal, help,
-   services, store…) expects dark text by default, as it had there. */
+
 body { background: #FFFFFF; color: #143152; }

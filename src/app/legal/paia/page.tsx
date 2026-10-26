@@ -1,26 +1,5 @@
 "use client"
 
-// src/app/legal/paia/page.tsx
-// ─────────────────────────────────────────────────────────────────────────────
-// PAIA manual — Promotion of Access to Information Act 2 of 2000, section 51.
-//
-// Why this is a page and not just a PDF in a drawer
-// ────────────────────────────────────────────────
-// s51 requires the manual to be AVAILABLE — at the premises and, if you have a
-// website, on it. The exemption that once excused smaller private bodies
-// expired on 31 December 2021, so every private body needs one regardless of
-// size. Non-compliance is an offence carrying a fine or up to two years.
-//
-// Every identifying detail renders from lib/legal/entities.ts, so the manual
-// cannot drift from the Terms, the Privacy Policy or the Information Officer
-// certificate. That matters more here than elsewhere: a manual naming the wrong
-// company or an unreachable officer is worse than no manual, because it looks
-// like compliance while defeating the purpose.
-//
-// The Information Officer is registered with the Information Regulator under
-// 2026-065021 (23 August 2026).
-// ─────────────────────────────────────────────────────────────────────────────
-
 import React from 'react';
 import Link from 'next/link';
 import {
@@ -37,7 +16,6 @@ export default function PaiaManualPage() {
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-3xl mx-auto px-4">
 
-        {/* Header */}
         <div className="text-center mb-10">
           <p className="text-xs font-semibold uppercase tracking-[0.15em] text-blue-600 mb-3">
             Promotion of Access to Information Act 2 of 2000
@@ -54,7 +32,6 @@ export default function PaiaManualPage() {
 
         <div className="space-y-6">
 
-          {/* 1 */}
           <section className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
               <FileText className="h-5 w-5 mr-2 text-blue-600" /> 1. Purpose of this manual
@@ -65,7 +42,6 @@ export default function PaiaManualPage() {
             </div>
           </section>
 
-          {/* 2 */}
           <section className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
               <Building2 className="h-5 w-5 mr-2 text-gray-600" /> 2. Particulars of the private body
@@ -99,7 +75,6 @@ export default function PaiaManualPage() {
             </div>
           </section>
 
-          {/* 3 */}
           <section className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
               <BookOpen className="h-5 w-5 mr-2 text-teal-600" /> 3. The Regulator&apos;s PAIA Guide
@@ -118,7 +93,6 @@ export default function PaiaManualPage() {
             </div>
           </section>
 
-          {/* 4 */}
           <section className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
               <FolderOpen className="h-5 w-5 mr-2 text-amber-600" /> 4. Records held, by category
@@ -166,7 +140,6 @@ export default function PaiaManualPage() {
             </div>
           </section>
 
-          {/* 5 */}
           <section className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
               <Send className="h-5 w-5 mr-2 text-blue-600" /> 5. How to request access
@@ -197,7 +170,6 @@ export default function PaiaManualPage() {
             </div>
           </section>
 
-          {/* 6 */}
           <section className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
               <ShieldOff className="h-5 w-5 mr-2 text-red-600" /> 6. Grounds for refusal
@@ -217,7 +189,6 @@ export default function PaiaManualPage() {
             </div>
           </section>
 
-          {/* 7 */}
           <section className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
               <UserCheck className="h-5 w-5 mr-2 text-green-600" /> 7. Requests under POPIA
@@ -249,7 +220,6 @@ export default function PaiaManualPage() {
             </div>
           </section>
 
-          {/* 8 */}
           <section className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
               <MapPin className="h-5 w-5 mr-2 text-gray-600" /> 8. Availability and review

@@ -1,9 +1,6 @@
-# One pull request per ecosystem per run, not one per package.
-# Majors ride in the same PR — the Vercel preview build is the gate: if a major
-# breaks the build (as lucide-react 1.x did with brand icons), the PR fails
-# before anything reaches main.
 version: 2
 updates:
+# One grouped PR per run; the Vercel preview build is the gate.
   - package-ecosystem: npm
     directory: /
     schedule:

@@ -1,8 +1,3 @@
-// Marketing-site stand-in for the app's PrivacyActions.
-//
-// Exporting or deleting data needs the visitor's session, and sessions live on
-// app.sormalitics.com — this origin has none. So the buttons here hand off to the
-// app's copy of this page, where the working controls are (sign-in required).
 import { Download, Trash2, Mail } from 'lucide-react';
 import { APP_URL } from '@/lib/site';
 

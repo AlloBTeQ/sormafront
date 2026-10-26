@@ -1,34 +1,5 @@
 "use client"
 
-// src/app/legal/privacy/page.tsx
-// ─────────────────────────────────────────────────────────────────────────────
-// Rewritten 23 August 2026. What changed and why:
-//
-//   - The subprocessor list is now the real one. The previous version named
-//     PayPal, Google Cloud, SendGrid, Mailgun, Intercom, Zendesk and Hotjar —
-//     none of which are integrated — while omitting Vercel, MongoDB Atlas,
-//     Upstash, Twilio, Microsoft Clarity, Sentry, IPinfo and VirusTotal, all of
-//     which receive data. Naming a processor you do not use is not a harmless
-//     placeholder; it is a false statement about who holds people's payroll
-//     data.
-//   - "Primary data centers in Ireland" and "local data centers in Cape Town"
-//     are gone. We own no data centres.
-//   - Data residency options on Business/Practitioner plans are gone. That was
-//     a paid promise with no implementation.
-//   - Security section reduced to what the system does. No end-to-end
-//     encryption claim (we hold the key), no 90-day key rotation, no security
-//     questions, no SOC 2.
-//   - Response-time commitments reduced to what a team this size can meet.
-//   - Retention now describes the actual erasure behaviour implemented in
-//     lib/privacy/erasure.ts, including that financial records are anonymised
-//     rather than deleted.
-//   - CROOM removed.
-//   - Legal framework extended to the seven jurisdictions we actually serve.
-//
-// Version lives in lib/legal/versions.ts. Bump LEGAL_VERSIONS.privacy on a
-// material change.
-// ─────────────────────────────────────────────────────────────────────────────
-
 import React, { useState } from 'react';
 import Link from 'next/link';
 import {
@@ -646,8 +617,6 @@ const SORMALITICSPrivacyPolicy = () => {
             {' '}Requests under the Promotion of Access to Information Act go to the same address, or see our{' '}
             <Link href="/legal/paia" className="text-blue-600 hover:underline">PAIA manual</Link>.</p>
 
-          {/* Rendered from lib/legal/entities.ts, so the number on this page can
-              never drift from the certificate. */}
           {ALLOBTEQ.informationOfficerRegistration && (
             <div className="bg-green-50 border border-green-200 rounded-lg p-4">
               <div className="flex items-start space-x-3">
@@ -677,10 +646,6 @@ const SORMALITICSPrivacyPolicy = () => {
               <h5 className="font-semibold text-gray-900 mb-1">United Kingdom</h5>
               <p className="text-gray-700 text-sm">Information Commissioner&apos;s Office</p>
               <p className="text-gray-600 text-sm">ico.org.uk · 0303 123 1113</p>
-              {/* Renders only once the ICO has ISSUED the number. An application
-                  reference is not a registration number, and publishing one as
-                  though it were would be exactly the kind of overstatement the
-                  rest of this rewrite removed. See lib/legal/entities.ts. */}
               {POLOMPA.dataProtectionRegistration?.status === 'registered' &&
                 POLOMPA.dataProtectionRegistration.number && (
                 <p className="text-gray-600 text-sm mt-1">
@@ -711,7 +676,6 @@ const SORMALITICSPrivacyPolicy = () => {
   return (
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-4xl mx-auto px-4">
-        {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">Privacy Policy</h1>
           <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-sm text-gray-600">
@@ -730,7 +694,6 @@ const SORMALITICSPrivacyPolicy = () => {
           </div>
         </div>
 
-        {/* Quick Summary */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
           <h2 className="text-xl font-semibold mb-4 flex items-center">
             <Eye className="h-5 w-5 mr-2 text-blue-600" />
@@ -758,7 +721,6 @@ const SORMALITICSPrivacyPolicy = () => {
           </div>
         </div>
 
-        {/* Table of Contents */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
           <h2 className="text-xl font-semibold mb-4">Contents</h2>
           <div className="grid md:grid-cols-2 gap-3">
@@ -779,7 +741,6 @@ const SORMALITICSPrivacyPolicy = () => {
           </div>
         </div>
 
-        {/* Content Sections */}
         <div className="space-y-6">
           {sections.map((section) => (
             <div
@@ -818,17 +779,11 @@ const SORMALITICSPrivacyPolicy = () => {
           ))}
         </div>
 
-        {/* Quick Actions
-            These were buttons with no onClick and no endpoint behind them, on a
-            page whose §7 promised self-service. They now call
-            /api/user/data-export and /api/user/delete-account — see
-            components/legal/PrivacyActions.tsx. */}
         <div className="mt-12 bg-white rounded-lg shadow-sm border border-gray-200 p-6">
           <h2 className="text-xl font-semibold mb-4">Exercise your rights</h2>
           <PrivacyActions />
         </div>
 
-        {/* Footer */}
         <div className="mt-12 text-center text-gray-600">
           <p className="text-sm">
             SORMALITICS is operated by {ALLOBTEQ.registeredName} (reg. {ALLOBTEQ.registrationNumber}) and {POLOMPA.registeredName} (no. {POLOMPA.registrationNumber}).

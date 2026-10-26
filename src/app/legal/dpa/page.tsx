@@ -1,30 +1,5 @@
 "use client"
 
-// src/app/legal/dpa/page.tsx
-// ─────────────────────────────────────────────────────────────────────────────
-// Data Processing Agreement. New, 23 August 2026.
-//
-// Why this exists
-// ───────────────
-// Practitioners upload their clients' employee, payroll and tax data. For that
-// data they are the controller and we are the processor. GDPR Article 28(3)
-// requires that relationship to be governed by a written contract containing
-// specific terms, and POPIA section 21 requires a written operator agreement.
-// Neither existed. The Privacy Policy correctly described us as a processor
-// while nothing recorded the instructions we were supposedly processing under.
-//
-// It is also the first document an accounting firm's compliance officer asks
-// for, so its absence was a commercial blocker as much as a legal one.
-//
-// The eight lettered obligations in section 5 map to Art. 28(3)(a)–(h) in
-// order. Keep them in that order — a reviewer checks them off against the
-// article, and reordering makes that harder for no benefit.
-//
-// Acceptance is recorded per practitioner (User.legal.dpaVersion) and enforced
-// in POST /api/practice/clients. Bump LEGAL_VERSIONS.dpa on a material change
-// and every practitioner is asked again.
-// ─────────────────────────────────────────────────────────────────────────────
-
 import React from 'react';
 import Link from 'next/link';
 import {
@@ -41,7 +16,6 @@ export default function DataProcessingAgreementPage() {
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-3xl mx-auto px-4">
 
-        {/* Header */}
         <div className="text-center mb-10">
           <h1 className="text-4xl font-bold text-gray-900 mb-3">Data Processing Agreement</h1>
           <p className="text-gray-600 mb-4">For practitioners processing client data through SORMALITICS</p>
@@ -51,7 +25,6 @@ export default function DataProcessingAgreementPage() {
           </div>
         </div>
 
-        {/* Plain-English summary */}
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-5 mb-8">
           <h2 className="font-semibold text-blue-900 mb-2 flex items-center">
             <FileText className="h-5 w-5 mr-2" /> What this is, in plain English
@@ -65,7 +38,6 @@ export default function DataProcessingAgreementPage() {
 
         <div className="space-y-6">
 
-          {/* 1 */}
           <section className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-4">1. Parties and scope</h2>
             <div className="space-y-3 text-gray-700 text-sm">
@@ -80,7 +52,6 @@ export default function DataProcessingAgreementPage() {
             </div>
           </section>
 
-          {/* 2 */}
           <section className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
               <Server className="h-5 w-5 mr-2 text-gray-600" /> 2. What we process, and for whom
@@ -102,7 +73,6 @@ export default function DataProcessingAgreementPage() {
             </div>
           </section>
 
-          {/* 3 */}
           <section className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
               <Users className="h-5 w-5 mr-2 text-blue-600" /> 3. Your obligations as controller
@@ -116,7 +86,6 @@ export default function DataProcessingAgreementPage() {
             </div>
           </section>
 
-          {/* 4 */}
           <section className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-4">4. Our undertaking</h2>
             <div className="space-y-3 text-gray-700 text-sm">
@@ -126,7 +95,6 @@ export default function DataProcessingAgreementPage() {
             </div>
           </section>
 
-          {/* 5 — Art 28(3)(a)-(h) */}
           <section className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
               <Shield className="h-5 w-5 mr-2 text-green-600" /> 5. Article 28(3) obligations
@@ -144,7 +112,6 @@ export default function DataProcessingAgreementPage() {
             </div>
           </section>
 
-          {/* 6 */}
           <section className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
               <Lock className="h-5 w-5 mr-2 text-red-600" /> 6. Security measures
@@ -174,7 +141,6 @@ export default function DataProcessingAgreementPage() {
             </div>
           </section>
 
-          {/* 7 */}
           <section className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-4">7. Data subject requests</h2>
             <div className="space-y-3 text-gray-700 text-sm">
@@ -185,7 +151,6 @@ export default function DataProcessingAgreementPage() {
             </div>
           </section>
 
-          {/* 8 */}
           <section className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-4">8. Sub-processors</h2>
             <div className="space-y-3 text-gray-700 text-sm">
@@ -201,7 +166,6 @@ export default function DataProcessingAgreementPage() {
             </div>
           </section>
 
-          {/* 9 */}
           <section className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
               <Trash2 className="h-5 w-5 mr-2 text-gray-600" /> 9. Retention, return and deletion
@@ -230,7 +194,6 @@ export default function DataProcessingAgreementPage() {
             </div>
           </section>
 
-          {/* 10 */}
           <section className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
               <AlertTriangle className="h-5 w-5 mr-2 text-red-600" /> 10. Personal data breaches
@@ -244,7 +207,6 @@ export default function DataProcessingAgreementPage() {
             </div>
           </section>
 
-          {/* 11 */}
           <section className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-4">11. Audit and demonstrating compliance</h2>
             <div className="space-y-3 text-gray-700 text-sm">
@@ -254,7 +216,6 @@ export default function DataProcessingAgreementPage() {
             </div>
           </section>
 
-          {/* 12 */}
           <section className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
               <Globe className="h-5 w-5 mr-2 text-blue-600" /> 12. International transfers
@@ -267,7 +228,6 @@ export default function DataProcessingAgreementPage() {
             </div>
           </section>
 
-          {/* 13 */}
           <section className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-4">13. Liability, term and general</h2>
             <div className="space-y-3 text-gray-700 text-sm">
@@ -280,7 +240,6 @@ export default function DataProcessingAgreementPage() {
             </div>
           </section>
 
-          {/* Contact */}
           <section className="bg-gray-50 rounded-lg border border-gray-200 p-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-3">Contact</h2>
             <div className="text-sm text-gray-700 space-y-1">

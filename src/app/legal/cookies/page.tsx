@@ -1,29 +1,5 @@
 "use client"
 
-// src/app/legal/cookies/page.tsx
-// ─────────────────────────────────────────────────────────────────────────────
-// Rewritten 23 August 2026, against the cookies this application actually sets.
-//
-// What was wrong:
-//   - The Marketing category listed a Meta Pixel (_fbp) and a LinkedIn Insight
-//     Tag (li_fat_id). Neither is integrated. The only LinkedIn reference in the
-//     codebase is a social icon in the footer. Disclosing tracking you do not do
-//     is still an inaccurate disclosure, and it invites a question you cannot
-//     answer well.
-//   - The Essential list named fk:session, fk:csrf and __Host-sorm-fp. The real
-//     cookies are auth-token, refresh-token, session-info and active-client.
-//   - The Preferences list described fk:theme / fk:currency / fk:locale /
-//     fk:country as cookies with one-year lifetimes. They are localStorage
-//     entries, which behave differently and are not cookies at all. They now
-//     have their own section.
-//   - `preferences` defaulted to TRUE before the user had chosen anything —
-//     pre-ticked consent, which GDPR Article 4(11) does not accept as consent.
-//     The shared module now defaults everything to deny.
-//   - This page kept its own copy of the consent read/write helpers. There is
-//     now one module, lib/legal/consent.ts, shared with the banner and with the
-//     analytics loader.
-// ─────────────────────────────────────────────────────────────────────────────
-
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import {
@@ -36,9 +12,6 @@ import {
   ALLOW_ALL, DENY_ALL, type Consent,
 } from '@/lib/legal/consent';
 import { LEGAL_VERSIONS } from '@/lib/legal/versions';
-
-
-// ─── Types ────────────────────────────────────────────────────
 
 interface CookieCategory {
   id: 'essential' | 'analytics' | 'marketing' | 'preferences';
@@ -55,8 +28,6 @@ interface CookieCategory {
     provider: string;
   }[];
 }
-
-// ─── Cookie inventory ─────────────────────────────────────────
 
 const CATEGORIES: CookieCategory[] = [
   {
@@ -111,9 +82,6 @@ const CATEGORIES: CookieCategory[] = [
   },
 ];
 
-// Browser storage that is NOT a cookie. Listed separately because the
-// distinction is real: localStorage has no expiry, is never sent to the server,
-// and is not cleared by a browser's "delete cookies" control.
 const LOCAL_STORAGE_ITEMS: { name: string; purpose: string; category: string }[] = [
   { name: 'fk:cookie-consent',            purpose: 'Your choices on this page',                     category: 'Essential' },
   { name: 'fk:cookie-consent-date',       purpose: 'When you last made those choices',              category: 'Essential' },
@@ -125,16 +93,8 @@ const LOCAL_STORAGE_ITEMS: { name: string; purpose: string; category: string }[]
   { name: 'sorm-sidebar-collapsed',       purpose: 'Whether the sidebar is collapsed',              category: 'Preferences' },
   { name: 'sormalitics:lastPayrollRegion', purpose: 'The payroll region you last used',             category: 'Preferences' },
   { name: '*_draft',                      purpose: 'Unsent document drafts, kept so you do not lose work', category: 'Preferences' },
-  // Not consent-gated, and listed here so that is visible rather than implied.
-  // sessionStorage, so it dies with the browser tab.
   { name: 'sentryReplaySession',          purpose: 'Ties the pieces of one error recording together. Session storage — cleared when you close the tab. Set by our error tracking, which is not part of analytics consent; see "Error recordings" below.', category: 'Diagnostics' },
 ];
-
-// Consent state comes from lib/legal/consent.ts. This page used to keep its own
-// loadConsent/saveConsent pair writing the same localStorage key — two writers,
-// no readers, which is how "Reject all" came to do nothing at all.
-
-// ─── Toggle ───────────────────────────────────────────────────
 
 function Toggle({ checked, onChange, disabled }: { checked: boolean; onChange: () => void; disabled?: boolean }) {
   return (
@@ -155,8 +115,6 @@ function Toggle({ checked, onChange, disabled }: { checked: boolean; onChange: (
     </button>
   );
 }
-
-// ─── Expandable cookie table ──────────────────────────────────
 
 function CookieTable({ cookies }: { cookies: CookieCategory['cookies'] }) {
   return (
@@ -185,8 +143,6 @@ function CookieTable({ cookies }: { cookies: CookieCategory['cookies'] }) {
   );
 }
 
-// ─── Category card ────────────────────────────────────────────
-
 function CategoryCard({
   cat,
   enabled,
@@ -202,7 +158,6 @@ function CategoryCard({
   return (
     <div className={`rounded-2xl border-2 bg-white/80 backdrop-blur-sm transition-all ${enabled ? cat.bg : 'border-slate-200'}`}>
       <div className="p-5">
-        {/* Header row */}
         <div className="flex items-start gap-4">
           <div className={`w-10 h-10 rounded-xl flex flex-wrap items-center justify-center flex-shrink-0 ${enabled ? cat.bg : 'bg-slate-100'}`}>
             <Icon className={`w-5 h-5 ${enabled ? cat.accent : 'text-slate-400'}`} />
@@ -226,7 +181,6 @@ function CategoryCard({
           </div>
         </div>
 
-        {/* Expand trigger */}
         <button
           type="button"
           onClick={() => setExpanded(v => !v)}
@@ -242,8 +196,6 @@ function CategoryCard({
           {cat.cookies.length > 0 ? (
             <CookieTable cookies={cat.cookies} />
           ) : (
-            // Preferences and Marketing set no cookies today. An empty table
-            // header with no rows reads as a rendering fault; say so instead.
             <p className="mt-4 text-xs text-slate-400 italic">
               {cat.id === 'marketing'
                 ? 'No marketing cookies are currently set. We would update this page and ask again before that changed.'
@@ -256,19 +208,13 @@ function CategoryCard({
   );
 }
 
-// ─── PAGE ─────────────────────────────────────────────────────
-
 const fmt = (d: Date) => d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 
 export default function CookiesPage() {
-  // Starts at DENY_ALL, not { preferences: true }. A pre-ticked box is not
-  // consent under GDPR Art. 4(11), and the previous default meant a visitor who
-  // never touched this page was recorded as having agreed to preferences.
   const [consent, setConsent] = useState<Consent>(DENY_ALL);
   const [saved, setSaved] = useState(false);
   const [consentDate, setConsentDate] = useState<string | null>(null);
 
-  // Read after mount — localStorage during render desynchronises hydration.
   useEffect(() => {
     setConsent(getConsent());
     const d = readConsentDate();
@@ -310,7 +256,6 @@ export default function CookiesPage() {
 
   return (
     <div className="min-h-screen">
-      {/* Decorative blobs */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden -z-10">
         <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-blue-200/20 rounded-full blur-3xl" />
         <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-teal-200/15 rounded-full blur-3xl" />
@@ -318,7 +263,6 @@ export default function CookiesPage() {
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
 
-        {/* ── Page header ── */}
         <div className="mb-10">
           <div className="flex items-center gap-2 mb-4">
             <Link href="/legal/privacy" className="text-xs text-slate-400 hover:text-slate-600 transition-colors">Privacy</Link>
@@ -352,7 +296,6 @@ export default function CookiesPage() {
           )}
         </div>
 
-        {/* ── Quick actions ── */}
         <div className="flex flex-wrap gap-2.5 mb-8">
           <button
             onClick={handleAcceptAll}
@@ -368,7 +311,6 @@ export default function CookiesPage() {
           </button>
         </div>
 
-        {/* ── Categories ── */}
         <div className="space-y-4 mb-8">
           {CATEGORIES.map(cat => (
             <CategoryCard
@@ -380,11 +322,6 @@ export default function CookiesPage() {
           ))}
         </div>
 
-        {/* ── Local storage ──
-            Kept separate from the cookie categories on purpose: these are not
-            cookies, they never reach our servers, and a browser's "clear
-            cookies" control does not remove them. Listing them among the
-            cookies, as this page used to, was misleading in both directions. */}
         <div className="mb-8 bg-white/70 backdrop-blur-sm border border-slate-200 rounded-2xl p-6">
           <h2 className="text-base font-bold text-slate-800 mb-2 flex items-center gap-2"
             style={{ fontFamily: 'var(--font-syne, sans-serif)' }}>
@@ -423,7 +360,6 @@ export default function CookiesPage() {
           </p>
         </div>
 
-        {/* ── Save bar ── */}
         <div className="sticky bottom-4 z-10">
           <div className="bg-white/90 backdrop-blur-md border border-slate-200 rounded-2xl px-5 py-3.5 flex flex-wrap gap-y-2 items-center justify-between shadow-lg shadow-slate-200/60">
             <div>
@@ -464,7 +400,6 @@ export default function CookiesPage() {
           </div>
         </div>
 
-        {/* ── Policy text ── */}
         <div className="mt-12 prose prose-slate prose-sm max-w-none">
           <div className="bg-white/60 backdrop-blur-sm border border-slate-200/80 rounded-2xl p-8 space-y-6">
 

@@ -6,22 +6,6 @@ import Link from 'next/link';
 import { BUSINESS_TYPES } from '@/lib/fisi/config';
 import './FisiLanding.css';
 
-/**
- * FISI — public marketing landing.
- *
- * Replaces the 1255-line self-contained prototype that previously lived here.
- * That page carried its own copy of BUSINESS_TYPES, its own NAV, ~280 lines of
- * inline CSS and a client-side mock of registration, imported nothing from
- * @/lib/fisi, and had no links out at all -- so /fisi was a dead end.
- *
- * The design is harvested from FisiLanding.css, which already described this
- * page in full (nav, hero, record panel, problem, tools, benefits, trust,
- * final, footer). Only the markup was missing.
- *
- * Employer types render from lib/fisi/config -- one source of truth, so the
- * landing can never drift from what signup actually offers.
- */
-
 type AuthState = 'checking' | 'anon' | 'no-profile' | 'ready';
 
 interface Cta {
@@ -91,9 +75,6 @@ export default function FisiLandingPage() {
   const [scrolled, setScrolled] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
 
-  // On the marketing origin there is no session to read (cookies belong to
-  // app.sormalitics.com), so the CTA is always the signup. The app's own
-  // /fisi/signup forwards an operator who is already set up to their hub.
   const auth: AuthState = 'anon';
 
   useEffect(() => {
@@ -103,7 +84,6 @@ export default function FisiLandingPage() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // .reveal / .reveal.in is defined in the stylesheet but needs an observer.
   useEffect(() => {
     const nodes = rootRef.current?.querySelectorAll('.reveal');
     if (!nodes?.length) return;
@@ -130,7 +110,6 @@ export default function FisiLandingPage() {
 
   return (
     <div className="fisi" ref={rootRef}>
-      {/* ---------- NAV ---------- */}
       <header className={scrolled ? 'nav scrolled' : 'nav'}>
         <div className="wrap nav-inner">
           <Link href="/fisi" className="brand" aria-label="FISI home">
@@ -161,7 +140,6 @@ export default function FisiLandingPage() {
         </div>
       </header>
 
-      {/* ---------- HERO ---------- */}
       <section className="hero">
         <div className="wrap hero-grid">
           <div>
@@ -190,7 +168,6 @@ export default function FisiLandingPage() {
             </p>
           </div>
 
-          {/* signature panel */}
           <div className="record" aria-hidden="true">
             <div className="record-bar">
               <span className="dot live" />
@@ -231,7 +208,6 @@ export default function FisiLandingPage() {
         </div>
       </section>
 
-      {/* ---------- PROBLEM ---------- */}
       <section className="section problem">
         <div className="wrap">
           <p className="problem-lead reveal">
@@ -255,7 +231,6 @@ export default function FisiLandingPage() {
         </div>
       </section>
 
-      {/* ---------- TOOLS ---------- */}
       <section className="section" id="what">
         <div className="wrap">
           <div className="section-head reveal">
@@ -281,7 +256,6 @@ export default function FisiLandingPage() {
         </div>
       </section>
 
-      {/* ---------- WHO IT IS FOR ---------- */}
       <section className="section" id="who">
         <div className="wrap">
           <div className="section-head reveal">
@@ -306,7 +280,6 @@ export default function FisiLandingPage() {
         </div>
       </section>
 
-      {/* ---------- BENEFITS ---------- */}
       <section className="section" id="why">
         <div className="wrap">
           <div className="section-head reveal">
@@ -325,7 +298,6 @@ export default function FisiLandingPage() {
         </div>
       </section>
 
-      {/* ---------- TRUST ---------- */}
       <section className="section trust">
         <div className="wrap">
           <div className="trust-card reveal">
@@ -347,7 +319,6 @@ export default function FisiLandingPage() {
         </div>
       </section>
 
-      {/* ---------- FINAL ---------- */}
       <section className="final">
         <div className="wrap final-inner">
           <h2>
@@ -359,7 +330,6 @@ export default function FisiLandingPage() {
         </div>
       </section>
 
-      {/* ---------- FOOTER ---------- */}
       <footer>
         <div className="wrap foot-inner">
           <div className="foot-brand">

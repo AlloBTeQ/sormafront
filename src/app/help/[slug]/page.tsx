@@ -15,9 +15,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const article = articles.find((a) => a.slug === slug);
   if (!article) return { title: 'Article Not Found — SORMALITICS Help' };
   return {
-    // `absolute` skips the root "%s | SORMALITICS" template (the title already
-    // ends in "SORMALITICS Help"); the canonical is set here so the article does
-    // not inherit /help from help/layout.tsx.
     title: { absolute: `${article.title} — SORMALITICS Help` },
     description: article.summary,
     alternates: { canonical: `/help/${slug}` },
@@ -37,7 +34,6 @@ export default async function ArticlePage({ params }: Props) {
 
   const category = categories.find((c) => c.slug === article.categorySlug);
 
-  // Related articles: same category, excluding current
   const related = articles
     .filter((a) => a.categorySlug === article.categorySlug && a.slug !== article.slug)
     .slice(0, 2);
@@ -46,10 +42,8 @@ export default async function ArticlePage({ params }: Props) {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
       <div className="grid lg:grid-cols-4 gap-10">
 
-        {/* ── Article body ── */}
         <article className="lg:col-span-3">
 
-          {/* Breadcrumb */}
           <nav className="flex items-center gap-2 text-xs text-slate-400 mb-8">
             <Link href="/help" className="hover:text-blue-600 transition-colors">
               Help Center
@@ -66,7 +60,6 @@ export default async function ArticlePage({ params }: Props) {
             <span className="text-slate-600 truncate">{article.title}</span>
           </nav>
 
-          {/* Header */}
           <header className="mb-10">
             {category && (
               <div className="flex items-center gap-2 mb-4">
@@ -82,10 +75,8 @@ export default async function ArticlePage({ params }: Props) {
             <p className="text-lg text-slate-500 leading-relaxed">{article.summary}</p>
           </header>
 
-          {/* Divider */}
           <div className="h-px bg-gradient-to-r from-blue-100 via-teal-100 to-transparent mb-10" />
 
-          {/* Body */}
           <div className="prose prose-slate max-w-none space-y-5">
             {article.body.map((paragraph, i) => (
               <p key={i} className="text-slate-700 leading-7 text-base">
@@ -94,7 +85,6 @@ export default async function ArticlePage({ params }: Props) {
             ))}
           </div>
 
-          {/* Tags */}
           {article.tags.length > 0 && (
             <div className="mt-10 pt-8 border-t border-slate-100 flex items-center gap-3 flex-wrap">
               <Tag className="w-4 h-4 text-slate-300 flex-shrink-0" />
@@ -109,7 +99,6 @@ export default async function ArticlePage({ params }: Props) {
             </div>
           )}
 
-          {/* Navigation */}
           <div className="mt-10 pt-8 border-t border-slate-100 flex flex-wrap gap-y-2 items-center justify-between">
             <Link
               href="/help"
@@ -121,10 +110,8 @@ export default async function ArticlePage({ params }: Props) {
           </div>
         </article>
 
-        {/* ── Sidebar ── */}
         <aside className="lg:col-span-1 space-y-6">
 
-          {/* Related articles */}
           {related.length > 0 && (
             <div className="bg-white rounded-2xl border border-slate-100 p-5">
               <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-4">
@@ -147,7 +134,6 @@ export default async function ArticlePage({ params }: Props) {
             </div>
           )}
 
-          {/* Browse by category */}
           <div className="bg-white rounded-2xl border border-slate-100 p-5">
             <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-4">
               All topics
@@ -170,7 +156,6 @@ export default async function ArticlePage({ params }: Props) {
             </div>
           </div>
 
-          {/* Still need help */}
           <div className="bg-gradient-to-br from-blue-600 to-teal-500 rounded-2xl p-5 text-white">
             <h3 className="text-sm font-bold mb-2">Still need help?</h3>
             <p className="text-xs text-blue-100 mb-4 leading-relaxed">

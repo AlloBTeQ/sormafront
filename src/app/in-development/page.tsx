@@ -3,10 +3,6 @@
 import React, { useEffect, useState } from 'react';
 import { ArrowRight, Mail } from 'lucide-react';
 
-// Where every app link lands while app.sormalitics.com is not live
-// (see APP_LIVE in lib/site.ts). The link it came from rides in the hash —
-// /in-development#/auth/register — so the copy can match what they clicked.
-
 const NAVY = '#143152';
 const DEEP = '#0E2540';
 const CARD = '#183A5F';
@@ -35,7 +31,7 @@ function intentFor(target: string): Intent {
   }
   if (p.startsWith('/store'))
     return { eyebrow: 'DOCUMENT STORE', title: 'Purchases open at launch.', line: 'Browse every template now; buying and downloading switch on when the app goes live.', subject: 'Document store — notify me' };
-  return { eyebrow: 'START FREE', title: 'We are putting on the finishing touches.', line: 'SORMALITICS is in its final stage of development. Leave your email and you will be among the first in.', subject: 'Early access' };
+  return { eyebrow: 'START FREE', title: 'We are putting on the finishing touches.', line: 'SORMALITICS opens shortly. Leave your email and you will be among the first in.', subject: 'Early access' };
 }
 
 export default function InDevelopment() {
@@ -55,7 +51,7 @@ export default function InDevelopment() {
         <div className="inline-flex items-center gap-2 px-3 py-1.5 mb-7 text-xs"
           style={{ ...MONO, border: `1px solid ${GOLD}`, background: GOLD_WASH, color: GOLD }}>
           <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: GOLD }} />
-          {intent.eyebrow} · IN DEVELOPMENT
+          {intent.eyebrow} · OPENING SOON
         </div>
         <h1 className="font-extrabold mb-6 max-w-[900px]"
           style={{ fontSize: 'clamp(38px, 6vw, 80px)', lineHeight: 1, letterSpacing: '-0.03em' }}>

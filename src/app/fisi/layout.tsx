@@ -1,8 +1,6 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 
-// Marketing copy of the FISI landing. The app frame (FisiShell) belongs to the
-// app's /fisi/* routes, which live on app.sormalitics.com.
 export const metadata: Metadata = {
   title: { absolute: 'FISI — Proof of income, formalised' },
   description:

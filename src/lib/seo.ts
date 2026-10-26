@@ -1,23 +1,9 @@
-// src/lib/seo.ts
-// ─────────────────────────────────────────────────────────────────────────────
-// One place for page metadata and structured data (18 Oct 2026).
-//
-// Why a helper: Next.js does NOT deep-merge `openGraph`/`twitter`. A page that
-// sets only `title` inherits the ROOT layout's openGraph whole — so every shared
-// link to /pricing, /services, /about… previewed as the home page. pageMeta()
-// gives each page its own card.
-//
-// Structured data is built from config/plans.ts so prices can't drift. No
-// ratings or reviews are emitted: we have none, and inventing them is against
-// Google's guidelines (and the law).
-// ─────────────────────────────────────────────────────────────────────────────
 
 import type { Metadata } from 'next';
 import { TIERS } from '@/config/plans';
 import { SITE_URL } from '@/lib/site';
 import { JURISDICTIONS } from '@/lib/payroll/jurisdictionStatus';
 
-// Countries payroll is live in — derived, never hand-typed (same source as the home page).
 const LIVE_CODES = JURISDICTIONS.filter(j => j.status === 'live').map(j => j.code);
 
 export const BRAND = 'SORMALITICS';
@@ -43,8 +29,6 @@ export function pageMeta({ path, title, description }: { path: string; title: st
   };
 }
 
-// ── JSON-LD ──────────────────────────────────────────────────────────────────
-
 export const organizationLd = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
@@ -67,7 +51,7 @@ export const websiteLd = {
   publisher: { '@id': `${SITE_URL}/#organization` },
 };
 
-/** The product, with one Offer per purchasable plan — monthly ZAR from config/plans.ts. */
+// Offers are built from config/plans.ts. No ratings or reviews: we have none, and inventing them breaks Google's rules.
 export const softwareLd = {
   '@context': 'https://schema.org',
   '@type': 'SoftwareApplication',
@@ -89,7 +73,7 @@ export const softwareLd = {
   })),
 };
 
-/** Serialise for a <script type="application/ld+json">; `<` escaped so no tag can close early. */
+// Escapes < so the JSON cannot close its <script> tag early.
 export function ld(obj: unknown): string {
   return JSON.stringify(obj).replace(/</g, '\\u003c');
 }

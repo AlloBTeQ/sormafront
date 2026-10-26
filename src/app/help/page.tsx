@@ -5,8 +5,6 @@ import Link from 'next/link';
 import { Search, ChevronDown, ChevronUp, ArrowRight, Mail, MessageCircle } from 'lucide-react';
 import { categories, faqs, articles } from '@/lib/help/content';
 
-// ─── Search filter ────────────────────────────────────────────────────────────
-
 function useSearch(query: string) {
   return useMemo(() => {
     const q = query.toLowerCase().trim();
@@ -25,8 +23,6 @@ function useSearch(query: string) {
     };
   }, [query]);
 }
-
-// ─── FAQ Accordion ────────────────────────────────────────────────────────────
 
 function FaqItem({
   question,
@@ -62,8 +58,6 @@ function FaqItem({
   );
 }
 
-// ─── Article card ─────────────────────────────────────────────────────────────
-
 function ArticleCard({ slug, title, summary, tags }: { slug: string; title: string; summary: string; tags: string[] }) {
   return (
     <Link
@@ -91,8 +85,6 @@ function ArticleCard({ slug, title, summary, tags }: { slug: string; title: stri
   );
 }
 
-// ─── Page ─────────────────────────────────────────────────────────────────────
-
 export default function HelpPage() {
   const [query, setQuery] = useState('');
   const [openFaq, setOpenFaq] = useState<string | null>(null);
@@ -104,9 +96,7 @@ export default function HelpPage() {
 
   return (
     <>
-      {/* ── Hero ── */}
       <section className="relative overflow-hidden bg-gradient-to-br from-blue-700 via-blue-600 to-teal-500">
-        {/* Subtle dot pattern */}
         <div
           aria-hidden
           className="absolute inset-0 opacity-10"
@@ -127,7 +117,6 @@ export default function HelpPage() {
             Search articles, FAQs, and guides across all SORMALITICS features.
           </p>
 
-          {/* Search bar */}
           <div className="relative max-w-2xl mx-auto">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
             <input
@@ -144,7 +133,6 @@ export default function HelpPage() {
         </div>
       </section>
 
-      {/* ── Category grid — hidden while searching ── */}
       {!isSearching && (
         <section className="py-14">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -173,7 +161,6 @@ export default function HelpPage() {
         </section>
       )}
 
-      {/* ── Search results ── */}
       {isSearching && (
         <section className="py-14">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -254,7 +241,6 @@ export default function HelpPage() {
         </section>
       )}
 
-      {/* ── FAQ accordion — shown when not searching ── */}
       {!isSearching && (
         <section className="py-14 bg-slate-50/60">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -294,7 +280,6 @@ export default function HelpPage() {
         </section>
       )}
 
-      {/* ── Browse articles — shown when not searching ── */}
       {!isSearching && (
         <section className="py-14">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -326,7 +311,6 @@ export default function HelpPage() {
         </section>
       )}
 
-      {/* ── Still need help CTA ── */}
       <section className="py-14 bg-slate-50/60">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-gradient-to-br from-blue-700 via-blue-600 to-teal-500 rounded-3xl p-10 text-center text-white relative overflow-hidden">

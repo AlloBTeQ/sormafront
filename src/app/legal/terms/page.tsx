@@ -1,27 +1,5 @@
 "use client"
 
-// src/app/legal/terms/page.tsx
-// ─────────────────────────────────────────────────────────────────────────────
-// Rewritten 23 August 2026. What changed and why:
-//
-//   - CROOM removed. SORMALITICS is described as what it is: a standalone
-//     AlloBTeQ product. The previous text called it "a complimentary product of
-//     the CROOM Platform" and promised integration with four sibling products.
-//   - Services section now covers what actually ships (eight modules, seven
-//     payroll jurisdictions) rather than four.
-//   - The contracting entity is stated per region, and the governing-law clause
-//     follows it. Previously the Privacy Policy named Polompa for UK users
-//     while these Terms bound everyone to South African courts.
-//   - Practitioner billing describes the real mechanism, including the
-//     two-client floor and the anniversary rule for reductions.
-//   - §5.7 points at /legal/refunds, which now exists.
-//   - Security claims reduced to what the system actually does.
-//
-// The version string is in lib/legal/versions.ts. If you make a MATERIAL change
-// here, bump LEGAL_VERSIONS.terms — that is what triggers re-acceptance and
-// what §11 promises notice of.
-// ─────────────────────────────────────────────────────────────────────────────
-
 import React, { useState } from 'react';
 import Link from 'next/link';
 import {
@@ -36,8 +14,6 @@ const SORMALITICSTermsOfService = () => {
   const [expandedSection, setExpandedSection] = useState('introduction');
 
   const lastUpdated  = "29 August 2026";
-  // Later than `lastUpdated` on purpose: §4.5 is a material change, and §11.2
-  // promises 30 days' notice before a material change takes effect.
   const effectiveDate = "28 September 2026";
 
   const sections = [
@@ -471,7 +447,6 @@ const SORMALITICSTermsOfService = () => {
   return (
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-4xl mx-auto px-4">
-        {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">Terms of Service</h1>
           <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-sm text-gray-600">
@@ -496,7 +471,6 @@ const SORMALITICSTermsOfService = () => {
           </div>
         </div>
 
-        {/* Table of Contents */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
           <h2 className="text-xl font-semibold mb-4">Contents</h2>
           <div className="grid md:grid-cols-2 gap-3">
@@ -517,7 +491,6 @@ const SORMALITICSTermsOfService = () => {
           </div>
         </div>
 
-        {/* Content Sections */}
         <div className="space-y-6">
           {sections.map((section) => (
             <div
@@ -556,7 +529,6 @@ const SORMALITICSTermsOfService = () => {
           ))}
         </div>
 
-        {/* Footer */}
         <div className="mt-12 text-center text-gray-600">
           <p className="text-sm">
             SORMALITICS is operated by {ALLOBTEQ.registeredName} (reg. {ALLOBTEQ.registrationNumber}) and {POLOMPA.registeredName} (no. {POLOMPA.registrationNumber}).

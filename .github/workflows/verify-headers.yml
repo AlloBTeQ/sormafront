@@ -6,7 +6,6 @@ on:
   workflow_dispatch:
 jobs:
   verify:
-    # For deployment_status, only run on successful production deploys.
     if: github.event_name != 'deployment_status' || (github.event.deployment_status.state == 'success' && github.event.deployment.environment == 'Production')
     runs-on: ubuntu-latest
     steps:

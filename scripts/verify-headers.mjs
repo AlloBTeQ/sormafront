@@ -1,6 +1,3 @@
-// Fetches a deployed URL and fails if any security header is missing or differs
-// from the "/(.*)" block committed in vercel.json.
-// Usage: node scripts/verify-headers.mjs [url]   (default https://sormalitics.com)
 import { readFileSync } from 'node:fs';
 
 const url = process.argv[2] || 'https://sormalitics.com';

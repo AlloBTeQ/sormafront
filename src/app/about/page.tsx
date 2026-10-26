@@ -1,5 +1,6 @@
 'use client'
 import { APP_URL } from '@/lib/site';
+import { codeList } from '@/lib/payroll/jurisdictionStatus';
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { 
@@ -12,16 +13,11 @@ import {
 import { SormaliticsMark } from '@/components/brand/SormaliticsMark';
 import { ALL_PRODUCTS, formatPrice } from '@/lib/store/product-catalog';
 
-/** Cheapest single document in the store, per currency — the honest "from" figure. */
 const cheapestDocument = {
   ZAR: Math.min(...ALL_PRODUCTS.map((p) => p.price.ZAR)),
   GBP: Math.min(...ALL_PRODUCTS.map((p) => p.price.GBP)),
 };
 
-// Plain components. The app version require()'d '@/components/ui/card' and
-// 'framer-motion' inside try/catch; neither exists in this repo, so every build
-// warned "Module not found" and the page logged an error on load. These are what
-// it fell back to anyway — motion props are dropped instead of leaking onto <div>.
 const Card = ({ children, className = '' }: { children: React.ReactNode; className?: string }) => (
   <div className={`border rounded-lg shadow-sm ${className}`}>{children}</div>
 );
@@ -35,7 +31,6 @@ const motion = {
   ),
 };
 
-// Interface for platform statistics
 interface PlatformStats {
   practitioners: number;
   documentsGenerated: number;
@@ -46,7 +41,7 @@ interface PlatformStats {
 }
 
 const SORMALITICSAbout = () => {
-  const [isLoaded, setIsLoaded] = useState(true); // true: the static HTML must contain the page, not a spinner
+  const [isLoaded, setIsLoaded] = useState(true);
   const [stats, setStats] = useState<PlatformStats>({
     practitioners: 0,
     documentsGenerated: 0,
@@ -56,14 +51,12 @@ const SORMALITICSAbout = () => {
     error: false
   });
 
-  // Animation variants for consistent motion effects
   const fadeInUp = {
     initial: { opacity: 0, y: 20 },
     animate: { opacity: 1, y: 0 },
     transition: { duration: 0.6 }
   };
 
-  // Fetch public statistics
   const fetchPublicStats = async () => {
     try {
       const response = await fetch(`${APP_URL}/api/public/platform-stats`);
@@ -74,11 +67,6 @@ const SORMALITICSAbout = () => {
       
       const data = await response.json();
       
-      // Fallbacks are ZERO, not invented figures. These previously defaulted
-      // to 2,847 practitioners / 47,000 documents / 8,291 freelancers, which
-      // meant a failed or empty API response rendered fabricated social proof.
-      // The metrics block below is currently commented out; if it is ever
-      // re-enabled, it must not display numbers nobody can substantiate.
       setStats({
         practitioners: data.practitioners ?? 0,
         documentsGenerated: data.documentsGenerated ?? 0,
@@ -90,7 +78,6 @@ const SORMALITICSAbout = () => {
     } catch (error) {
       console.error('Error fetching platform statistics:', error);
       
-      // Fallback to reasonable default values
       setStats({
         practitioners: 0,
         documentsGenerated: 0,
@@ -104,8 +91,6 @@ const SORMALITICSAbout = () => {
   
   useEffect(() => {
     setIsLoaded(true);
-    // fetchPublicStats() removed on the marketing site: /api/public/platform-stats
-    // does not exist in the app, and the stats block is commented out below.
     setStats(st => ({ ...st, loading: false }));
   }, []);
 
@@ -115,7 +100,6 @@ const SORMALITICSAbout = () => {
 
   return (
     <div className="min-h-screen">
-      {/* Hero Section */}
       <div className="bg-gradient-to-br from-blue-50 via-white to-green-50 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div 
@@ -170,7 +154,6 @@ const SORMALITICSAbout = () => {
         </div>
       </div>
 
-      {/* Problem & Solution */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <motion.div
@@ -239,8 +222,6 @@ const SORMALITICSAbout = () => {
                 </div>
               </div>
 
-              {/* Figures come from the store catalogue, so this box cannot
-                  disagree with what checkout charges. */}
               <div className="bg-white p-4 rounded-lg border-2 border-green-200 mt-6">
                 <div className="text-center">
                   <div className="text-2xl font-bold text-green-600">
@@ -258,7 +239,6 @@ const SORMALITICSAbout = () => {
         </div>
       </div>
 
-      {/* Who We Serve */}
       <div className="bg-gray-50 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
@@ -324,7 +304,6 @@ const SORMALITICSAbout = () => {
         </div>
       </div>
 
-      {/* Impact Metrics */}
       <div className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
@@ -334,62 +313,9 @@ const SORMALITICSAbout = () => {
             </p>
           </div>
 
-          {/*<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            {[
-              { 
-                number: stats.practitioners,
-                label: 'Professional Users',
-                icon: <Users className="h-8 w-8 text-blue-500 mx-auto mb-2" />,
-                suffix: '+'
-              },
-              { 
-                number: stats.documentsGenerated,
-                label: 'Documents Generated',
-                icon: <FileText className="h-8 w-8 text-green-500 mx-auto mb-2" />,
-                suffix: '+'
-              },
-              { 
-                number: stats.freelancers,
-                label: 'Freelancers Served',
-                icon: <Briefcase className="h-8 w-8 text-purple-500 mx-auto mb-2" />,
-                suffix: '+'
-              },
-              { 
-                number: 10,
-                label: 'Hours Saved Per Week',
-                icon: <Clock className="h-8 w-8 text-orange-500 mx-auto mb-2" />,
-                suffix: '+'
-              } 
-            ].map((stat, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                className="bg-gray-50 p-6 rounded-lg border-2 border-transparent hover:border-gray-200 transition-colors"
-              >
-                {stat.icon}
-                <div className="text-3xl font-bold text-gray-900 mb-2">
-                  {stats.loading ? (
-                    <div className="h-8 bg-gray-200 rounded animate-pulse"></div>
-                  ) : (
-                    <>{typeof stat.number === 'number' ? stat.number.toLocaleString() : stat.number}{stat.suffix}</>
-                  )}
-                </div>
-                <div className="text-gray-600 font-medium text-sm">{stat.label}</div>
-              </motion.div>
-            ))}
-          </div>*/}
         </div>
       </div>
 
-      {/* The CROOM ecosystem section was removed on 23 August 2026.
-          CROOM is still in development, and describing SORMALITICS as the
-          "financial backbone" of five live platforms — with a user count
-          drawn from a stat that defaults to 1 — was a claim we could not
-          stand behind. It can come back when CROOM ships. */}
-
-      {/* Why Choose SORMALITICS */}
       <div className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
@@ -463,7 +389,6 @@ const SORMALITICSAbout = () => {
         </div>
       </div>
 
-      {/* CTA Section */}
       <div className="bg-gradient-to-br from-blue-600 via-green-600 to-purple-600 py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div
@@ -495,14 +420,13 @@ const SORMALITICSAbout = () => {
         </div>
       </div>
 
-      {/* Footer */}
       <div className="bg-gray-900 text-white py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <p className="text-gray-300">
             <strong>SORMALITICS</strong> - Professional financial tools for practitioners, accountants, consultants & freelancers
           </p>
           <p className="text-sm text-gray-400 mt-2">
-            Payroll, invoicing, accounting and agreements across seven jurisdictions
+            Payroll live in {codeList('live')} · invoicing, accounting and agreements
           </p>
         </div>
       </div>

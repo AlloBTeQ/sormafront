@@ -1,4 +1,3 @@
-// pages/contact.tsx
 'use client';
 
 import { APP_LIVE, APP_ORIGIN, APP_URL } from '@/lib/site';
@@ -53,12 +52,9 @@ const Contact: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // The honeypot is uncontrolled (bots fill it, React state never sees it); read it off the form.
     const honeypot = ((e.currentTarget as HTMLFormElement).elements.namedItem('website') as HTMLInputElement | null)?.value ?? '';
     setIsSubmitting(true);
 
-    // Until the app is live there is no endpoint to post to — hand the message
-    // to the visitor's email client instead, already addressed and filled in.
     if (!APP_LIVE) {
       const body = [
         `Name: ${formData.name}`, `Email: ${formData.email}`, `Company: ${formData.company}`,
@@ -70,11 +66,8 @@ const Contact: React.FC = () => {
     }
 
     try {
-      // Here you would typically send the form data to your API
       const response = await fetch(`${APP_ORIGIN}/api/contact/submit`, {
         method: 'POST',
-        // FormData keeps this a "simple" cross-origin request (no preflight);
-        // the app's /api/contact/submit accepts it. See lib/http/marketingCors.ts.
         body: (() => { const fd = new FormData(); Object.entries(formData).forEach(([k, v]) => fd.append(k, String(v))); if (honeypot) fd.append('website', honeypot); return fd; })()
       });
 
@@ -103,7 +96,6 @@ const Contact: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-600 via-purple-600 to-purple-800">
-      {/* Header Section */}
       <div className="relative pt-20 pb-32 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto text-center">
           <h1 className="text-5xl md:text-6xl font-bold text-white mb-6">
@@ -115,20 +107,17 @@ const Contact: React.FC = () => {
         </div>
       </div>
 
-      {/* Main Content */}
       <div className="relative -mt-20 pb-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-white rounded-3xl shadow-2xl overflow-hidden">
             <div className="grid lg:grid-cols-2 gap-0">
               
-              {/* Contact Information */}
               <div className="bg-gradient-to-br from-gray-50 to-blue-50 p-8 lg:p-12">
                 <div className="max-w-lg">
                   <h2 className="text-3xl font-bold text-gray-900 mb-8">
                     Contact Information
                   </h2>
                   
-                  {/* Email */}
                   <div className="flex items-start space-x-4 mb-8">
                     <div className="flex-shrink-0">
                       <div className="w-12 h-12 bg-blue-600 rounded-lg flex flex-wrap items-center justify-center">
@@ -147,9 +136,7 @@ const Contact: React.FC = () => {
                     </div>
                   </div>
 
-                  {/* Phone Numbers */}
                   <div className="space-y-6 mb-8">
-                    {/* UK Phone */}
                     <div className="flex items-start space-x-4">
                       <div className="flex-shrink-0">
                         <div className="w-12 h-12 bg-green-600 rounded-lg flex flex-wrap items-center justify-center">
@@ -168,7 +155,6 @@ const Contact: React.FC = () => {
                       </div>
                     </div>
 
-                    {/* RSA Phone */}
                     <div className="flex items-start space-x-4">
                       <div className="flex-shrink-0">
                         <div className="w-12 h-12 bg-orange-600 rounded-lg flex flex-wrap items-center justify-center">
@@ -188,14 +174,12 @@ const Contact: React.FC = () => {
                     </div>
                   </div>
 
-                  {/* Office Locations */}
                   <div className="space-y-6">
                     <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
                       <Building2 className="w-5 h-5 mr-2 text-blue-600" />
                       Our Offices
                     </h3>
                     
-                    {/* UK Office */}
                     <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
                       <div className="flex items-start space-x-3">
                         <MapPin className="w-5 h-5 text-blue-600 mt-1 flex-shrink-0" />
@@ -211,7 +195,6 @@ const Contact: React.FC = () => {
                       </div>
                     </div>
 
-                    {/* RSA Office */}
                     <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
                       <div className="flex items-start space-x-3">
                         <MapPin className="w-5 h-5 text-orange-600 mt-1 flex-shrink-0" />
@@ -231,7 +214,6 @@ const Contact: React.FC = () => {
                 </div>
               </div>
 
-              {/* Contact Form */}
               <div className="p-8 lg:p-12">
                 <h2 className="text-3xl font-bold text-gray-900 mb-8">
                   Send us a Message
@@ -255,12 +237,9 @@ const Contact: React.FC = () => {
                   </div>
                 ) : (
                   <form onSubmit={handleSubmit} className="space-y-6">
-                  {/* Honeypot — invisible to people and screen readers; bots fill it, and the
-                      app quietly drops anything that arrives with it set. */}
                   <div aria-hidden="true" style={{ position: 'absolute', left: '-10000px', width: 1, height: 1, overflow: 'hidden' }}>
                     <label>Website<input type="text" name="website" tabIndex={-1} autoComplete="off" defaultValue="" /></label>
                   </div>
-                    {/* Name and Email */}
                     <div className="grid md:grid-cols-2 gap-6">
                       <div>
                         <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
@@ -296,7 +275,6 @@ const Contact: React.FC = () => {
                       </div>
                     </div>
 
-                    {/* Company and Phone */}
                     <div className="grid md:grid-cols-2 gap-6">
                       <div>
                         <label htmlFor="company" className="block text-sm font-medium text-gray-700 mb-2">
@@ -330,7 +308,6 @@ const Contact: React.FC = () => {
                       </div>
                     </div>
 
-                    {/* Region and Preferred Contact */}
                     <div className="grid md:grid-cols-2 gap-6">
                       <div>
                         <label htmlFor="region" className="block text-sm font-medium text-gray-700 mb-2">
@@ -364,7 +341,6 @@ const Contact: React.FC = () => {
                       </div>
                     </div>
 
-                    {/* Subject */}
                     <div>
                       <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-2">
                         Subject *
@@ -382,7 +358,6 @@ const Contact: React.FC = () => {
                       />
                     </div>
 
-                    {/* Message */}
                     <div>
                       <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
                         Message *
@@ -400,7 +375,6 @@ const Contact: React.FC = () => {
                       />
                     </div>
 
-                    {/* Submit Button */}
                     <div>
                       <button
                         type="submit"
@@ -428,7 +402,6 @@ const Contact: React.FC = () => {
         </div>
       </div>
 
-      {/* FAQ Section */}
       <div className="bg-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
@@ -480,7 +453,6 @@ const Contact: React.FC = () => {
         </div>
       </div>
 
-      {/* Footer CTA */}
       <div className="bg-gradient-to-r from-blue-600 to-purple-600 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">

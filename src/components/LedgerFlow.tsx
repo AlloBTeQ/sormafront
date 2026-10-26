@@ -2,18 +2,6 @@ import React from 'react';
 import { ArrowRight } from 'lucide-react';
 import { app } from '@/lib/site';
 
-// ─────────────────────────────────────────────────────────────────────────────
-// LedgerFlow — "SORM … ALITICS". Board G on the design canvas (18 Oct 2026),
-// drawn from Mvelase's sketch: the brand name split around the whole cycle,
-// budget → quote → agreement → invoice → payroll → Exco, on one gold spine.
-//
-// Figures are ILLUSTRATIVE and must balance — an accountant will check:
-//   sale:    18 400.00 = 16 000.00 revenue + 2 400.00 VAT output (15%)
-//   payroll: 412 880.00 = 334 432.80 net payable + 78 447.20 PAYE
-// The agreement step sits before the invoice on purpose: revenue is recognised
-// when the IFRS 15 performance obligation is satisfied, not when billed.
-// ─────────────────────────────────────────────────────────────────────────────
-
 const NAVY = '#143152';
 const CARD = '#183A5F';
 const TEXT = '#FBF7EA';
@@ -28,6 +16,7 @@ const WORD: React.CSSProperties = { fontSize: 'clamp(72px, 13vw, 184px)', fontWe
 
 type Line = { side: 'Dr' | 'Cr'; account: string; amount: string };
 
+// Illustrative figures that must balance: 16 000 + 2 400 = 18 400 and 334 432.80 + 78 447.20 = 412 880.
 const SALE: Line[] = [
   { side: 'Dr', account: 'Trade receivables — B Ltd', amount: '18 400.00' },
   { side: 'Cr', account: 'Revenue',                   amount: '16 000.00' },
@@ -46,7 +35,6 @@ const EXCO = [
   { label: 'Receivables outstanding', value: '312 840.00' },
 ];
 
-// The dot on the spine. Offset matches the list's padding-left so it sits on the line.
 function Node({ filled = false }: { filled?: boolean }) {
   return (
     <span aria-hidden="true" className="absolute top-7 w-3.5 h-3.5 rounded-full"
@@ -110,7 +98,6 @@ export function LedgerFlow() {
     <section id="flow" aria-labelledby="flow-heading" style={{ background: NAVY, color: TEXT, borderTop: `1px solid ${RULE}` }}>
       <div className="max-w-[1240px] mx-auto px-4 sm:px-8 lg:px-12 py-16 lg:py-24">
 
-        {/* SORM */}
         <div className="flex flex-wrap items-end justify-between gap-6">
           <div aria-hidden="true" style={WORD}>SORM</div>
           <div className="max-w-[420px] pb-3">
@@ -122,7 +109,6 @@ export function LedgerFlow() {
           </div>
         </div>
 
-        {/* The spine */}
         <ol className="my-10 flex flex-col gap-5 list-none"
           style={{
             marginLeft: 'clamp(8px, 2.4vw, 36px)',
@@ -195,7 +181,6 @@ export function LedgerFlow() {
           </li>
         </ol>
 
-        {/* ALITICS */}
         <div className="flex flex-wrap items-start justify-between gap-6">
           <div aria-hidden="true" style={{ ...WORD, color: GOLD }}>ALITICS</div>
           <div className="max-w-[420px] pt-3">

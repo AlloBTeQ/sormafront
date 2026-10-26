@@ -27,15 +27,6 @@ const AdvancedStore = () => {
   const [selectedCategory, setSelectedCategory] = useState<ProductCategory | 'all'>('all');
   const searchParams = useSearchParams();
 
-  /**
-   * Honour ?category= and ?q= from the URL.
-   *
-   * The filters were local state only, so /store?category=invoice silently
-   * showed everything — a deep link from anywhere else in the product landed
-   * the visitor on an unfiltered shelf and made them hunt. /services links here
-   * for invoices (there is no /store/product/invoice page), so without this the
-   * CTA is technically alive and practically useless.
-   */
   useEffect(() => {
     const cat = searchParams.get('category');
     if (cat && ['payslip', 'invoice', 'agreement', 'schedule'].includes(cat)) {
@@ -74,26 +65,21 @@ const AdvancedStore = () => {
     { id: 'STANDARD' as const, name: 'Universal', flag: '🌐' },
   ];
 
-  // Filter and sort products
   const getFilteredProducts = () => {
     let filtered = ALL_PRODUCTS;
 
-    // Category filter
     if (selectedCategory !== 'all') {
       filtered = filtered.filter(p => p.category === selectedCategory);
     }
 
-    // Jurisdiction filter
     if (selectedJurisdiction !== 'all') {
       filtered = filtered.filter(p => p.jurisdiction === selectedJurisdiction);
     }
 
-    // Search filter
     if (searchQuery) {
       filtered = searchProducts(searchQuery);
     }
 
-    // Sort
     switch (sortBy) {
       case 'price-low':
         filtered = [...filtered].sort((a, b) => a.price[selectedCurrency] - b.price[selectedCurrency]);
@@ -102,10 +88,8 @@ const AdvancedStore = () => {
         filtered = [...filtered].sort((a, b) => b.price[selectedCurrency] - a.price[selectedCurrency]);
         break;
       case 'popular':
-        // In real app, sort by purchase count
         break;
       case 'newest':
-        // In real app, sort by creation date
         break;
     }
 
@@ -125,8 +109,6 @@ const AdvancedStore = () => {
   const handleBuyNow = (productId: string) => {
     const product = ALL_PRODUCTS.find(p => p.id === productId);
     if (product) {
-      // No price in the URL — the checkout page reads it from the catalogue and
-      // the server re-quotes it, so passing one here would only be decorative.
       window.location.href =
         `${APP_URL}/store/checkout?product=${encodeURIComponent(productId)}&currency=${selectedCurrency}`;
     }
@@ -153,7 +135,6 @@ const AdvancedStore = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
       <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white py-12">
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-8">
@@ -163,7 +144,6 @@ const AdvancedStore = () => {
             </p>
           </div>
 
-          {/* Currency Selector */}
           <div className="flex justify-center mb-6">
             <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur rounded-lg p-1">
               {(['GBP', 'USD', 'EUR', 'ZAR'] as Currency[]).map((currency) => (
@@ -182,7 +162,6 @@ const AdvancedStore = () => {
             </div>
           </div>
 
-          {/* Search Bar */}
           <div className="max-w-2xl mx-auto">
             <div className="relative">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -198,11 +177,9 @@ const AdvancedStore = () => {
         </div>
       </div>
 
-      {/* Filters */}
       <div className="bg-white border-b sticky top-0 z-40 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex flex-wrap items-center gap-4">
-            {/* Category Tabs */}
             <div className="flex flex-wrap items-center gap-2 w-full sm:flex-1 min-w-0">
               {categories.map((cat) => (
                 <button
@@ -225,7 +202,6 @@ const AdvancedStore = () => {
               ))}
             </div>
 
-            {/* Jurisdiction Filter */}
             <div className="relative">
               <select
                 value={selectedJurisdiction}
@@ -241,7 +217,6 @@ const AdvancedStore = () => {
               <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
             </div>
 
-            {/* Sort */}
             <div className="relative">
               <select
                 value={sortBy}
@@ -257,7 +232,6 @@ const AdvancedStore = () => {
             </div>
           </div>
 
-          {/* Active Filters */}
           {(searchQuery || selectedCategory !== 'all' || selectedJurisdiction !== 'all') && (
             <div className="flex items-center gap-2 mt-3 flex-wrap">
               <span className="text-sm text-gray-600">Active filters:</span>
@@ -300,14 +274,12 @@ const AdvancedStore = () => {
         </div>
       </div>
 
-      {/* Results Count */}
       <div className="max-w-7xl mx-auto px-4 py-6">
         <p className="text-gray-600">
           Showing <strong>{filteredProducts.length}</strong> {filteredProducts.length === 1 ? 'template' : 'templates'}
         </p>
       </div>
 
-      {/* Products Grid */}
       <div className="max-w-7xl mx-auto px-4 pb-20">
         {filteredProducts.length === 0 ? (
           <div className="text-center py-20">
@@ -338,7 +310,6 @@ const AdvancedStore = () => {
                   key={product.id}
                   className="bg-white rounded-xl border-2 border-gray-200 hover:border-blue-300 hover:shadow-xl transition-all overflow-hidden group"
                 >
-                  {/* Product Image */}
                   <div className="relative h-48 bg-gradient-to-br from-gray-50 to-gray-100">
                     <div className="absolute inset-0 flex flex-wrap items-center justify-center">
                       <div className="text-6xl opacity-10">
@@ -349,7 +320,6 @@ const AdvancedStore = () => {
                       </div>
                     </div>
                     
-                    {/* Badges */}
                     <div className="absolute top-3 left-3 flex gap-2">
                       <span className={`px-2 py-1 rounded-full text-xs font-bold ${complexity.color}`}>
                         {complexity.label}
@@ -362,7 +332,6 @@ const AdvancedStore = () => {
                       )}
                     </div>
 
-                    {/* Preview Button Overlay */}
                     <button
                       onClick={() => handlePreview(product)}
                       className="absolute inset-0 bg-black/0 group-hover:bg-black/50 transition-all flex flex-wrap items-center justify-center opacity-0 group-hover:opacity-100"
@@ -374,12 +343,10 @@ const AdvancedStore = () => {
                     </button>
                   </div>
 
-                  {/* Product Info */}
                   <div className="p-6">
                     <h3 className="text-xl font-bold text-gray-900 mb-2">{product.name}</h3>
                     <p className="text-gray-600 text-sm mb-4 line-clamp-2">{product.description}</p>
 
-                    {/* Features */}
                     <div className="space-y-2 mb-4">
                       {product.features.slice(0, 3).map((feature, idx) => (
                         <div key={idx} className="flex items-start gap-2 text-sm text-gray-700">
@@ -397,7 +364,6 @@ const AdvancedStore = () => {
                       )}
                     </div>
 
-                    {/* Price & Actions */}
                     <div className="border-t pt-4 mt-4">
                       <div className="flex flex-wrap gap-y-2 items-center justify-between mb-3">
                         <div>
@@ -435,7 +401,6 @@ const AdvancedStore = () => {
         )}
       </div>
 
-      {/* Preview Modal */}
       {previewProduct && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex flex-wrap items-center justify-center p-4 overflow-y-auto">
           <div className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
@@ -453,7 +418,6 @@ const AdvancedStore = () => {
             </div>
 
             <div className="p-6">
-              {/* Template Preview Image */}
               <div className="bg-gray-100 rounded-lg p-8 mb-6 text-center">
                 <div className="text-8xl mb-4">
                   {previewProduct.category === 'payslip' && '💰'}
@@ -464,7 +428,6 @@ const AdvancedStore = () => {
                 <p className="text-gray-600">Template preview will be displayed here</p>
               </div>
 
-              {/* Full Features List */}
               <div className="mb-6">
                 <h3 className="text-lg font-bold text-gray-900 mb-4">What's Included:</h3>
                 <div className="grid md:grid-cols-2 gap-3">
@@ -477,7 +440,6 @@ const AdvancedStore = () => {
                 </div>
               </div>
 
-              {/* Editable Fields */}
               <div className="mb-6">
                 <h3 className="text-lg font-bold text-gray-900 mb-4">Editable Fields:</h3>
                 <div className="flex flex-wrap gap-2">
@@ -489,7 +451,6 @@ const AdvancedStore = () => {
                 </div>
               </div>
 
-              {/* Price & Buy */}
               <div className="bg-gray-50 rounded-lg p-6">
                 <div className="flex flex-wrap gap-y-2 items-center justify-between mb-4">
                   <div>
@@ -512,7 +473,6 @@ const AdvancedStore = () => {
         </div>
       )}
 
-      {/* Shopping Cart (Fixed Bottom) */}
       {cart.length > 0 && (
         <div className="fixed bottom-0 left-0 right-0 bg-white border-t-4 border-blue-600 shadow-2xl py-4 px-4 z-40">
           <div className="max-w-7xl mx-auto flex flex-wrap gap-y-2 items-center justify-between">
@@ -540,8 +500,6 @@ const AdvancedStore = () => {
                 Clear Cart
               </button>
               <button
-                // Straight to checkout — /store/cart was never built, so this
-                // button previously led to a 404 with a full cart.
                 onClick={() => window.location.href = `${APP_URL}/store/checkout?items=${cart.map(encodeURIComponent).join(',')}&currency=${selectedCurrency}`}
                 className="px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-bold hover:from-blue-700 hover:to-purple-700"
               >
@@ -557,8 +515,6 @@ const AdvancedStore = () => {
 };
 
 export default function StorePage() {
-  // useSearchParams needs a Suspense boundary, or the whole route opts out of
-  // static rendering and Next warns at build time.
   return (
     <Suspense fallback={<div className="min-h-screen bg-gray-50" />}>
       <AdvancedStore />

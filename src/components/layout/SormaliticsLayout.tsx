@@ -9,23 +9,14 @@ import { SormaliticsFooter } from './SormaliticsFooter';
 import { app } from '@/lib/site';
 import { SormaliticsMark } from '@/components/brand/SormaliticsMark';
 
-// Public chrome restyled 16 Oct 2026. Navbar: white ground, light-grey rule,
-// ink #143152 type, square aurum CTA (as board B on the design canvas). Footer
-// and landing stay on the ink ground. Outfit + DM Mono. Routes,
-// chromeless logic and the mobile drawer are unchanged.
-
-const INK = '#143152';      // navbar type
+const INK = '#143152';
 const NAV_BG = '#FFFFFF';
 const GOLD = '#C9A227';
-const BODY = '#2C4667';     // inactive links — ink, a step lighter
+const BODY = '#2C4667';
 const RULE = '#D7D9DD';
-const CREAM = '#FDF6DE';    // active row in the mobile drawer
+const CREAM = '#FDF6DE';
 const DISPLAY: React.CSSProperties = { fontFamily: 'var(--font-syne), ui-sans-serif, system-ui, sans-serif' };
 const MONO: React.CSSProperties = { fontFamily: 'var(--font-dm-mono), ui-monospace, monospace' };
-
-// ─────────────────────────────────────────────────────────────
-// NAV CONFIG
-// ─────────────────────────────────────────────────────────────
 
 const NAV_LINKS = [
   { name: 'Services', href: '/services' },
@@ -36,11 +27,6 @@ const NAV_LINKS = [
   { name: 'Fisi', href: '/fisi' },
 ];
 
-
-// ─────────────────────────────────────────────────────────────
-// BRAND
-// ─────────────────────────────────────────────────────────────
-
 function Brand() {
   return (
     <a href="/" className="flex items-center gap-2.5" aria-label="SORMALITICS home">
@@ -50,15 +36,10 @@ function Brand() {
   );
 }
 
-// ─────────────────────────────────────────────────────────────
-// NAVBAR
-// ─────────────────────────────────────────────────────────────
-
 function SormaliticsNavbar() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  // Close the mobile menu whenever the route changes.
   useEffect(() => { setMobileOpen(false); }, [pathname]);
 
   const isActive = (href: string) =>
@@ -70,7 +51,6 @@ function SormaliticsNavbar() {
         <div className="flex items-center justify-between gap-4 h-16">
           <Brand />
 
-          {/* Desktop links */}
           <div className="hidden lg:flex items-center gap-7">
             {NAV_LINKS.map(({ name, href }) => (
               <a
@@ -87,7 +67,6 @@ function SormaliticsNavbar() {
             ))}
           </div>
 
-          {/* Desktop actions */}
           <div className="hidden lg:flex items-center gap-2">
             <a href={app('/auth/login')} className="px-3.5 py-3 text-sm font-medium transition-colors hover:text-[#8A6A34]" style={{ color: INK }}>
               Sign in
@@ -99,7 +78,6 @@ function SormaliticsNavbar() {
             </a>
           </div>
 
-          {/* Mobile toggle */}
           <button
             type="button"
             onClick={() => setMobileOpen(o => !o)}
@@ -113,7 +91,6 @@ function SormaliticsNavbar() {
         </div>
       </nav>
 
-      {/* Mobile drawer */}
       {mobileOpen && (
         <div className="lg:hidden" style={{ background: NAV_BG, borderTop: `1px solid ${RULE}` }}>
           <div className="max-w-[1240px] mx-auto px-4 sm:px-8 py-4 flex flex-col gap-1">
@@ -149,22 +126,8 @@ function SormaliticsNavbar() {
   );
 }
 
-// ─────────────────────────────────────────────────────────────
-// LAYOUT
-// ─────────────────────────────────────────────────────────────
-
-/**
- * SormaliticsLayout
- *
- * Public marketing chrome: sticky navbar + footer, wrapped around the
- * page content. Rendered from app/layout.tsx.
- *
- * Marketing-site copy: there are no app routes on this origin, so the
- * chromeless logic the app needs is gone. Every app link goes through app().
- */
 export function SormaliticsLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  // FISI's landing carries its own nav and footer.
   if (pathname === '/fisi' || pathname?.startsWith('/fisi/')) return <>{children}</>;
 
   return (

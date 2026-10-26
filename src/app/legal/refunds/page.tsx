@@ -1,27 +1,5 @@
 "use client"
 
-// src/app/legal/refunds/page.tsx
-// ─────────────────────────────────────────────────────────────────────────────
-// New, 23 August 2026.
-//
-// Terms §5.2 previously read "all payments are non-refundable except as
-// expressly stated in our Refund Policy" — and no Refund Policy existed. A
-// carve-out pointing at nothing is worse than no carve-out: a blanket
-// non-refundability clause with a phantom exception is exactly what a consumer
-// tribunal reads against the drafter.
-//
-// The position implemented here: statutory minimum PLUS a 14-day goodwill
-// refund on the first subscription payment.
-//
-// The statutory floor is not optional and cannot be contracted away:
-//   - South Africa: ECTA s44 gives a 7-day cooling-off on electronic
-//     transactions; the CPA governs the rest.
-//   - UK/EU: the Consumer Contracts Regulations give consumers 14 days, with
-//     the digital-content exception once supply begins with express consent.
-// Both apply to CONSUMERS. Most SORMALITICS customers are businesses, who do
-// not get them — hence the goodwill layer, which does not care.
-// ─────────────────────────────────────────────────────────────────────────────
-
 import React from 'react';
 import Link from 'next/link';
 import {
@@ -38,7 +16,6 @@ export default function RefundPolicyPage() {
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-3xl mx-auto px-4">
 
-        {/* Header */}
         <div className="text-center mb-10">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">Refund Policy</h1>
           <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-sm text-gray-600">
@@ -47,7 +24,6 @@ export default function RefundPolicyPage() {
           </div>
         </div>
 
-        {/* Summary */}
         <div className="bg-green-50 border border-green-200 rounded-lg p-5 mb-8">
           <h2 className="font-semibold text-green-900 mb-2 flex items-center">
             <RotateCcw className="h-5 w-5 mr-2" /> The short version
@@ -59,7 +35,6 @@ export default function RefundPolicyPage() {
 
         <div className="space-y-6">
 
-          {/* 1 */}
           <section className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
               <CheckCircle className="h-5 w-5 mr-2 text-green-600" /> 1. The 14-day goodwill refund
@@ -77,7 +52,6 @@ export default function RefundPolicyPage() {
             </div>
           </section>
 
-          {/* 2 */}
           <section className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
               <Scale className="h-5 w-5 mr-2 text-blue-600" /> 2. Your rights under consumer law
@@ -105,7 +79,6 @@ export default function RefundPolicyPage() {
             </div>
           </section>
 
-          {/* 3 */}
           <section className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
               <CreditCard className="h-5 w-5 mr-2 text-purple-600" /> 3. Subscriptions after the first 14 days
@@ -122,7 +95,6 @@ export default function RefundPolicyPage() {
             </div>
           </section>
 
-          {/* 4 */}
           <section className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
               <AlertTriangle className="h-5 w-5 mr-2 text-amber-600" /> 4. Practitioner client slots
@@ -138,7 +110,6 @@ export default function RefundPolicyPage() {
             </div>
           </section>
 
-          {/* 5 */}
           <section className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-4">5. One-off document and template purchases</h2>
             <div className="space-y-3 text-gray-700 text-sm">
@@ -151,7 +122,6 @@ export default function RefundPolicyPage() {
             </div>
           </section>
 
-          {/* 6 */}
           <section className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-4">6. When we will refund you regardless</h2>
             <div className="space-y-3 text-gray-700 text-sm">
@@ -167,7 +137,6 @@ export default function RefundPolicyPage() {
             </div>
           </section>
 
-          {/* 7 */}
           <section className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
               <Clock className="h-5 w-5 mr-2 text-gray-600" /> 7. How to ask, and what happens
@@ -185,7 +154,6 @@ export default function RefundPolicyPage() {
             </div>
           </section>
 
-          {/* 8 */}
           <section className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-4">8. Chargebacks</h2>
             <div className="space-y-3 text-gray-700 text-sm">
@@ -193,7 +161,6 @@ export default function RefundPolicyPage() {
             </div>
           </section>
 
-          {/* Contact */}
           <section className="bg-gray-50 rounded-lg border border-gray-200 p-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-3 flex items-center">
               <Mail className="h-5 w-5 mr-2 text-blue-600" /> Contact

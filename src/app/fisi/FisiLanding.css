@@ -1,9 +1,3 @@
-/* FisiLanding.css — FISI marketing page (editorial dark brand)
-   MOBILE-FIRST: base styles target the phone; desktop layers up via min-width.
-   Fonts: imported here for drop-in convenience. For the mobile-first audience
-   (slower networks), move these to <link rel="preconnect"> + stylesheet in
-   index.html and delete this @import — render-blocking @import hurts first paint. */
-/* Fonts come from @fontsource in app/layout.tsx — no Google Fonts request (CSP blocks it). */
 
 .fisi {
   --ed-bg: #11151D;
@@ -72,7 +66,6 @@
   display: inline-block;
 }
 
-/* ---------- NAV (mobile: collapsed behind toggle) ---------- */
 .fisi .nav {
   position: sticky;
   top: 0;
@@ -105,7 +98,6 @@
   color: var(--ed-faint);
 }
 
-/* mobile: hidden; opens as full-width dropdown */
 .fisi .nav-links { display: none; }
 .fisi .nav-links.open {
   display: flex; flex-direction: column; align-items: stretch; gap: 0.25rem;
@@ -117,7 +109,7 @@
   font-size: 1rem;
   color: var(--ed-muted);
   transition: color 0.2s ease;
-  padding: 0.85rem 0;            /* generous tap targets */
+  padding: 0.85rem 0;            
   border-bottom: 1px solid var(--ed-border);
 }
 .fisi .nav-links a:last-child { border-bottom: 0; }
@@ -134,12 +126,11 @@
 }
 .fisi .nav-toggle {
   display: inline-flex; align-items: center; justify-content: center;
-  width: 44px; height: 44px;        /* min touch target */
+  width: 44px; height: 44px;        
   margin-right: -10px;
   background: none; border: 0; color: var(--ed-text); cursor: pointer;
 }
 
-/* ---------- BUTTONS (mobile: full-width, thumb-friendly) ---------- */
 .fisi .btn {
   display: inline-flex;
   align-items: center;
@@ -159,7 +150,6 @@
 .fisi .btn-ghost { border-color: var(--ed-border-strong); color: var(--ed-text); }
 .fisi .btn .arr { transition: transform 0.2s ease; }
 
-/* ---------- HERO ---------- */
 .fisi .hero { position: relative; padding: clamp(32px, 8vw, 96px) 0 clamp(48px, 9vw, 110px); }
 .fisi .hero::before {
   content: "";
@@ -205,7 +195,6 @@
   color: var(--ed-faint);
 }
 
-/* ---------- SIGNATURE: LIVE RECORD PANEL ---------- */
 .fisi .record {
   background: linear-gradient(180deg, var(--ed-surface), var(--ed-bg-2));
   border: 1px solid var(--ed-border);
@@ -280,7 +269,6 @@
 }
 .fisi .chip.due { color: var(--ed-accent); border-color: var(--ed-accent-line); background: var(--ed-accent-dim); }
 
-/* ---------- SECTION SHELL ---------- */
 .fisi .section { padding: clamp(56px, 13vw, 130px) 0; }
 .fisi .section-head { max-width: 46rem; margin-bottom: clamp(32px, 9vw, 64px); }
 .fisi .section-head h2 {
@@ -297,7 +285,6 @@
   max-width: 38em;
 }
 
-/* ---------- PROBLEM ---------- */
 .fisi .problem { border-top: 1px solid var(--ed-border); border-bottom: 1px solid var(--ed-border); background: var(--ed-bg-2); }
 .fisi .problem .wrap { display: grid; grid-template-columns: 1fr; gap: clamp(24px, 7vw, 64px); align-items: center; }
 .fisi .problem-lead {
@@ -311,7 +298,6 @@
 .fisi .problem-body p:last-child { margin-bottom: 0; }
 .fisi .problem-body strong { color: var(--ed-text); font-weight: 500; }
 
-/* ---------- TOOLS ---------- */
 .fisi .tools-grid { display: grid; grid-template-columns: 1fr; gap: 1px; background: var(--ed-border); border: 1px solid var(--ed-border); border-radius: 14px; overflow: hidden; }
 .fisi .tool { background: var(--ed-bg); padding: clamp(24px, 6vw, 44px); transition: background 0.25s ease; }
 .fisi .tool:active { background: var(--ed-surface); }
@@ -321,14 +307,12 @@
 .fisi .tool .role { font-family: var(--ed-mono); font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ed-faint); margin-bottom: 0.8rem; }
 .fisi .tool p { color: var(--ed-muted); font-size: 0.98rem; }
 
-/* ---------- BENEFITS ---------- */
 .fisi .benefits-grid { display: grid; grid-template-columns: 1fr; gap: clamp(22px, 6vw, 36px); }
 .fisi .benefit { border-top: 1px solid var(--ed-accent-line); padding-top: 1.3rem; }
 .fisi .benefit .num { font-family: var(--ed-mono); font-size: 0.72rem; color: var(--ed-accent); letter-spacing: 0.08em; }
 .fisi .benefit h3 { font-weight: 600; font-size: 1.2rem; margin: 0.7rem 0 0.5rem; line-height: 1.2; }
 .fisi .benefit p { color: var(--ed-muted); font-size: 0.95rem; }
 
-/* ---------- TRUST ---------- */
 .fisi .trust { background: var(--ed-bg-2); border-top: 1px solid var(--ed-border); }
 .fisi .trust-card {
   border: 1px solid var(--ed-border);
@@ -344,7 +328,6 @@
 .fisi .trust-card p { color: var(--ed-muted); font-size: clamp(1rem, 4.4vw, 1.08rem); max-width: 34em; margin: 0 auto; }
 .fisi .trust-tags { display: flex; flex-wrap: wrap; gap: 0.6rem; justify-content: center; margin-top: 1.8rem; }
 
-/* ---------- PRICING ---------- */
 .fisi .price-grid { display: grid; grid-template-columns: 1fr; gap: clamp(28px, 8vw, 64px); align-items: center; }
 .fisi .price-card {
   border: 1px solid var(--ed-accent-line);
@@ -363,7 +346,6 @@
 .fisi .includes li:last-child { border-bottom: 0; }
 .fisi .includes .ck { color: var(--ed-accent); flex-shrink: 0; }
 
-/* ---------- FINAL CTA ---------- */
 .fisi .final { text-align: center; padding: clamp(64px, 16vw, 150px) 0; position: relative; }
 .fisi .final::before {
   content: "";
@@ -376,7 +358,6 @@
 .fisi .final h2 em { font-style: normal; color: var(--ed-accent); }
 .fisi .final .btn { width: 100%; max-width: 22rem; }
 
-/* ---------- FOOTER ---------- */
 .fisi footer { border-top: 1px solid var(--ed-border); padding: clamp(40px, 9vw, 64px) 0; }
 .fisi .foot-inner { display: flex; flex-direction: column; gap: 2rem; justify-content: space-between; align-items: flex-start; }
 .fisi .foot-brand .mark { font-weight: 700; font-size: 1.3rem; letter-spacing: 0.04em; }
@@ -388,13 +369,9 @@
 .fisi .foot-col a:hover, .fisi .foot-col a:active { color: var(--ed-accent); }
 .fisi .foot-base { margin-top: 2.2rem; padding-top: 1.4rem; border-top: 1px solid var(--ed-border); display: flex; flex-wrap: wrap; gap: 0.8rem; justify-content: space-between; color: var(--ed-faint); font-family: var(--ed-mono); font-size: 0.7rem; letter-spacing: 0.03em; }
 
-/* ---------- REVEAL ---------- */
 .fisi .reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.7s ease, transform 0.7s ease; }
 .fisi .reveal.in { opacity: 1; transform: none; }
 
-/* ====================================================================
-   TABLET — min-width: 620px
-   ==================================================================== */
 @media (min-width: 620px) {
   .fisi .hero-actions { flex-direction: row; flex-wrap: wrap; gap: 0.9rem; }
   .fisi .hero-actions .btn { width: auto; }
@@ -407,9 +384,6 @@
   .fisi .foot-inner { flex-direction: row; flex-wrap: wrap; }
 }
 
-/* ====================================================================
-   DESKTOP — min-width: 900px
-   ==================================================================== */
 @media (min-width: 900px) {
   .fisi .nav-inner { height: 68px; }
   .fisi .nav-toggle { display: none; }
@@ -444,10 +418,6 @@
   .fisi .foot-inner { align-items: flex-start; }
 }
 
-/* ====================================================================
-   REGISTRATION / SIGNUP  (/fisi/signup)
-   Employer-type picker + SORMALITICS-pipeline account creation.
-   ==================================================================== */
 .fisi .reg {
   max-width: 560px;
   margin: 0 auto;
@@ -538,14 +508,11 @@
   .fisi .reg-tax { grid-template-columns: 1fr 1fr; }
 }
 
-/* ---------- MOTION ---------- */
 @media (prefers-reduced-motion: reduce) {
   .fisi .reveal { opacity: 1; transform: none; }
   .fisi * { animation: none !important; transition: none !important; }
 }
 
-/* Mobile type floor — nothing below 12px on a phone.
-   Desktop keeps the original editorial micro-type. */
 @media (max-width: 767px) {
   .fisi .eyebrow { font-size: 0.75rem; }
   .fisi .brand .sub { font-size: 0.75rem; }

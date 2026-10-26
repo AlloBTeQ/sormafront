@@ -2,23 +2,8 @@ import React from 'react';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { app } from '@/lib/site';
-import { JURISDICTIONS, codeList } from '@/lib/payroll/jurisdictionStatus';
+import { JURISDICTIONS } from '@/lib/payroll/jurisdictionStatus';
 import { getProductsByCategory, type ProductCategory } from '@/lib/store/product-catalog';
-
-// ─────────────────────────────────────────────────────────────────────────────
-// /services — rebuilt 18 Oct 2026 around the modules, the way they're sold:
-// Accounting {quotations, invoicing, budgets, ledger & VAT, financial reporting,
-// AFS}, Payroll, Agreements, Exco, Teams & controls, Practices, and the
-// pay-per-document store.
-//
-// Every capability listed here exists in the app (checked against
-// SORMALITICS/src/app/dashboard and app/api on 18 Oct 2026). The previous page
-// claimed 25+ currencies, a mobile app, an API, HMRC P45s and £ prices — none
-// of which a buyer could actually get. Keep it that way: if it isn't in the app,
-// it isn't on this page.
-//
-// Server component — no state. Jurisdictions and store prices are derived.
-// ─────────────────────────────────────────────────────────────────────────────
 
 const NAVY = '#143152';
 const CARD = '#183A5F';
@@ -34,7 +19,6 @@ type Capability = { name: string; body: string; tag?: string };
 type Module = { id: string; n: string; name: string; line: string; usedBy: string; items: Capability[]; note?: string };
 
 const liveCodes = JURISDICTIONS.filter(j => j.status === 'live').map(j => j.code).join(' · ');
-const devCodes = codeList('in-development');
 
 const MODULES: Module[] = [
   {
@@ -64,7 +48,7 @@ const MODULES: Module[] = [
       { name: 'Payslips', body: 'Payslips generated for every employee and sent by email when the run is released.' },
       { name: 'Filing schedules', body: 'Monthly and year-end schedules with the figures you need for your employer filings — in South Africa the EMP201, EMP501 and IRP5; the equivalents in Botswana and Zambia.', tag: liveCodes },
     ],
-    note: `Payroll is live in ${liveCodes}. ${devCodes} are in development. Our reports and schedules support your filings — you review them and submit to the authority yourself.`,
+    note: `Payroll is live in ${liveCodes}. Our reports and schedules support your filings — you review them and submit to the authority yourself.`,
   },
   {
     id: 'agreements',
@@ -116,7 +100,6 @@ const MODULES: Module[] = [
   },
 ];
 
-// Pay-per-document: cheapest ZAR price per shelf, read from the store catalogue.
 const SHELVES: { category: ProductCategory; label: string }[] = [
   { category: 'payslip', label: 'Payslips' },
   { category: 'invoice', label: 'Invoices' },
@@ -132,7 +115,6 @@ export default function ServicesPage() {
   return (
     <div style={{ fontFamily: 'var(--font-syne), ui-sans-serif, system-ui, sans-serif', color: TEXT, background: NAVY }}>
 
-      {/* ── HERO ── */}
       <section>
         <div className={`${WRAP} pt-16 pb-12 lg:pt-24`}>
           <p className="text-xs tracking-[0.18em] mb-6" style={{ ...MONO, color: GOLD }}>SERVICES</p>
@@ -143,7 +125,6 @@ export default function ServicesPage() {
             Accounting, payroll and agreements for the whole finance department — each team in its own
             workspace, every posting approved, every figure traceable from the invoice to the AFS.
           </p>
-          {/* Jump list — also gives Google the page's structure up front */}
           <nav aria-label="Modules" className="flex flex-wrap gap-x-6 gap-y-3 text-sm" style={MONO}>
             {MODULES.map(m => (
               <a key={m.id} href={`#${m.id}`} className="py-1 transition-colors hover:text-[#E5C55E]" style={{ color: BODY }}>
@@ -157,7 +138,6 @@ export default function ServicesPage() {
         </div>
       </section>
 
-      {/* ── MODULES ── */}
       {MODULES.map(m => (
         <section key={m.id} id={m.id} aria-labelledby={`${m.id}-h`} className="scroll-mt-20" style={{ borderTop: `1px solid ${RULE}` }}>
           <div className={`${WRAP} py-14 lg:py-20 grid lg:grid-cols-12 gap-10`}>
@@ -188,7 +168,6 @@ export default function ServicesPage() {
         </section>
       ))}
 
-      {/* ── PAY PER DOCUMENT ── */}
       <section id="pay-per-document" aria-labelledby="ppd-h" className="scroll-mt-20" style={{ background: CARD, borderTop: `1px solid ${RULE}` }}>
         <div className={`${WRAP} py-14 lg:py-20 grid lg:grid-cols-12 gap-10`}>
           <div className="lg:col-span-4">
@@ -217,7 +196,6 @@ export default function ServicesPage() {
         </div>
       </section>
 
-      {/* ── CLOSER ── */}
       <section style={{ borderTop: `1px solid ${RULE}` }}>
         <div className={`${WRAP} py-16 lg:py-24 flex flex-wrap items-end justify-between gap-8`}>
           <h2 className="font-extrabold max-w-[700px]" style={{ fontSize: 'clamp(32px, 4.6vw, 64px)', letterSpacing: '-0.03em', lineHeight: 1 }}>
