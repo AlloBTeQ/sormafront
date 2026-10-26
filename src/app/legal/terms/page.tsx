@@ -13,7 +13,7 @@ import { ALLOBTEQ, POLOMPA, CONTACT, formatAddress, nameWithNumber } from '@/lib
 const SORMALITICSTermsOfService = () => {
   const [expandedSection, setExpandedSection] = useState('introduction');
 
-  const lastUpdated  = "29 August 2026";
+  const lastUpdated  = "26 October 2026";
   const effectiveDate = "28 September 2026";
 
   const sections = [
@@ -146,7 +146,7 @@ const SORMALITICSTermsOfService = () => {
             </div>
           </div>
 
-          <p><strong>2.2 Jurisdictions:</strong> Payroll and tax features currently cover South Africa, the United Kingdom, the United States, Kenya, Uganda, Botswana and Zambia. Coverage differs by feature and by plan, and we may add or withdraw a jurisdiction. Availability of a jurisdiction is not a statement that a given calculation fits your circumstances — see section 7.</p>
+          <p><strong>2.2 Jurisdictions:</strong> Payroll and tax features currently cover South Africa, Botswana, Zambia, Zimbabwe, Namibia, Eswatini, Lesotho and Kenya. Each company is registered for one jurisdiction when it signs up, and its payroll runs under that jurisdiction only; it cannot be changed later. Coverage differs by feature and by plan, and we may add or withdraw a jurisdiction. Availability of a jurisdiction is not a statement that a given calculation fits your circumstances — see section 7.</p>
 
           <p><strong>2.3 Plans:</strong> Free, Professional, Business and Practitioner. What each includes, and its limits, are on our <Link href="/pricing" className="text-blue-600 hover:underline">pricing page</Link>. Limits are enforced.</p>
 
