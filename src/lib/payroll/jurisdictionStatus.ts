@@ -107,7 +107,7 @@ export type JurisdictionStatus = 'live' | 'in-development';
  * region added to REGION_META then defaults to in-development, which is the
  * safe direction to fail.
  */
-const LIVE_REGIONS: readonly PayrollRegion[] = ['RSA', 'BW', 'ZM'] as const;
+const LIVE_REGIONS: readonly PayrollRegion[] = ['RSA', 'BW', 'ZM', 'ZW', 'NA', 'SZ', 'LS', 'KE'] as const;
 
 /**
  * The three published conditions, per region, as DATA.
@@ -135,16 +135,11 @@ export const READINESS: Partial<Record<PayrollRegion, JurisdictionReadiness>> = 
   RSA: { runPersists: true, testSuite: true, outputsGenerated: true },
   BW:  { runPersists: true, testSuite: true, outputsGenerated: true },
   ZM:  { runPersists: true, testSuite: true, outputsGenerated: true },
-  ZW: {
-    runPersists: true,
-    testSuite: true,
-    outputsGenerated: false,
-    blockingArtefact: 'a ZIMRA P2 produced from a real saved run on a real database',
-    note:
-      'Engine, ledger posting, P2 declarations of record, ITF16 reconciliation, ' +
-      'per-currency payslip and P6 certificate are all complete and unit-green. ' +
-      'Only the live run is outstanding.',
-  },
+  ZW: { runPersists: true, testSuite: true, outputsGenerated: true, note: 'P2, ITF16 and P6 from real saved runs, 2026-10-19.' },
+  NA: { runPersists: true, testSuite: true, outputsGenerated: true, note: 'ETX, SSC and PAYE 5 from real saved runs, 2026-10-21.' },
+  SZ: { runPersists: true, testSuite: true, outputsGenerated: true, note: 'PAYE and ENPF schedules and PAYE05 from real saved runs, 2026-10-25.' },
+  LS: { runPersists: true, testSuite: true, outputsGenerated: true, note: 'PAYE schedule and P.16 from real saved runs, 2026-10-25.' },
+  KE: { runPersists: true, testSuite: true, outputsGenerated: true, note: 'PAYE, NSSF, SHIF and housing levy schedules and P9A from real saved runs, 2026-10-25.' },
   UK: {
     runPersists: true,
     testSuite: true,
@@ -186,6 +181,10 @@ const FILING_PORTAL: Partial<Record<PayrollRegion, string>> = {
   ZM:  'the ZRA TaxOnline portal',
   ZW:  'ZIMRA TaRMS',
   UK:  'your RTI software',
+  NA:  'NamRA ITAS (SSC and the NTA separately)',
+  SZ:  'ERS (ENPF separately)',
+  LS:  'RSL',
+  KE:  'KRA iTax (NSSF and SHA separately)',
 };
 
 /** e.g. "Generate the P2 and supporting schedules — you file with ZIMRA TaRMS yourself." */

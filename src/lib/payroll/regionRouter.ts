@@ -5,7 +5,7 @@
 //   import { getPayrollRunRoute, saveLastRegion, getLastRegion } from '@/lib/payroll/regionRouter';
 //   router.push(getPayrollRunRoute('RSA'));
 
-export type PayrollRegion = 'RSA' | 'UK' | 'US' | 'KE' | 'UG' | 'BW' | 'ZM' | 'ZW';
+export type PayrollRegion = 'RSA' | 'UK' | 'US' | 'KE' | 'UG' | 'BW' | 'ZM' | 'ZW' | 'NA' | 'SZ' | 'LS';
 
 const STORAGE_KEY = 'sormalitics:lastPayrollRegion';
 
@@ -19,6 +19,9 @@ const REGION_ROUTE_MAP: Record<PayrollRegion, string> = {
   BW:  'botrun',
   ZM:  'zambrun',
   ZW:  'zimrun',
+  NA:  'narun',
+  SZ:  'szrun',
+  LS:  'lsrun',
 };
 
 /**
@@ -83,4 +86,7 @@ export const REGION_META: Record<PayrollRegion, {
   // gazettes separate USD and ZWG tables and the employer picks. 'USD' here is
   // the display default only — never read it as the run's actual currency.
   ZW:  { name: 'Zimbabwe',       flag: '🇿🇼', currency: 'USD', taxAuthority: 'ZIMRA', color: '#4B71A0' },
+  NA:  { name: 'Namibia',        flag: '🇳🇦', currency: 'NAD', taxAuthority: 'NamRA', color: '#003580' },
+  SZ:  { name: 'Eswatini',       flag: '🇸🇿', currency: 'SZL', taxAuthority: 'ERS',   color: '#3E5EB9' },
+  LS:  { name: 'Lesotho',        flag: '🇱🇸', currency: 'LSL', taxAuthority: 'RSL',   color: '#00209F' },
 };

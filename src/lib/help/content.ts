@@ -30,7 +30,7 @@ export const categories: Category[] = [
   {
     slug: 'payroll',
     title: 'Payroll & Tax',
-    description: 'Run payroll across 7 jurisdictions with automatic PAYE, UIF, NIC, and Social Security calculations.',
+    description: 'Run payroll in eight African countries, with PAYE and each country\'s social security and levies worked out for you.',
     icon: '💰',
   },
   {
@@ -84,13 +84,13 @@ export const faqs: FAQ[] = [
   {
     question: 'Which countries does SORMALITICS support for payroll?',
     answer:
-      'SORMALITICS supports payroll in 7 jurisdictions: South Africa (SARS), United Kingdom (HMRC), United States (IRS), Kenya (KRA), Uganda (URA), Botswana (BURS), and Zambia (ZRA). Each region has a dedicated tax engine with verified 2024/25 statutory rates.',
+      'Payroll is live in eight countries: South Africa (SARS), Botswana (BURS), Zambia (ZRA), Zimbabwe (ZIMRA), Namibia (NamRA), Eswatini (ERS), Lesotho (RSL) and Kenya (KRA). Each country has its own tax engine and its own monthly schedules and year-end certificates. Your company is set up for one country when you register.',
     categorySlug: 'payroll',
   },
   {
     question: 'How accurate are the tax calculations?',
     answer:
-      "Our tax engines use the latest published statutory rates from each authority. For South Africa this includes the 2024/25 PAYE tables, UIF (1%), and SDL (1%). Engines are reviewed annually when new rates are published. We recommend confirming generated figures with a qualified accountant before submission.",
+      "Our tax engines use the latest published statutory rates from each authority. For South Africa this includes the current PAYE tables, UIF (1%) and SDL (1%). Engines are reviewed annually when new rates are published. We recommend confirming generated figures with a qualified accountant before submission.",
     categorySlug: 'payroll',
   },
   {
@@ -130,7 +130,7 @@ export const faqs: FAQ[] = [
   {
     question: 'How does SORMALITICS handle PAYE across multiple tax brackets?',
     answer:
-      "Each tax engine applies progressive rates to the employee's annualised income, then divides the annual liability by the number of pay periods. For South Africa, the 2024/25 brackets run from 18% to 45%. UIF and SDL are flat percentages capped at statutory thresholds.",
+      "Each tax engine applies progressive rates to the employee's annualised income, then divides the annual liability by the number of pay periods. For South Africa, the brackets run from 18% to 45%. UIF and SDL are flat percentages capped at statutory thresholds.",
     categorySlug: 'tax-compliance',
   },
   {
@@ -217,10 +217,10 @@ export const articles: Article[] = [
     slug: 'multi-region-tax-calculations',
     title: 'Understanding Multi-Region Tax Calculations',
     summary:
-      "How SORMALITICS's dedicated tax engines handle PAYE, NICs, Social Security, and statutory deductions across 7 jurisdictions.",
+      "How SORMALITICS's dedicated tax engines handle PAYE, social security and statutory deductions in each country we support.",
     body: [
-      'SORMALITICS runs a separate tax engine for each of the 7 supported jurisdictions. Each engine is maintained with the current tax year\'s statutory rates and thresholds, sourced directly from the relevant authority — SARS, HMRC, IRS, KRA, URA, BURS, and ZRA.',
-      'For South Africa, the engine applies the progressive PAYE tables to the annualised income, calculates monthly UIF (1% employee + 1% employer, capped at the statutory threshold), and SDL (1% employer levy on gross payroll). The primary rebate of R17,235 (2024/25) reduces the annual tax before the monthly figure is derived.',
+      'SORMALITICS runs a separate tax engine for each supported country. Each engine uses the current tax year\'s rates and thresholds, checked against the relevant authority — SARS, BURS, ZRA, ZIMRA, NamRA, ERS, RSL and KRA.',
+      'For South Africa, the engine applies the progressive PAYE tables to the annualised income, calculates monthly UIF (1% employee + 1% employer, capped at the statutory threshold), and SDL (1% employer levy on gross payroll). The primary rebate for the tax year reduces the annual tax before the monthly figure is derived.',
       'For the United Kingdom, the engine applies Income Tax bands (20%, 40%, 45%) above the personal allowance of £12,570. National Insurance is calculated at 8% (employee) above the Primary Threshold and 15% (employer) above the Secondary Threshold, which fell to £5,000 a year from April 2025. Scottish taxpayers (an S tax code) are charged Scotland’s own six bands instead. Student loan deductions (Plan 1, 2, 4 or 5, and postgraduate loans) are applied if flagged on the employee record.',
       'All engines output a consistent structure: gross pay, itemised deductions, employer contributions, and net pay. You can run a mixed-jurisdiction payroll — UK and South African employees in the same month — and SORMALITICS handles each correctly, generating the appropriate statutory form per region.',
     ],
@@ -294,9 +294,9 @@ export const articles: Article[] = [
       'A reference guide to statutory filing dates for PAYE and employer returns across all 7 SORMALITICS-supported jurisdictions.',
     body: [
       'Missing a PAYE filing deadline results in statutory penalties and interest from the tax authority. SORMALITICS shows a compliance calendar on your Tax Compliance Hub dashboard, but understanding the underlying deadlines helps you plan payroll processing well in advance.',
-      'South Africa (SARS): EMP201 must be filed and paid by the 7th of the following month. The bi-annual EMP501 reconciliation is due 31 October and 31 May. IRP5 certificates must be issued to employees by the same dates. United Kingdom (HMRC): The P32 employer payment record must be filed and paid by the 19th of the following month (22nd for electronic payment). P35 annual employer return is due 19 April. P60 certificates must reach employees by 31 May.',
-      'United States (IRS): Form 941 (quarterly federal tax return) is due the last day of the month following each quarter — April 30, July 31, October 31, and January 31. FUTA (Form 940) is filed annually by January 31. Kenya (KRA): Monthly PAYE returns are due by the 9th of the following month. The annual P9A certificate is due by end of February.',
-      "Uganda (URA): Monthly PAYE returns are due by the 15th of the following month. Botswana (BURS): ITW9 monthly returns are due by the end of the following month. Zambia (ZRA): Form P monthly returns are due by the 10th of the following month. SORMALITICS's compliance calendar highlights all upcoming deadlines based on your active payroll regions.",
+      'South Africa (SARS): EMP201 paid and filed by the 7th of the following month; EMP501 reconciliation by 31 October (interim) and 31 May (annual), with IRP5 certificates for each employee. Botswana (BURS): PAYE remitted by the 15th; ITW10 one month after the 30 June year end, with an ITW8 for each employee. Zambia (ZRA): monthly PAYE return, with NAPSA and NHIMA, by the 10th.',
+      'Zimbabwe (ZIMRA): P2 and NSSA by the 10th, ZIMDEF by the 15th, ITF16 within 30 days of 31 December. Namibia (NamRA): PAYE (ETX) by the 20th, Social Security within 30 days, and a PAYE 5 for each employee after the February year end. Eswatini (ERS): PAYE before the 7th, ENPF within 21 days, PAYE05 certificates within 14 days of 30 June.',
+      "Lesotho (RSL): PAYE by the 15th; a P.16 for each employee within 28 days of 31 March, and within 7 days when someone leaves. Kenya (KRA): PAYE, NSSF, SHIF and the housing levy by the 9th; a P9A for each employee by the end of February. SORMALITICS's compliance calendar shows the upcoming deadlines for your company's country.",
     ],
     categorySlug: 'tax-compliance',
     tags: ['deadlines', 'PAYE', 'EMP201', 'P32', 'Form 941', 'KRA', 'filing dates', 'compliance'],
