@@ -63,9 +63,9 @@ export type BillingCycle = 'monthly' | 'annual';
 
 // ─── Currency ────────────────────────────────────────────────────────────────
 
-export type SupportedCurrency = 'ZAR' | 'GBP' | 'USD' | 'EUR';
+export type SupportedCurrency = 'ZAR' | 'GBP' | 'USD' | 'EUR' | 'KES' | 'ZMW';
 
-export const SUPPORTED_CURRENCIES: SupportedCurrency[] = ['ZAR', 'GBP', 'USD', 'EUR'];
+export const SUPPORTED_CURRENCIES: SupportedCurrency[] = ['ZAR', 'GBP', 'USD', 'EUR', 'KES', 'ZMW'];
 
 /**
  * The currencies we OFFER at checkout today. A subset of SUPPORTED_CURRENCIES.
@@ -83,17 +83,49 @@ export const SUPPORTED_CURRENCIES: SupportedCurrency[] = ['ZAR', 'GBP', 'USD', '
 //
 // 2026-10-17: ZAR only. The Stripe Prices are ZAR-only (no currency_options),
 // so a GBP/USD selection was shown a foreign price and then charged in rand by
-// the fallback in lib/stripe.ts. Foreign buyers now see rand; their card issuer
-// (or Stripe Adaptive Pricing, if enabled) converts. To re-offer a currency, add
-// it to the Price's currency_options in Stripe FIRST, then list it here.
-export const OFFERED_CURRENCIES: SupportedCurrency[] = ['ZAR'];
+// the fallback in lib/stripe.ts.
+//
+// 2026-10-27: local pricing for Zimbabwe (USD), Kenya (KES) and Zambia (ZMW).
+// The list is read from BILLING_OFFERED_CURRENCIES so a currency can be
+// switched on the moment its `currency_options` exist on all six Stripe Prices,
+// and not a deploy before. Order of operations, every time:
+//   1. add the currency to each Price's currency_options in Stripe;
+//   2. set BILLING_OFFERED_CURRENCIES (e.g. "ZAR,USD,KES,ZMW") in Vercel;
+//   3. redeploy.
+// Unset, it is ZAR only. Unknown codes are ignored; ZAR is always present.
+function readOfferedCurrencies(): SupportedCurrency[] {
+  const raw = (process.env.BILLING_OFFERED_CURRENCIES ?? process.env.NEXT_PUBLIC_BILLING_OFFERED_CURRENCIES ?? 'ZAR')
+    .split(',').map(c => c.trim().toUpperCase()).filter(Boolean);
+  const list = raw.filter((c): c is SupportedCurrency => (SUPPORTED_CURRENCIES as string[]).includes(c));
+  return list.includes('ZAR') ? list : ['ZAR', ...list];
+}
+export const OFFERED_CURRENCIES: SupportedCurrency[] = readOfferedCurrencies();
 
 export const CURRENCY_META: Record<SupportedCurrency, { symbol: string; name: string }> = {
   ZAR: { symbol: 'R', name: 'South African Rand' },
   GBP: { symbol: '£', name: 'British Pound' },
   USD: { symbol: '$', name: 'US Dollar' },
   EUR: { symbol: '€', name: 'Euro' },
+  KES: { symbol: 'KSh ', name: 'Kenyan Shilling' },
+  ZMW: { symbol: 'K', name: 'Zambian Kwacha' },
 };
+
+// ─── Jurisdiction → billing currency ─────────────────────────────────────────
+//
+// Where a customer runs payroll decides what they see on the pricing page and
+// the billing cards. BW, SZ, LS and NA stay on rand (their currencies are
+// pegged to it and cards there clear ZAR). Zimbabwe is dollarised; Kenya and
+// Zambia get their own price points rather than a rand conversion (see the
+// 2026-10-27 pricing note). Only a currency that is OFFERED is returned, so a
+// market whose Stripe prices are not yet set up falls back to rand.
+const JURISDICTION_CURRENCY: Record<string, SupportedCurrency> = {
+  ZW: 'USD', KE: 'KES', ZM: 'ZMW', UK: 'GBP', US: 'USD',
+};
+
+export function billingCurrencyFor(jurisdiction: string | null | undefined): SupportedCurrency {
+  const c = jurisdiction ? JURISDICTION_CURRENCY[jurisdiction.toUpperCase()] : undefined;
+  return c && OFFERED_CURRENCIES.includes(c) ? c : 'ZAR';
+}
 
 // ─── Modules ─────────────────────────────────────────────────────────────────
 
@@ -317,7 +349,7 @@ export const PLANS: Record<Plan, PlanDefinition> = {
     },
     lifetimeLimits: ['invoices', 'quotes', 'payslips', 'agreements'],
     access: ['invoicing'],
-    monthlyPrice: { ZAR: 0, GBP: 0, USD: 0, EUR: 0 },
+    monthlyPrice: { ZAR: 0, GBP: 0, USD: 0, EUR: 0, KES: 0, ZMW: 0 },
     annualMonths: 10,
     features: [
       '3 invoices to try',
@@ -371,7 +403,7 @@ export const PLANS: Record<Plan, PlanDefinition> = {
     // isn't the enforcement.
     access: ['invoicing', 'accounting', 'agreements', 'tax', 'payroll', 'reporting'],
     payrollMode: 'draft',
-    monthlyPrice: { ZAR: 550.00, GBP: 23.99, USD: 29.99, EUR: 26.99 },
+    monthlyPrice: { ZAR: 550.00, GBP: 23.99, USD: 19.00, EUR: 26.99, KES: 1499, ZMW: 399 },
     annualMonths: 10,
     features: [
       'Unlimited invoices & quotes',
@@ -413,16 +445,16 @@ export const PLANS: Record<Plan, PlanDefinition> = {
     },
     access: ['invoicing', 'accounting', 'agreements', 'tax', 'payroll', 'reporting'],
     payrollMode: 'full',
-    monthlyPrice: { ZAR: 899.99, GBP: 39.99, USD: 49.99, EUR: 44.99 },
+    monthlyPrice: { ZAR: 899.99, GBP: 39.99, USD: 39.00, EUR: 44.99, KES: 2999, ZMW: 799 },
     // £39.99 ÷ 10 included employees is £4.00 a head, so £2.99 for employee 11
     // is a volume step down rather than a penalty. Read the comment on
     // `employeeOverage` in PlanDefinition before touching the ZAR figure.
-    employeeOverage: { ZAR: 39.00, GBP: 2.99, USD: 3.99, EUR: 3.49 },
+    employeeOverage: { ZAR: 39.00, GBP: 2.99, USD: 1.99, EUR: 3.49, KES: 149, ZMW: 39 },
     annualMonths: 10,
     features: [
       'Everything in Professional',
       'Full payroll — 10 employees included',
-      'Extra employees at £2.99 / R39 each per month',
+      'Extra employees at {overage} each per month',
       'Payslip generation & distribution',
       'Team collaboration (up to 15 members)',
       'Advanced reporting & schedules',
@@ -458,11 +490,11 @@ export const PLANS: Record<Plan, PlanDefinition> = {
     payrollMode: 'full',
     // The FIRST tier's rate, and it must stay equal to volumeTiers[0].rate —
     // this is what the pricing card quotes as the headline "per client" price.
-    monthlyPrice: { ZAR: 699.99, GBP: 29.99, USD: 37.99, EUR: 34.99 },
+    monthlyPrice: { ZAR: 699.99, GBP: 29.99, USD: 29.00, EUR: 34.99, KES: 2499, ZMW: 599 },
     // Same rate as Business, deliberately. If a practitioner's employees were
     // cheaper than a Business customer's, the arbitrage is to register one
     // 100-person company as ten "clients".
-    employeeOverage: { ZAR: 39.00, GBP: 2.99, USD: 3.99, EUR: 3.49 },
+    employeeOverage: { ZAR: 39.00, GBP: 2.99, USD: 1.99, EUR: 3.49, KES: 149, ZMW: 39 },
     annualMonths: 10,
     features: [
       'All Business features per client',
@@ -471,7 +503,7 @@ export const PLANS: Record<Plan, PlanDefinition> = {
       'Bulk operations across clients',
       'Practice analytics dashboard',
       'Priority dedicated support',
-      'Volume pricing — from £24.99 at 6 clients, £19.99 at 21',
+      'Volume pricing — from {tier2} at 6 clients, {tier3} at 21',
     ],
     cta:    'Get Started',
     accent: 'purple',
@@ -500,9 +532,9 @@ export const PLANS: Record<Plan, PlanDefinition> = {
       // these two numbers may never move independently.
       // `practitionerBillingMath.test.ts` asserts the inequality directly.
       volumeTiers: [
-        { upTo: 5,    rate: { ZAR: 699.99, GBP: 29.99, USD: 37.99, EUR: 34.99 } },
-        { upTo: 20,   rate: { ZAR: 574.99, GBP: 24.99, USD: 31.99, EUR: 29.99 } },
-        { upTo: null, rate: { ZAR: 450.00, GBP: 19.99, USD: 24.99, EUR: 21.99 } },
+        { upTo: 5,    rate: { ZAR: 699.99, GBP: 29.99, USD: 29.00, EUR: 34.99, KES: 2499, ZMW: 599 } },
+        { upTo: 20,   rate: { ZAR: 574.99, GBP: 24.99, USD: 24.00, EUR: 29.99, KES: 1999, ZMW: 499 } },
+        { upTo: null, rate: { ZAR: 450.00, GBP: 19.99, USD: 19.00, EUR: 21.99, KES: 1599, ZMW: 399 } },
       ],
     },
   },
@@ -730,12 +762,36 @@ export function sellsEmployeeOverage(plan: string | null | undefined): boolean {
   return getPlan(plan).employeeOverage != null;
 }
 
+/** Currencies quoted in whole units on the price list (KSh 1,499, not KSh 1,499.00). */
+export const WHOLE_UNIT_CURRENCIES: SupportedCurrency[] = ['KES', 'ZMW'];
+
 export function formatPrice(amount: number, currency: SupportedCurrency): string {
   const symbol = CURRENCY_META[currency].symbol;
-  const value  = amount % 1 === 0
-    ? amount.toLocaleString('en-ZA')
-    : amount.toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  // en-GB, not en-ZA: ICU's en-ZA prints "R899,99" and "R5 500", which the
+  // price list has never shown. Dot decimal, comma thousands, everywhere.
+  const value  = amount % 1 === 0 || WHOLE_UNIT_CURRENCIES.includes(currency)
+    ? Math.round(amount).toLocaleString('en-GB')
+    : amount.toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   return `${symbol}${value}`;
+}
+
+/**
+ * A plan's feature bullets with money printed in ONE currency.
+ *
+ * Two bullets quote a price — the employee overage and the Practitioner volume
+ * breaks. They used to be typed out as "£2.99 / R39", which was wrong for
+ * every other currency the moment there was one. The definitions now carry
+ * {overage}, {tier2} and {tier3}; this fills them from the same tables the
+ * headline price comes from, so the bullet and the invoice cannot disagree.
+ */
+export function planFeatures(plan: string | null | undefined, currency: SupportedCurrency = 'ZAR'): string[] {
+  const def = getPlan(plan);
+  const breaks = rateBreaksFor(def.key, currency) ?? [];
+  const overage = def.employeeOverage?.[currency];
+  return def.features.map(f => f
+    .replace('{overage}', overage != null ? formatPrice(overage, currency) : '—')
+    .replace('{tier2}', breaks[1] ? formatPrice(breaks[1].rate, currency) : '—')
+    .replace('{tier3}', breaks[2] ? formatPrice(breaks[2].rate, currency) : '—'));
 }
 
 /**

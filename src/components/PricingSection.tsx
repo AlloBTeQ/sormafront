@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { Check } from 'lucide-react';
 import { TIERS, CURRENCIES } from '@/config/plans';
-import { OFFERED_CURRENCIES } from '@/lib/plans';
+import { OFFERED_CURRENCIES, formatPrice, planFeatures } from '@/lib/plans';
 import type { SupportedCurrency } from '@/config/plans';
 import { checkoutHref } from '@/lib/site';
 
@@ -19,11 +19,19 @@ const MONO: React.CSSProperties = { fontFamily: 'var(--font-dm-mono), ui-monospa
 const WRAP = 'max-w-[1240px] mx-auto px-4 sm:px-8 lg:px-12';
 type BillingPeriod = 'monthly' | 'yearly';
 
+const CURRENCY_NOTE: Record<SupportedCurrency, string> = {
+  ZAR: 'Prices are in South African rand (ZAR).',
+  USD: 'Prices are in US dollars (USD).',
+  KES: 'Prices are in Kenyan shillings (KES).',
+  ZMW: 'Prices are in Zambian kwacha (ZMW).',
+  GBP: 'Prices are in pounds sterling (GBP).',
+  EUR: 'Prices are in euros (EUR).',
+};
+
 // Prices come from config/plans.ts — never type them here.
 export function PricingSection({ asPage = false }: { asPage?: boolean }) {
   const [currency, setCurrency] = useState<SupportedCurrency>('ZAR');
   const [period, setPeriod] = useState<BillingPeriod>('monthly');
-  const sym = CURRENCIES[currency].symbol;
 
   return (
       <section id="pricing" className={asPage ? 'pt-16 pb-24 lg:pt-24' : 'py-16 lg:py-24'}>
@@ -74,7 +82,7 @@ export function PricingSection({ asPage = false }: { asPage?: boolean }) {
                     {featured && <span className="text-[11px] px-2 py-0.5 rounded-full" style={{ ...MONO, color: NAVY, background: GOLD }}>Most chosen</span>}
                   </div>
                   <span className="text-[38px] font-extrabold leading-none tracking-[-0.02em]">
-                    {isFree ? 'Free' : <>{sym}{price.toFixed(2)}<span className="text-sm font-normal tracking-normal" style={{ color: MUTED }}>{unit}{per}</span></>}
+                    {isFree ? 'Free' : <>{formatPrice(price, currency)}<span className="text-sm font-normal tracking-normal" style={{ color: MUTED }}>{unit}{per}</span></>}
                   </span>
                   {/* Starter is a once-off trial, not a free monthly tier (owner's rule,
                       2026-10-26). Said on the card, beside the price, so nobody reads
@@ -86,7 +94,7 @@ export function PricingSection({ asPage = false }: { asPage?: boolean }) {
                   )}
                   <span className="text-sm" style={{ color: BODY }}>{tier.tagline}</span>
                   <ul className="flex flex-col gap-2 my-3 text-[13px]" style={{ color: BODY }}>
-                    {tier.features.slice(0, 4).map(f => (
+                    {planFeatures(tier.id, currency).slice(0, 4).map(f => (
                       <li key={f} className="flex gap-2.5 items-start">
                         <Check className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" style={{ color: GOLD }} />{f}
                       </li>
@@ -110,7 +118,7 @@ export function PricingSection({ asPage = false }: { asPage?: boolean }) {
             })}
           </div>
           <p className="mt-6 text-xs" style={{ ...MONO, color: MUTED }}>
-            Prices are in South African rand (ZAR). Cards in other currencies are converted by your card provider, who may charge a fee. SORMALITICS produces reports and schedules to support your tax filings — you review them, and you remain responsible for what you submit.
+            {CURRENCY_NOTE[currency]} Cards in other currencies are converted by your card provider, who may charge a fee. SORMALITICS produces reports and schedules to support your tax filings — you review them, and you remain responsible for what you submit.
           </p>
         </div>
       </section>
