@@ -5,7 +5,7 @@
 //   import { getPayrollRunRoute, saveLastRegion, getLastRegion } from '@/lib/payroll/regionRouter';
 //   router.push(getPayrollRunRoute('RSA'));
 
-export type PayrollRegion = 'RSA' | 'UK' | 'US' | 'KE' | 'UG' | 'BW' | 'ZM' | 'ZW' | 'NA' | 'SZ' | 'LS';
+export type PayrollRegion = 'RSA' | 'UK' | 'US' | 'KE' | 'UG' | 'BW' | 'ZM' | 'ZW' | 'NA' | 'SZ' | 'LS' | 'RW' | 'AO' | 'MZ';
 
 const STORAGE_KEY = 'sormalitics:lastPayrollRegion';
 
@@ -22,6 +22,9 @@ const REGION_ROUTE_MAP: Record<PayrollRegion, string> = {
   NA:  'narun',
   SZ:  'szrun',
   LS:  'lsrun',
+  RW:  'rwrun',
+  AO:  'aorun',
+  MZ:  'mzrun',
 };
 
 /**
@@ -89,4 +92,7 @@ export const REGION_META: Record<PayrollRegion, {
   NA:  { name: 'Namibia',        flag: '🇳🇦', currency: 'NAD', taxAuthority: 'NamRA', color: '#003580' },
   SZ:  { name: 'Eswatini',       flag: '🇸🇿', currency: 'SZL', taxAuthority: 'ERS',   color: '#3E5EB9' },
   LS:  { name: 'Lesotho',        flag: '🇱🇸', currency: 'LSL', taxAuthority: 'RSL',   color: '#00209F' },
+  RW:  { name: 'Rwanda',         flag: '🇷🇼', currency: 'RWF', taxAuthority: 'RRA',   color: '#00A1DE' },
+  AO:  { name: 'Angola',         flag: '🇦🇴', currency: 'AOA', taxAuthority: 'AGT',   color: '#CC092F' },
+  MZ:  { name: 'Mozambique',     flag: '🇲🇿', currency: 'MZN', taxAuthority: 'AT',    color: '#007168' },
 };

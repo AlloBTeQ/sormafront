@@ -92,9 +92,15 @@ export const SUPPORTED_CURRENCIES: SupportedCurrency[] = ['ZAR', 'GBP', 'USD', '
 //   1. add the currency to each Price's currency_options in Stripe;
 //   2. set BILLING_OFFERED_CURRENCIES (e.g. "ZAR,USD,KES,ZMW") in Vercel;
 //   3. redeploy.
-// Unset, it is ZAR only. Unknown codes are ignored; ZAR is always present.
+// Unknown codes are ignored; ZAR is always present.
+//
+// 2026-10-28: USD, KES and ZMW currency_options are on all six Stripe Prices
+// (owner confirmed), so this static site now shows all four by default — the
+// list is baked in at build time and .env* is not committed. The variable still
+// overrides it. Charging is guarded separately, in the app, which bills in the
+// currency of the company's registered country.
 function readOfferedCurrencies(): SupportedCurrency[] {
-  const raw = (process.env.BILLING_OFFERED_CURRENCIES ?? process.env.NEXT_PUBLIC_BILLING_OFFERED_CURRENCIES ?? 'ZAR')
+  const raw = (process.env.BILLING_OFFERED_CURRENCIES ?? process.env.NEXT_PUBLIC_BILLING_OFFERED_CURRENCIES ?? 'ZAR,USD,KES,ZMW')
     .split(',').map(c => c.trim().toUpperCase()).filter(Boolean);
   const list = raw.filter((c): c is SupportedCurrency => (SUPPORTED_CURRENCIES as string[]).includes(c));
   return list.includes('ZAR') ? list : ['ZAR', ...list];

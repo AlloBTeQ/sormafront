@@ -84,7 +84,7 @@ export const faqs: FAQ[] = [
   {
     question: 'Which countries does SORMALITICS support for payroll?',
     answer:
-      'Payroll is live in eight countries: South Africa (SARS), Botswana (BURS), Zambia (ZRA), Zimbabwe (ZIMRA), Namibia (NamRA), Eswatini (ERS), Lesotho (RSL) and Kenya (KRA). Each country has its own tax engine and its own monthly schedules and year-end certificates. Your company is set up for one country when you register.',
+      'Payroll is live in eleven countries: South Africa (SARS), Botswana (BURS), Zambia (ZRA), Zimbabwe (ZIMRA), Namibia (NamRA), Eswatini (ERS), Lesotho (RSL), Kenya (KRA), Rwanda (RRA), Angola (AGT) and Mozambique (AT). Each country has its own tax engine and its own monthly schedules and year-end certificates. Your company is set up for one country when you register.',
     categorySlug: 'payroll',
   },
   {

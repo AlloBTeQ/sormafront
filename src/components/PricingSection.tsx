@@ -19,11 +19,22 @@ const MONO: React.CSSProperties = { fontFamily: 'var(--font-dm-mono), ui-monospa
 const WRAP = 'max-w-[1240px] mx-auto px-4 sm:px-8 lg:px-12';
 type BillingPeriod = 'monthly' | 'yearly';
 
+// The market each currency is for — shown on hover over the selector, because
+// checkout bills in the currency of the country the company registers in.
+const CURRENCY_MARKET: Record<SupportedCurrency, string> = {
+  ZAR: 'South Africa, Botswana, Namibia, Eswatini, Lesotho, Rwanda, Angola, Mozambique',
+  USD: 'Zimbabwe',
+  KES: 'Kenya',
+  ZMW: 'Zambia',
+  GBP: 'United Kingdom',
+  EUR: 'Europe',
+};
+
 const CURRENCY_NOTE: Record<SupportedCurrency, string> = {
   ZAR: 'Prices are in South African rand (ZAR).',
-  USD: 'Prices are in US dollars (USD).',
-  KES: 'Prices are in Kenyan shillings (KES).',
-  ZMW: 'Prices are in Zambian kwacha (ZMW).',
+  USD: 'Prices are in US dollars (USD), for companies registered in Zimbabwe.',
+  KES: 'Prices are in Kenyan shillings (KES), for companies registered in Kenya.',
+  ZMW: 'Prices are in Zambian kwacha (ZMW), for companies registered in Zambia.',
   GBP: 'Prices are in pounds sterling (GBP).',
   EUR: 'Prices are in euros (EUR).',
 };
@@ -42,6 +53,7 @@ export function PricingSection({ asPage = false }: { asPage?: boolean }) {
               {OFFERED_CURRENCIES.length > 1 && <div className="flex" style={{ border: `1px solid ${RULE}` }}>
                 {OFFERED_CURRENCIES.map(c => (
                   <button key={c} type="button" onClick={() => setCurrency(c)} aria-pressed={currency === c}
+                    title={CURRENCY_MARKET[c]}
                     className="px-3 py-2.5 transition-colors"
                     style={currency === c ? { background: TEXT, color: NAVY } : { color: BODY }}>
                     {CURRENCIES[c].symbol} {c}

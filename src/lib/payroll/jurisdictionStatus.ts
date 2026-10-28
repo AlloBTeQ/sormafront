@@ -107,7 +107,7 @@ export type JurisdictionStatus = 'live' | 'in-development';
  * region added to REGION_META then defaults to in-development, which is the
  * safe direction to fail.
  */
-const LIVE_REGIONS: readonly PayrollRegion[] = ['RSA', 'BW', 'ZM', 'ZW', 'NA', 'SZ', 'LS', 'KE'] as const;
+const LIVE_REGIONS: readonly PayrollRegion[] = ['RSA', 'BW', 'ZM', 'ZW', 'NA', 'SZ', 'LS', 'KE', 'RW', 'AO', 'MZ'] as const;
 
 /**
  * The three published conditions, per region, as DATA.
@@ -140,6 +140,9 @@ export const READINESS: Partial<Record<PayrollRegion, JurisdictionReadiness>> = 
   SZ: { runPersists: true, testSuite: true, outputsGenerated: true, note: 'PAYE and ENPF schedules and PAYE05 from real saved runs, 2026-10-25.' },
   LS: { runPersists: true, testSuite: true, outputsGenerated: true, note: 'PAYE schedule and P.16 from real saved runs, 2026-10-25.' },
   KE: { runPersists: true, testSuite: true, outputsGenerated: true, note: 'PAYE, NSSF, SHIF and housing levy schedules and P9A from real saved runs, 2026-10-25.' },
+  RW: { runPersists: true, testSuite: true, outputsGenerated: true, note: 'Unified PAYE + RSSB schedule from real saved runs, 2026-10-27; promoted 2026-10-28.' },
+  AO: { runPersists: true, testSuite: true, outputsGenerated: true, note: 'IRT and INSS schedules and the Modelo 2 summary from real saved runs, 2026-10-27; promoted 2026-10-28.' },
+  MZ: { runPersists: true, testSuite: true, outputsGenerated: true, note: 'IRPS (M/19) and INSS schedules and employee certificates from real saved runs, 2026-10-27; promoted 2026-10-28.' },
   UK: {
     runPersists: true,
     testSuite: true,
@@ -185,6 +188,9 @@ const FILING_PORTAL: Partial<Record<PayrollRegion, string>> = {
   SZ:  'ERS (ENPF separately)',
   LS:  'RSL',
   KE:  'KRA iTax (NSSF and SHA separately)',
+  RW:  'RRA e-Tax (PAYE and RSSB on one return)',
+  AO:  'the AGT Portal do Contribuinte (INSS separately)',
+  MZ:  'AT e-Declaração (INSS on SISSMO separately)',
 };
 
 /** e.g. "Generate the P2 and supporting schedules — you file with ZIMRA TaRMS yourself." */
