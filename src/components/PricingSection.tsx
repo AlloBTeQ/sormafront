@@ -118,7 +118,7 @@ export function PricingSection({ asPage = false }: { asPage?: boolean }) {
             })}
           </div>
           <p className="mt-6 text-xs" style={{ ...MONO, color: MUTED }}>
-            {CURRENCY_NOTE[currency]} Cards in other currencies are converted by your card provider, who may charge a fee. SORMALITICS produces reports and schedules to support your tax filings — you review them, and you remain responsible for what you submit.
+            {CURRENCY_NOTE[currency]} {OFFERED_CURRENCIES.length > 1 ? 'Your company is billed in the currency of the country it is registered in; the selector is for comparison. ' : ''}Cards in other currencies are converted by your card provider, who may charge a fee. SORMALITICS produces reports and schedules to support your tax filings — you review them, and you remain responsible for what you submit.
           </p>
         </div>
       </section>
