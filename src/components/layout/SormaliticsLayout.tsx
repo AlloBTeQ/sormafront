@@ -9,6 +9,7 @@ import { SormaliticsFooter } from './SormaliticsFooter';
 import { app } from '@/lib/site';
 import { SormaliticsMark } from '@/components/brand/SormaliticsMark';
 import { PromoBanner } from '@/components/PromoBanner';
+import { CountrySuggest } from '@/components/CountrySuggest';
 
 const INK = '#143152';
 const NAV_BG = '#FFFFFF';
@@ -135,6 +136,8 @@ export function SormaliticsLayout({ children }: { children: React.ReactNode }) {
     <div className="min-h-screen flex flex-col bg-white">
       <PromoBanner />
       <SormaliticsNavbar />
+      {/* Country suggestion on the pages a visitor lands on before choosing one. */}
+      {(pathname === '/' || pathname === '/payroll' || pathname === '/pricing') && <CountrySuggest />}
       <main className="flex-1">{children}</main>
       <SormaliticsFooter />
     </div>

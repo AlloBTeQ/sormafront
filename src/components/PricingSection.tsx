@@ -3,10 +3,11 @@
 import React, { useEffect, useState } from 'react';
 import { Check } from 'lucide-react';
 import { TIERS, CURRENCIES } from '@/config/plans';
-import { OFFERED_CURRENCIES, formatPrice, planFeatures } from '@/lib/plans';
+import { OFFERED_CURRENCIES, billingCurrencyFor, formatPrice, planFeatures } from '@/lib/plans';
 import type { SupportedCurrency } from '@/config/plans';
 import { checkoutHref } from '@/lib/site';
 import { activeTrialPromotion, promotionEndLabel, type TrialPromotion } from '@/lib/billing/promotions';
+import { likelyCountry } from '@/lib/geo/likelyCountry';
 
 const NAVY = '#143152';
 const TEXT = '#FBF7EA';
@@ -47,6 +48,16 @@ export function PricingSection({ asPage = false }: { asPage?: boolean }) {
   // Read after mount (static export): see components/PromoBanner.tsx.
   const [promo, setPromo] = useState<TrialPromotion | null>(null);
   useEffect(() => { setPromo(activeTrialPromotion()); }, []);
+  // Open in the visitor's likely billing currency (browser time zone, see
+  // lib/geo/likelyCountry.ts) — the currency checkout will actually bill a
+  // company registered there. Only an initial choice: the selector stays,
+  // and an unoffered currency falls back to rand inside billingCurrencyFor.
+  useEffect(() => {
+    const guess = likelyCountry();
+    if (!guess) return;
+    const c = billingCurrencyFor(guess.primary.iso);
+    if (OFFERED_CURRENCIES.includes(c)) setCurrency(c);
+  }, []);
 
   return (
       <section id="pricing" className={asPage ? 'pt-16 pb-24 lg:pt-24' : 'py-16 lg:py-24'}>
