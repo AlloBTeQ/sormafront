@@ -1,11 +1,12 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Check } from 'lucide-react';
 import { TIERS, CURRENCIES } from '@/config/plans';
 import { OFFERED_CURRENCIES, formatPrice, planFeatures } from '@/lib/plans';
 import type { SupportedCurrency } from '@/config/plans';
 import { checkoutHref } from '@/lib/site';
+import { activeTrialPromotion, promotionEndLabel, type TrialPromotion } from '@/lib/billing/promotions';
 
 const NAVY = '#143152';
 const TEXT = '#FBF7EA';
@@ -43,6 +44,9 @@ const CURRENCY_NOTE: Record<SupportedCurrency, string> = {
 export function PricingSection({ asPage = false }: { asPage?: boolean }) {
   const [currency, setCurrency] = useState<SupportedCurrency>('ZAR');
   const [period, setPeriod] = useState<BillingPeriod>('monthly');
+  // Read after mount (static export): see components/PromoBanner.tsx.
+  const [promo, setPromo] = useState<TrialPromotion | null>(null);
+  useEffect(() => { setPromo(activeTrialPromotion()); }, []);
 
   return (
       <section id="pricing" className={asPage ? 'pt-16 pb-24 lg:pt-24' : 'py-16 lg:py-24'}>
@@ -102,6 +106,17 @@ export function PricingSection({ asPage = false }: { asPage?: boolean }) {
                   {isFree && (
                     <span className="text-[11px] tracking-[0.06em]" style={{ ...MONO, color: GOLD }}>
                       ONCE-OFF TRIAL · PER COMPANY · NO CARD
+                    </span>
+                  )}
+                  {/* The current special, beside the price it is free from — with
+                      the price after it, the renewal and how not to pay, as the
+                      app's pricing page says it (CPA s41). Decided in the browser
+                      so it vanishes with the offer, no rebuild needed. */}
+                  {!isFree && promo && period === 'monthly' && (
+                    <span className="text-[12px] leading-snug" style={{ color: GOLD }}>
+                      <strong>First month free</strong> for new subscribers who sign up by {promotionEndLabel(promo)},
+                      then {formatPrice(price, currency)}{unit}/mo, renewing monthly until you cancel.
+                      Card required; cancel before the month ends and you pay nothing.
                     </span>
                   )}
                   <span className="text-sm" style={{ color: BODY }}>{tier.tagline}</span>

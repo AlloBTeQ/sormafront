@@ -8,6 +8,7 @@ import {
 import { SormaliticsFooter } from './SormaliticsFooter';
 import { app } from '@/lib/site';
 import { SormaliticsMark } from '@/components/brand/SormaliticsMark';
+import { PromoBanner } from '@/components/PromoBanner';
 
 const INK = '#143152';
 const NAV_BG = '#FFFFFF';
@@ -132,6 +133,7 @@ export function SormaliticsLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
+      <PromoBanner />
       <SormaliticsNavbar />
       <main className="flex-1">{children}</main>
       <SormaliticsFooter />

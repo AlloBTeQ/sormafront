@@ -14,6 +14,7 @@ const FILES = [
   'src/lib/legal/entities.ts',
   'src/lib/legal/versions.ts',
   'src/lib/fisi/config.ts',
+  'src/lib/billing/promotions.ts',
 ];
 if (!existsSync(APP)) { console.error(`App repo not found at ${APP}`); process.exit(1); }
 for (const f of FILES) { copyFileSync(resolve(APP, f), resolve(f)); console.log('synced', f); }
