@@ -28,6 +28,8 @@ const MUTED = '#8FA9C8';
 const RULE = '#2B4A70';
 const GOLD = '#C9A227';
 const MONO: React.CSSProperties = { fontFamily: 'var(--font-dm-mono), ui-monospace, monospace' };
+/** Upper bound on a monthly salary — above any real payslip in every currency served, including kwanza. */
+const MAX_GROSS = 1_000_000_000;
 
 // Each country's own way of writing money: R 25 000,00 in South Africa,
 // KSh 100,000.00 in Kenya, K15,000.00 in Zambia.
@@ -59,9 +61,12 @@ export function PayCalculator({ region, country, currency, sampleGross }: {
     return () => { live = false; };
   }, []);
 
-  const gross = Number(String(raw).replace(/[^\d.]/g, ''));
+  // Spaces and commas are thousands separators people type ("25 000",
+  // "100,000"); anything else never reaches the field (see onChange).
+  const gross = Number(String(raw).replace(/[\s,]/g, ''));
+  const tooBig = Number.isFinite(gross) && gross > MAX_GROSS;
   const result: Result | null = useMemo(() => {
-    if (!engine || !Number.isFinite(gross) || gross <= 0) return null;
+    if (!engine || !Number.isFinite(gross) || gross <= 0 || gross > MAX_GROSS) return null;
     try { return engine.calculatePayslip(gross, region, {}); } catch { return null; }
   }, [engine, gross, region]);
 
@@ -79,9 +84,22 @@ export function PayCalculator({ region, country, currency, sampleGross }: {
       </label>
       <input
         id="gross"
+        type="text"
         inputMode="decimal"
+        autoComplete="off"
+        spellCheck={false}
+        maxLength={16}
         value={raw}
-        onChange={e => setRaw(e.target.value)}
+        // A salary is digits, one decimal point, and the separators people
+        // type. Anything else is dropped as it is typed or pasted, so the box
+        // cannot hold "SELECT * FROM users" or "abc123" (which an earlier
+        // version quietly read as 123). Nothing typed here ever leaves the
+        // browser: there is no server behind this page.
+        onChange={e => {
+          const cleaned = e.target.value.replace(/[^\d.,\s]/g, '');
+          const oneDot = cleaned.replace(/(\..*)\./g, '$1');
+          setRaw(/\d/.test(oneDot) ? oneDot.replace(/^\s+/, '') : '');
+        }}
         className="w-full rounded-lg px-4 py-3 text-lg font-semibold outline-none focus:ring-2"
         style={{ background: NAVY, color: TEXT, border: `1px solid ${RULE}`, ...MONO }}
         aria-describedby="calc-note"
@@ -90,7 +108,11 @@ export function PayCalculator({ region, country, currency, sampleGross }: {
       <div className="mt-6" aria-live="polite">
         {failed && <p style={{ color: BODY }}>The calculator could not load. Please refresh the page.</p>}
         {!failed && !engine && <p style={{ color: MUTED }}>Loading the {country} tax tables…</p>}
-        {engine && !result && <p style={{ color: MUTED }}>Enter a monthly salary above zero.</p>}
+        {engine && !result && (
+          <p style={{ color: MUTED }}>
+            {tooBig ? `Enter a monthly salary up to ${MAX_GROSS.toLocaleString('en-ZA')}.` : 'Enter a monthly salary above zero.'}
+          </p>
+        )}
         {result && (
           <>
             <dl className="divide-y" style={{ borderColor: RULE }}>
