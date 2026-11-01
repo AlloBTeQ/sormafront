@@ -11,6 +11,8 @@ import { SormaliticsLayout } from '@/components/layout/SormaliticsLayout';
 import { SITE_URL } from '@/lib/site';
 import { organizationLd, websiteLd, ld } from '@/lib/seo';
 import { Toaster } from 'sonner';
+import { CookieBanner } from '@/components/legal/CookieBanner';
+import { Analytics } from '@/components/legal/Analytics';
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -25,8 +27,8 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
   openGraph: {
     type: 'website',
-    locale: 'en_GB',
-    alternateLocale: ['en_US', 'en_ZA'],
+    locale: 'en_ZA',
+    alternateLocale: ['en_GB', 'en_US'],
     url: SITE_URL,
     siteName: 'SORMALITICS',
     title: 'SORMALITICS — Nothing posts until someone signs for it',
@@ -58,11 +60,17 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en-ZA">
       <body className="min-h-screen font-sans antialiased" suppressHydrationWarning>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: ld([organizationLd, websiteLd]) }} />
         <SormaliticsLayout>{children}</SormaliticsLayout>
         <Toaster richColors position="top-center" />
+        {/* Consent first, then analytics that reads it — both synced from the
+            app (scripts/sync-from-app.mjs). Google Analytics loads only after
+            the visitor accepts analytics cookies, and only when
+            NEXT_PUBLIC_GA_ID is set on this Vercel project. */}
+        <CookieBanner />
+        <Analytics />
       </body>
     </html>
   );

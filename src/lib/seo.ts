@@ -17,8 +17,9 @@ export function pageMeta({ path, title, description }: { path: string; title: st
     alternates: { canonical: path },
     openGraph: {
       type: 'website',
-      locale: 'en_GB',
-      alternateLocale: ['en_US', 'en_ZA'],
+      // Southern Africa first: most visitors and every launch market read en-ZA.
+      locale: 'en_ZA',
+      alternateLocale: ['en_GB', 'en_US'],
       siteName: BRAND,
       url: path,
       title: full,

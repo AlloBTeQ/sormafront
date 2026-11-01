@@ -25,6 +25,7 @@ const MONO: React.CSSProperties = { fontFamily: 'var(--font-dm-mono), ui-monospa
 const SERVICES = [
   { name: 'Invoicing',            href: '/services' },
   { name: 'Payroll & Payslips',   href: '/services' },
+  { name: 'Payroll by Country',   href: '/payroll' },
   { name: 'Legal Agreements',     href: '/services' },
   { name: 'Accounting Suite',     href: '/services' },
   { name: 'Document Store',       href: '/store' },

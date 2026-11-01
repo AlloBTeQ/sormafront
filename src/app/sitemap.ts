@@ -1,6 +1,7 @@
 import type { MetadataRoute } from 'next';
 import { articles } from '@/lib/help/content';
 import { SITE_URL } from '@/lib/site';
+import { COUNTRY_PAGES } from '@/lib/payroll/countryPages';
 
 export const dynamic = 'force-static';
 
@@ -14,6 +15,9 @@ const PAGES: [string, number][] = [
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
     ...PAGES.map(([path, priority]) => ({ url: `${SITE_URL}${path}`, priority })),
+    // Country payroll pages — the searches people make when ready to buy.
+    { url: `${SITE_URL}/payroll`, priority: 0.8 },
+    ...COUNTRY_PAGES.map(c => ({ url: `${SITE_URL}/payroll/${c.slug}`, priority: 0.8 })),
     ...articles.map(a => ({ url: `${SITE_URL}/help/${a.slug}`, priority: 0.5 })),
   ];
 }
