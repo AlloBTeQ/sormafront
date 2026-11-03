@@ -34,19 +34,23 @@ import {
 
 // ─── Plans ───────────────────────────────────────────────────────────────────
 
-// Canonical ladder: free → professional → business → practitioner.
+// Canonical ladder: free → professional → business → practitioner, with
+// `cooperative` beside Business: the same company toolkit plus the member
+// ledger and the Prudential Authority returns, for South African SACCOs and
+// co-operative banks (owner's decision, 2026-11-03).
 // `team`/`enterprise` are retained as legacy aliases so historical User
 // documents still validate; they are not sold.
 export type Plan =
   | 'free'
   | 'professional'
   | 'business'
+  | 'cooperative'
   | 'practitioner'
   | 'team'
   | 'enterprise';
 
 /** Plans a customer can actually buy today, in ladder order. */
-export const PURCHASABLE_PLANS = ['free', 'professional', 'business', 'practitioner'] as const;
+export const PURCHASABLE_PLANS = ['free', 'professional', 'business', 'cooperative', 'practitioner'] as const;
 export type PurchasablePlan = (typeof PURCHASABLE_PLANS)[number];
 
 /**
@@ -56,7 +60,7 @@ export type PurchasablePlan = (typeof PURCHASABLE_PLANS)[number];
  * starts at the minimum quantity and the count is reconciled automatically as
  * clients are added/removed, so it is self-serve like the others.
  */
-export const SELF_SERVE_PLANS = ['professional', 'business', 'practitioner'] as const;
+export const SELF_SERVE_PLANS = ['professional', 'business', 'cooperative', 'practitioner'] as const;
 export type SelfServePlan = (typeof SELF_SERVE_PLANS)[number];
 
 export type BillingCycle = 'monthly' | 'annual';
@@ -144,7 +148,13 @@ export type ModuleKey =
   | 'payroll'
   | 'reporting'
   | 'practice'
-  | 'fleet';
+  | 'fleet'
+  /**
+   * The co-operative member ledger and the PA's CFI001–CFI005 returns.
+   * Cooperative has it; Practitioner and Enterprise have it so a practice can
+   * prepare a SACCO client's returns.
+   */
+  | 'regulatory';
 
 // ─── Limits ──────────────────────────────────────────────────────────────────
 
@@ -190,6 +200,12 @@ export interface PlanLimits {
   signatureRequests: number;
   /** Max custom templates per month. */
   templates:    number;
+  /**
+   * Co-operative members included in the price — the people on the member
+   * register at a date (lib/regulatory). Only meaningful on a plan with the
+   * 'regulatory' module; UNLIMITED everywhere else.
+   */
+  members:      number;
 }
 
 /**
@@ -324,6 +340,20 @@ export interface PlanDefinition {
    * the bug. It is inconsistent on purpose.
    */
   employeeOverage?: Record<SupportedCurrency, number> | null;
+  /**
+   * Payroll jurisdictions this plan is sold to. Absent = every jurisdiction.
+   *
+   * Cooperative is ['ZA']: its returns are the South African Prudential
+   * Authority's. A currency check is not enough — `billingCurrencyFor` folds
+   * Botswana, Namibia, Eswatini, Lesotho and others into the rand zone too.
+   */
+  soldIn?: readonly string[];
+  /**
+   * Monthly rate for one co-operative member above `limits.members`, or
+   * null/absent while none is set — the members above the allowance are then
+   * reported to the customer and to us, not charged.
+   */
+  memberOverage?: Record<SupportedCurrency, number> | null;
 }
 
 /**
@@ -351,7 +381,7 @@ export const PLANS: Record<Plan, PlanDefinition> = {
     limits: {
       invoices: 3, quotes: 2, payslips: 1, agreements: 1,
       issuers: 1, employees: 0, teamMembers: 1,
-      reportExports: 2, pdfUploads: 5, signatureRequests: 3, templates: 2,
+      reportExports: 2, pdfUploads: 5, signatureRequests: 3, templates: 2, members: UNLIMITED,
     },
     lifetimeLimits: ['invoices', 'quotes', 'payslips', 'agreements'],
     access: ['invoicing'],
@@ -389,7 +419,7 @@ export const PLANS: Record<Plan, PlanDefinition> = {
       // up with one person both capturing and approving — that is expected on
       // this tier, and segregationOfDuties.ts waives the split here on purpose.
       issuers: 1, employees: 2, teamMembers: 2,
-      reportExports: 20, pdfUploads: 100, signatureRequests: 50, templates: 20,
+      reportExports: 20, pdfUploads: 100, signatureRequests: 50, templates: 20, members: UNLIMITED,
     },
     // Payroll IS on Professional now, but only as far as `review` — see
     // `payrollMode` below. The previous comment here said "no payroll on
@@ -447,7 +477,7 @@ export const PLANS: Record<Plan, PlanDefinition> = {
       // things by "you're allowed ten". Raising it also costs no existing
       // customer anything, which lowering `employees` to disambiguate would.
       issuers: 1, employees: 10, teamMembers: 15,
-      reportExports: UNLIMITED, pdfUploads: UNLIMITED, signatureRequests: UNLIMITED, templates: UNLIMITED,
+      reportExports: UNLIMITED, pdfUploads: UNLIMITED, signatureRequests: UNLIMITED, templates: UNLIMITED, members: UNLIMITED,
     },
     access: ['invoicing', 'accounting', 'agreements', 'tax', 'payroll', 'reporting'],
     payrollMode: 'full',
@@ -474,6 +504,49 @@ export const PLANS: Record<Plan, PlanDefinition> = {
     },
   },
 
+  cooperative: {
+    key:     'cooperative',
+    name:    'Co-operative',
+    tagline: 'For SACCOs and co-operative banks — member ledger and PA returns',
+    badge:   'PA RETURNS',
+    // Business's limits, plus the member allowance. Owner's decisions,
+    // 2026-11-03: R999.99 a month — the PA returns are quarterly, so the price
+    // is set for a book that is busy four times a year, not every day — South
+    // Africa only, and nothing extra for members until the register passes 750.
+    limits: {
+      invoices: UNLIMITED, quotes: UNLIMITED, payslips: UNLIMITED, agreements: UNLIMITED,
+      issuers: 1, employees: 10, teamMembers: 15,
+      reportExports: UNLIMITED, pdfUploads: UNLIMITED, signatureRequests: UNLIMITED, templates: UNLIMITED,
+      members: 750,
+    },
+    access: ['invoicing', 'accounting', 'agreements', 'tax', 'payroll', 'reporting', 'regulatory'],
+    payrollMode: 'full',
+    // Rand only. The other currencies are placeholders the type requires and
+    // are never quoted: `soldIn` refuses every jurisdiction but South Africa,
+    // and `monthlyPrice()` returns null outside it (see below).
+    monthlyPrice: { ZAR: 999.99, GBP: 0, USD: 0, EUR: 0, KES: 0, ZMW: 0 },
+    employeeOverage: { ZAR: 39.00, GBP: 0, USD: 0, EUR: 0, KES: 0, ZMW: 0 },
+    // Not set yet: above 750 members the excess is shown, not billed.
+    memberOverage: null,
+    soldIn: ['ZA'],
+    annualMonths: 10,
+    features: [
+      'Everything in Business',
+      'Member register — savings, shares and loans',
+      'Member activity posts straight to your ledger',
+      'Loan book with arrears, interest runs and provisions',
+      "Prudential Authority returns CFI001–CFI005, on the PA's own workbook",
+      'Prudential ratio checks before you sign',
+      'Up to 750 members included',
+    ],
+    cta:    'Get Started',
+    accent: 'teal',
+    stripePriceEnv: {
+      monthly: 'STRIPE_PRICE_COOPERATIVE_MONTHLY',
+      annual:  'STRIPE_PRICE_COOPERATIVE_ANNUAL',
+    },
+  },
+
   practitioner: {
     key:     'practitioner',
     name:    'Practitioner',
@@ -490,9 +563,9 @@ export const PLANS: Record<Plan, PlanDefinition> = {
       // in lib/billing/entitlements.ts. Leaving this unlimited was a real leak:
       // it let one tenancy run a 400-person payroll for the price of a slot.
       issuers: UNLIMITED, employees: 10, teamMembers: UNLIMITED,
-      reportExports: UNLIMITED, pdfUploads: UNLIMITED, signatureRequests: UNLIMITED, templates: UNLIMITED,
+      reportExports: UNLIMITED, pdfUploads: UNLIMITED, signatureRequests: UNLIMITED, templates: UNLIMITED, members: UNLIMITED,
     },
-    access: ['invoicing', 'accounting', 'agreements', 'tax', 'payroll', 'reporting', 'practice'],
+    access: ['invoicing', 'accounting', 'agreements', 'tax', 'payroll', 'reporting', 'practice', 'regulatory'],
     payrollMode: 'full',
     // The FIRST tier's rate, and it must stay equal to volumeTiers[0].rate —
     // this is what the pricing card quotes as the headline "per client" price.
@@ -555,7 +628,7 @@ export const PLANS: Record<Plan, PlanDefinition> = {
     limits: {
       invoices: UNLIMITED, quotes: UNLIMITED, payslips: UNLIMITED, agreements: UNLIMITED,
       issuers: 1, employees: 25, teamMembers: 15,
-      reportExports: UNLIMITED, pdfUploads: UNLIMITED, signatureRequests: UNLIMITED, templates: UNLIMITED,
+      reportExports: UNLIMITED, pdfUploads: UNLIMITED, signatureRequests: UNLIMITED, templates: UNLIMITED, members: UNLIMITED,
     },
     access: ['invoicing', 'accounting', 'agreements', 'tax', 'payroll', 'reporting'],
     monthlyPrice: null,
@@ -574,9 +647,9 @@ export const PLANS: Record<Plan, PlanDefinition> = {
     limits: {
       invoices: UNLIMITED, quotes: UNLIMITED, payslips: UNLIMITED, agreements: UNLIMITED,
       issuers: UNLIMITED, employees: UNLIMITED, teamMembers: UNLIMITED,
-      reportExports: UNLIMITED, pdfUploads: UNLIMITED, signatureRequests: UNLIMITED, templates: UNLIMITED,
+      reportExports: UNLIMITED, pdfUploads: UNLIMITED, signatureRequests: UNLIMITED, templates: UNLIMITED, members: UNLIMITED,
     },
-    access: ['invoicing', 'accounting', 'agreements', 'tax', 'payroll', 'reporting', 'practice'],
+    access: ['invoicing', 'accounting', 'agreements', 'tax', 'payroll', 'reporting', 'practice', 'regulatory'],
     monthlyPrice: null,
     annualMonths: 10,
     features: [],
@@ -666,7 +739,30 @@ export function displayQuantity(plan: string | null | undefined, requested: unkn
 
 /** Monthly price in a currency, or null when the plan is not fixed-price. */
 export function monthlyPrice(plan: Plan, currency: SupportedCurrency): number | null {
+  if (PLANS[plan].soldIn && !planSoldInCurrency(plan, currency)) return null;
   return PLANS[plan].monthlyPrice?.[currency] ?? null;
+}
+
+/**
+ * Whether `plan` is sold to a company whose payroll jurisdiction is
+ * `jurisdiction`. 'RSA' is the payroll engine's spelling of South Africa.
+ */
+export function planSoldIn(plan: string | null | undefined, jurisdiction: string | null | undefined): boolean {
+  const list = getPlan(plan).soldIn;
+  if (!list) return true;
+  const j = String(jurisdiction ?? '').toUpperCase();
+  const norm = j === 'RSA' ? 'ZA' : j === 'UK' ? 'GB' : j;
+  // An account with no jurisdiction on record is billed in rand (see
+  // billingCurrencyFor) and was registered before the jurisdiction question;
+  // those are South African.
+  return list.includes(norm || 'ZA');
+}
+
+/** A jurisdiction-limited plan is quoted only in the currency its jurisdictions bill in. */
+function planSoldInCurrency(plan: Plan, currency: SupportedCurrency): boolean {
+  const list = PLANS[plan].soldIn;
+  if (!list) return true;
+  return list.some((j) => billingCurrencyFor(j) === currency);
 }
 
 /** Annual price — `annualMonths` × the monthly rate. */
