@@ -8,7 +8,7 @@ import type { SupportedCurrency } from '@/config/plans';
 import { app, checkoutHref } from '@/lib/site';
 import { activeTrialPromotion, promotionEndLabel, type TrialPromotion } from '@/lib/billing/promotions';
 import { likelyCountry } from '@/lib/geo/likelyCountry';
-import { ADDON_CARDS } from '@/config/addons';
+import { ADDON_CARDS, addonMoney, isAddonCurrency } from '@/config/addons';
 
 const NAVY = '#143152';
 const TEXT = '#FBF7EA';
@@ -157,7 +157,7 @@ export function PricingSection({ asPage = false }: { asPage?: boolean }) {
             })}
           </div>
           <CooperativeBand period={period} promo={promo} />
-          <AddonsBand />
+          <AddonsBand currency={currency} />
           <p className="mt-6 text-xs" style={{ ...MONO, color: MUTED }}>
             {CURRENCY_NOTE[currency]} {OFFERED_CURRENCIES.length > 1 ? 'Your company is billed in the currency of the country it is registered in; the selector is for comparison. ' : ''}Cards in other currencies are converted by your card provider, who may charge a fee. SORMALITICS produces reports and schedules to support your tax filings — you review them, and you remain responsible for what you submit.
           </p>
@@ -220,8 +220,9 @@ function CooperativeBand({ period, promo }: { period: BillingPeriod; promo: Tria
 // ── Add-ons ───────────────────────────────────────────────────────────────────
 // Bought on their own or with any plan. The plans that include reporting
 // already include AFS workspaces; these are for everyone else — the preparer
-// with one set to do, or many. Billed in rand (see config/addons.ts).
-function AddonsBand() {
+// with one set to do, or many. In the selected currency (see config/addons.ts).
+function AddonsBand({ currency }: { currency: string }) {
+  const cur = isAddonCurrency(currency) ? currency : 'ZAR';
   return (
     <div className="mt-10">
       <div className="flex flex-col gap-1 mb-4">
@@ -235,11 +236,11 @@ function AddonsBand() {
           <div key={a.key} className="rounded-2xl p-6 flex flex-col gap-3" style={{ border: `1px solid ${RULE}`, background: 'rgba(255,255,255,0.03)' }}>
             <span className="text-[15px] font-bold">{a.name}</span>
             <span className="text-[28px] font-extrabold leading-none tracking-[-0.02em]">
-              {a.price}<span className="text-sm font-normal tracking-normal" style={{ color: MUTED }}> {a.per}</span>
+              {a.from ? 'From ' : ''}{addonMoney(a.amount[cur], cur)}<span className="text-sm font-normal tracking-normal" style={{ color: MUTED }}> {a.per}</span>
             </span>
             <span className="text-[13px]" style={{ color: BODY }}>{a.blurb}</span>
             <ul className="flex flex-col gap-1.5 text-[13px] flex-1" style={{ color: BODY }}>
-              {a.points.map(p => (
+              {a.points(cur).map(p => (
                 <li key={p} className="flex gap-2.5 items-start"><Check className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" style={{ color: GOLD }} />{p}</li>
               ))}
             </ul>
@@ -259,7 +260,7 @@ function AddonsBand() {
           </div>
         ))}
       </div>
-      <p className="mt-3 text-[11px]" style={{ ...MONO, color: MUTED }}>Add-ons are billed in rand.</p>
+      <p className="mt-3 text-[11px]" style={{ ...MONO, color: MUTED }}>Add-ons are charged in your company&apos;s billing currency, like the plans.</p>
     </div>
   );
 }
