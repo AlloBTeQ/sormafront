@@ -5,9 +5,10 @@ import { Check } from 'lucide-react';
 import { TIERS, CURRENCIES } from '@/config/plans';
 import { OFFERED_CURRENCIES, billingCurrencyFor, formatPrice, planFeatures } from '@/lib/plans';
 import type { SupportedCurrency } from '@/config/plans';
-import { checkoutHref } from '@/lib/site';
+import { app, checkoutHref } from '@/lib/site';
 import { activeTrialPromotion, promotionEndLabel, type TrialPromotion } from '@/lib/billing/promotions';
 import { likelyCountry } from '@/lib/geo/likelyCountry';
+import { ADDON_CARDS } from '@/config/addons';
 
 const NAVY = '#143152';
 const TEXT = '#FBF7EA';
@@ -156,6 +157,7 @@ export function PricingSection({ asPage = false }: { asPage?: boolean }) {
             })}
           </div>
           <CooperativeBand period={period} promo={promo} />
+          <AddonsBand />
           <p className="mt-6 text-xs" style={{ ...MONO, color: MUTED }}>
             {CURRENCY_NOTE[currency]} {OFFERED_CURRENCIES.length > 1 ? 'Your company is billed in the currency of the country it is registered in; the selector is for comparison. ' : ''}Cards in other currencies are converted by your card provider, who may charge a fee. SORMALITICS produces reports and schedules to support your tax filings — you review them, and you remain responsible for what you submit.
           </p>
@@ -211,6 +213,53 @@ function CooperativeBand({ period, promo }: { period: BillingPeriod; promo: Tria
         </a>
         <span className="text-[11px] text-center" style={{ ...MONO, color: MUTED }}>Billed in rand · 750 members included</span>
       </div>
+    </div>
+  );
+}
+
+// ── Add-ons ───────────────────────────────────────────────────────────────────
+// Bought on their own or with any plan. The plans that include reporting
+// already include AFS workspaces; these are for everyone else — the preparer
+// with one set to do, or many. Billed in rand (see config/addons.ts).
+function AddonsBand() {
+  return (
+    <div className="mt-10">
+      <div className="flex flex-col gap-1 mb-4">
+        <span className="text-xs tracking-[0.08em]" style={{ ...MONO, color: GOLD }}>ADD-ONS</span>
+        <span className="text-sm" style={{ color: BODY }}>
+          Buy on their own or with any plan. Professional, Business and Practitioner already include AFS workspaces.
+        </span>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+        {ADDON_CARDS.map(a => (
+          <div key={a.key} className="rounded-2xl p-6 flex flex-col gap-3" style={{ border: `1px solid ${RULE}`, background: 'rgba(255,255,255,0.03)' }}>
+            <span className="text-[15px] font-bold">{a.name}</span>
+            <span className="text-[28px] font-extrabold leading-none tracking-[-0.02em]">
+              {a.price}<span className="text-sm font-normal tracking-normal" style={{ color: MUTED }}> {a.per}</span>
+            </span>
+            <span className="text-[13px]" style={{ color: BODY }}>{a.blurb}</span>
+            <ul className="flex flex-col gap-1.5 text-[13px] flex-1" style={{ color: BODY }}>
+              {a.points.map(p => (
+                <li key={p} className="flex gap-2.5 items-start"><Check className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" style={{ color: GOLD }} />{p}</li>
+              ))}
+            </ul>
+            {a.onSale ? (
+              <a href={app('/dashboard/billing#addons')}
+                className="inline-flex items-center justify-center gap-2 py-2.5 px-4 text-sm font-semibold rounded-lg transition-colors hover:bg-white/5 hover:text-[#E5C55E]"
+                style={{ color: TEXT, border: `1px solid ${EDGE}` }}>
+                Add <span aria-hidden="true">→</span>
+              </a>
+            ) : (
+              <a href="mailto:support@sormalitics.com?subject=IFRS%2016%20Leases"
+                className="inline-flex items-center justify-center gap-2 py-2.5 px-4 text-sm font-semibold rounded-lg transition-colors hover:bg-white/5"
+                style={{ color: MUTED, border: `1px solid ${RULE}` }}>
+                Coming soon — talk to us
+              </a>
+            )}
+          </div>
+        ))}
+      </div>
+      <p className="mt-3 text-[11px]" style={{ ...MONO, color: MUTED }}>Add-ons are billed in rand.</p>
     </div>
   );
 }
