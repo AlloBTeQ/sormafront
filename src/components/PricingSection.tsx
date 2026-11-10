@@ -245,7 +245,9 @@ function AddonsBand({ currency }: { currency: string }) {
               ))}
             </ul>
             {a.onSale ? (
-              <a href={app('/dashboard/billing#addons')}
+              // The app's /pricing opens the pay-first dialog for this add-on:
+              // no account needed (signed-in visitors go on to Billing).
+              <a href={app(`/pricing?addon=${a.key}`)}
                 className="inline-flex items-center justify-center gap-2 py-2.5 px-4 text-sm font-semibold rounded-lg transition-colors hover:bg-white/5 hover:text-[#E5C55E]"
                 style={{ color: TEXT, border: `1px solid ${EDGE}` }}>
                 Add <span aria-hidden="true">→</span>
