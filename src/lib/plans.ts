@@ -406,11 +406,12 @@ export const PLANS: Record<Plan, PlanDefinition> = {
     tagline: 'Everything an independent professional needs',
     badge:   'MOST POPULAR',
     limits: {
-      invoices: UNLIMITED, quotes: UNLIMITED, payslips: 6, agreements: 25,
-      // Two employees, and six draft payslips a month — enough for three
-      // preview runs of a two-person payroll, which is the whole demo. The
-      // ceiling that matters is `payrollMode: 'draft'` below, not this number;
-      // this one only stops a draft run being used as a free payslip printer.
+      invoices: UNLIMITED, quotes: UNLIMITED, payslips: 12, agreements: 25,
+      // Two employees on a LIVE payroll (owner's decision, 2026-11-11 pricing
+      // review: draft-only payroll priced the owner-managed company out — it had
+      // to buy Business to pay two people). Twelve payslips a month covers a
+      // weekly run for two plus a re-run; the employee ceiling is what moves a
+      // growing company up to Business, not a switched-off feature.
       //
       // teamMembers 2 = three people in total: `teamMembers` counts only the
       // people the owner ADDS, never the owner (see countTeamMemberSeats). Owner's
@@ -438,14 +439,16 @@ export const PLANS: Record<Plan, PlanDefinition> = {
     // this list — the array is meant to describe the truth, even where it
     // isn't the enforcement.
     access: ['invoicing', 'accounting', 'agreements', 'tax', 'payroll', 'reporting'],
-    payrollMode: 'draft',
-    monthlyPrice: { ZAR: 550.00, GBP: 23.99, USD: 19.00, EUR: 26.99, KES: 1499, ZMW: 399 },
+    // 'full' since 2026-11-11 — was 'draft'. See the note on `limits` above.
+    payrollMode: 'full',
+    // 2026-11-11 price list v3 (excl. VAT; the seller is not VAT-registered).
+    monthlyPrice: { ZAR: 299.99, GBP: 17.99, USD: 15.99, EUR: 20.99, KES: 1499, ZMW: 339 },
     annualMonths: 10,
     features: [
       'Unlimited invoices & quotes',
       'Full accounting — GL, trial balance, reports',
       'Legal agreements with e-signature',
-      'Payroll preview — 2 employees, draft runs',
+      'Full payroll — 2 employees included',
       '3 users — you plus 2 team members',
       'Tax compliance (EMP201, P32, Form 941)',
       'Custom branding on all documents',
@@ -481,11 +484,12 @@ export const PLANS: Record<Plan, PlanDefinition> = {
     },
     access: ['invoicing', 'accounting', 'agreements', 'tax', 'payroll', 'reporting'],
     payrollMode: 'full',
-    monthlyPrice: { ZAR: 899.99, GBP: 39.99, USD: 39.00, EUR: 44.99, KES: 2999, ZMW: 799 },
+    // 2026-11-11 price list v3: R699.99 (was R899.99).
+    monthlyPrice: { ZAR: 699.99, GBP: 39.99, USD: 39.00, EUR: 44.99, KES: 2999, ZMW: 799 },
     // £39.99 ÷ 10 included employees is £4.00 a head, so £2.99 for employee 11
     // is a volume step down rather than a penalty. Read the comment on
     // `employeeOverage` in PlanDefinition before touching the ZAR figure.
-    employeeOverage: { ZAR: 39.00, GBP: 2.99, USD: 1.99, EUR: 3.49, KES: 149, ZMW: 39 },
+    employeeOverage: { ZAR: 19.99, GBP: 2.99, USD: 1.29, EUR: 3.49, KES: 149, ZMW: 25 },
     annualMonths: 10,
     features: [
       'Everything in Professional',
@@ -524,8 +528,9 @@ export const PLANS: Record<Plan, PlanDefinition> = {
     // Rand only. The other currencies are placeholders the type requires and
     // are never quoted: `soldIn` refuses every jurisdiction but South Africa,
     // and `monthlyPrice()` returns null outside it (see below).
-    monthlyPrice: { ZAR: 999.99, GBP: 0, USD: 0, EUR: 0, KES: 0, ZMW: 0 },
-    employeeOverage: { ZAR: 39.00, GBP: 0, USD: 0, EUR: 0, KES: 0, ZMW: 0 },
+    // 2026-11-11 price list v3: R849.99 (was R999.99).
+    monthlyPrice: { ZAR: 849.99, GBP: 0, USD: 0, EUR: 0, KES: 0, ZMW: 0 },
+    employeeOverage: { ZAR: 19.99, GBP: 0, USD: 0, EUR: 0, KES: 0, ZMW: 0 },
     // Not set yet: above 750 members the excess is shown, not billed.
     memberOverage: null,
     soldIn: ['ZA'],
@@ -569,11 +574,11 @@ export const PLANS: Record<Plan, PlanDefinition> = {
     payrollMode: 'full',
     // The FIRST tier's rate, and it must stay equal to volumeTiers[0].rate —
     // this is what the pricing card quotes as the headline "per client" price.
-    monthlyPrice: { ZAR: 699.99, GBP: 29.99, USD: 29.00, EUR: 34.99, KES: 2499, ZMW: 599 },
+    monthlyPrice: { ZAR: 469.99, GBP: 29.99, USD: 26.00, EUR: 34.99, KES: 2499, ZMW: 529 },
     // Same rate as Business, deliberately. If a practitioner's employees were
     // cheaper than a Business customer's, the arbitrage is to register one
     // 100-person company as ten "clients".
-    employeeOverage: { ZAR: 39.00, GBP: 2.99, USD: 1.99, EUR: 3.49, KES: 149, ZMW: 39 },
+    employeeOverage: { ZAR: 19.99, GBP: 2.99, USD: 1.29, EUR: 3.49, KES: 149, ZMW: 25 },
     annualMonths: 10,
     features: [
       'All Business features per client',
@@ -611,9 +616,10 @@ export const PLANS: Record<Plan, PlanDefinition> = {
       // these two numbers may never move independently.
       // `practitionerBillingMath.test.ts` asserts the inequality directly.
       volumeTiers: [
-        { upTo: 5,    rate: { ZAR: 699.99, GBP: 29.99, USD: 29.00, EUR: 34.99, KES: 2499, ZMW: 599 } },
-        { upTo: 20,   rate: { ZAR: 574.99, GBP: 24.99, USD: 24.00, EUR: 29.99, KES: 1999, ZMW: 499 } },
-        { upTo: null, rate: { ZAR: 450.00, GBP: 19.99, USD: 19.00, EUR: 21.99, KES: 1599, ZMW: 399 } },
+        // 2026-11-11 price list v3; the 2-client floor stays above Business in every currency.
+        { upTo: 5,    rate: { ZAR: 469.99, GBP: 29.99, USD: 26.00, EUR: 34.99, KES: 2499, ZMW: 529 } },
+        { upTo: 20,   rate: { ZAR: 379.99, GBP: 24.99, USD: 21.00, EUR: 29.99, KES: 1999, ZMW: 429 } },
+        { upTo: null, rate: { ZAR: 309.99, GBP: 19.99, USD: 17.00, EUR: 21.99, KES: 1599, ZMW: 349 } },
       ],
     },
   },
