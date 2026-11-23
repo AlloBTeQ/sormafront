@@ -5,16 +5,16 @@
 // is two pickers and the sum of the two — never a fixed double price.
 //
 // The same page as the app's /pricing/ifrs16 (sormalitics: src/app/pricing/
-// ifrs16/page.tsx); prices from config/addons.ts, which mirrors the app's
-// catalogue. Buying hands off to the app; a side that is not on sale yet takes
+// ifrs16/page.tsx); prices and tiers from the app's catalogue, copied here by
+// `pnpm sync` (config/addons.ts, read through config/addonCards.ts). Buying hands off to the app; a side that is not on sale yet takes
 // a "tell me when" instead of money (LEASE_SIDE_ON_SALE).
 import React, { useEffect, useState } from 'react';
 import { Check } from 'lucide-react';
 import { app } from '@/lib/site';
 import {
-  LEASE_SIDE_ON_SALE, LEASE_TIERS, addonMoney, isAddonCurrency, leaseSidePrice,
-  type AddonCurrency, type LeaseSide, type LeaseTier,
-} from '@/config/addons';
+  LEASE_QUOTE_ABOVE, LEASE_SIDE_ON_SALE, LEASE_TIERS, LONG_LEASE_YEARS, addonMoney, isAddonCurrency, leaseSidePrice,
+  type AddonCurrency, type LeaseSide,
+} from '@/config/addonCards';
 
 const NAVY = '#143152';
 const TEXT = '#FBF7EA';
@@ -54,9 +54,10 @@ const LESSOR_POINTS = [
   'Subleases, when you also hold the Lessee side',
 ];
 
-const tierLabel = (t: LeaseTier) => LEASE_TIERS.find(x => x.value === t)!.label;
+const FIRST_TIER = LEASE_TIERS[0].value;
+const tierLabel = (t: number) => LEASE_TIERS.find(x => x.value === t)!.label;
 
-function TierPicker({ side, value, onChange, cur }: { side: LeaseSide; value: LeaseTier; onChange: (t: LeaseTier) => void; cur: AddonCurrency }) {
+function TierPicker({ side, value, onChange, cur }: { side: LeaseSide; value: number; onChange: (t: number) => void; cur: AddonCurrency }) {
   const price = leaseSidePrice(value, cur);
   return (
     <fieldset className="rounded-2xl p-6" style={CARD}>
@@ -84,8 +85,8 @@ function TierPicker({ side, value, onChange, cur }: { side: LeaseSide; value: Le
 export default function Ifrs16ModulePage() {
   const [cur, setCur] = useState<AddonCurrency>('ZAR');
   const [choice, setChoice] = useState<Choice>('lessee');
-  const [lessee, setLessee] = useState<LeaseTier>(10);
-  const [lessor, setLessor] = useState<LeaseTier>(10);
+  const [lessee, setLessee] = useState<number>(FIRST_TIER);
+  const [lessor, setLessor] = useState<number>(FIRST_TIER);
 
   // /pricing/ifrs16?side=both&currency=KES — handed on from the pricing page. Read after mount (static export).
   useEffect(() => {
@@ -102,13 +103,13 @@ export default function Ifrs16ModulePage() {
   const pLessor = hasLessor ? leaseSidePrice(lessor, cur) : 0;
   const quoted = pLessee == null || pLessor == null;
   const total = quoted ? null : (pLessee ?? 0) + (pLessor ?? 0);
-  const from = leaseSidePrice(10, cur)!;
+  const from = leaseSidePrice(FIRST_TIER, cur) ?? 0;
 
   const picked = [hasLessee ? `Lessee: ${tierLabel(lessee)} leases` : '', hasLessor ? `Lessor: ${tierLabel(lessor)} leases` : ''].filter(Boolean).join('; ');
   const mail = (subject: string) => `mailto:${SUPPORT}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(`${picked}. Billing currency: ${cur}.`)}`;
   // The app's /pricing opens the pay-first dialog with this tier: no account needed.
   const buyLessee = app(`/pricing?addon=leases&leases=${lessee}&currency=${cur}`);
-  const lesseeBuyable = LEASE_SIDE_ON_SALE.lessee && lessee !== 26;
+  const lesseeBuyable = LEASE_SIDE_ON_SALE.lessee && pLessee != null;
   const waiting = [hasLessee && !LEASE_SIDE_ON_SALE.lessee ? 'Lessee' : '', hasLessor && !LEASE_SIDE_ON_SALE.lessor ? 'Lessor' : ''].filter(Boolean);
   const canBuyAll = !quoted && waiting.length === 0 && !hasLessor; // both sides in one hand-off comes with the lessor checkout
 
@@ -163,7 +164,7 @@ export default function Ifrs16ModulePage() {
             {hasLessor && <TierPicker side="lessor" value={lessor} onChange={setLessor} cur={cur} />}
             <ul className="flex flex-col gap-1.5 text-[13px]" style={{ color: BODY }}>
               <li>Each side is counted on its own: leases you hold as lessee never use up your lessor tier, or the other way round.</li>
-              <li>A lease with more than 20 years still to run counts as two. Ended leases stop counting.</li>
+              <li>A lease with more than {LONG_LEASE_YEARS} years still to run counts as two. Ended leases stop counting.</li>
               {choice === 'lessor' && <li>A sublease is carved from a lease you hold as lessee, so it needs both sides.</li>}
               <li>Charged monthly in your company&apos;s billing currency, from the day you take it. Move tier at any time in Billing.</li>
             </ul>
@@ -181,7 +182,7 @@ export default function Ifrs16ModulePage() {
             </p>
 
             {quoted ? (
-              <a href={mail('IFRS 16 Module — more than 25 leases')} className={primary} style={{ background: GOLD, color: NAVY }}>Talk to us <span aria-hidden="true">→</span></a>
+              <a href={mail(`IFRS 16 Module — more than ${LEASE_QUOTE_ABOVE} leases`)} className={primary} style={{ background: GOLD, color: NAVY }}>Talk to us <span aria-hidden="true">→</span></a>
             ) : canBuyAll ? (
               <a href={buyLessee} className={primary} style={{ background: GOLD, color: NAVY }}>Get the module <span aria-hidden="true">→</span></a>
             ) : (

@@ -8,7 +8,7 @@ import type { SupportedCurrency } from '@/config/plans';
 import { app, checkoutHref } from '@/lib/site';
 import { activeTrialPromotion, promotionEndLabel, type TrialPromotion } from '@/lib/billing/promotions';
 import { likelyCountry } from '@/lib/geo/likelyCountry';
-import { ADDON_CARDS, addonMoney, isAddonCurrency, LEASE_10, LEASE_25, type AddonCurrency } from '@/config/addons';
+import { ADDON_CARDS, addonMoney, isAddonCurrency, LEASE_10, LEASE_25, type AddonCurrency } from '@/config/addonCards';
 
 const NAVY = '#143152';
 const TEXT = '#FBF7EA';
@@ -276,7 +276,7 @@ function SchoolBand({ period }: { period: BillingPeriod }) {
 // ── Add-ons ───────────────────────────────────────────────────────────────────
 // Bought on their own or with any plan. The plans that include reporting
 // already include AFS workspaces; these are for everyone else — the preparer
-// with one set to do, or many. In the selected currency (see config/addons.ts).
+// with one set to do, or many. In the selected currency; prices from the app's catalogue (config/addonCards.ts).
 function AddonsBand({ currency }: { currency: string }) {
   const cur = isAddonCurrency(currency) ? currency : 'ZAR';
   return (

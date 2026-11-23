@@ -12,7 +12,7 @@ The product lives at **app.sormalitics.com** (the `SORMALITICS` repo).
   the app's pricing page resumes checkout from those params.
 - Old app URLs that hit this domain (`/dashboard/*`, `/auth/*`, `/api/*`, `/legal/*`, …)
   are 308-redirected to the app by `vercel.json`, so emailed links and bookmarks keep working.
-- Plans, prices and live jurisdictions are copied from the app. After changing them there,
+- Plans, prices, add-ons (prices, lease tiers, what is on sale) and live jurisdictions are copied from the app. After changing them there,
   run `pnpm sync` here (copies from `../SORMALITICS`), then `pnpm type-check && pnpm build`, then push.
 
 ```

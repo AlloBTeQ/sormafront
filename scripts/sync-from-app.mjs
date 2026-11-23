@@ -5,6 +5,10 @@ const APP = resolve(process.argv[2] ?? '../SORMALITICS');
 const FILES = [
   'src/lib/plans.ts',
   'src/config/plans.ts',
+  // The add-on catalogue the app's checkout charges from: prices, lease tiers,
+  // currencies and what is on sale. This site's cards and the IFRS 16 Module
+  // page read it through src/config/addonCards.ts — never type a price there.
+  'src/config/addons.ts',
   'src/lib/billing/practitionerBillingMath.ts',
   'src/lib/payroll/jurisdictionStatus.ts',
   'src/lib/payroll/regionRouter.ts',
