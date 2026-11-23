@@ -6,7 +6,7 @@ import { COUNTRY_PAGES } from '@/lib/payroll/countryPages';
 export const dynamic = 'force-static';
 
 const PAGES: [string, number][] = [
-  ['/', 1.0], ['/pricing', 0.9], ['/services', 0.8], ['/store', 0.8], ['/fisi', 0.8],
+  ['/', 1.0], ['/pricing', 0.9], ['/pricing/ifrs16', 0.8], ['/services', 0.8], ['/store', 0.8], ['/fisi', 0.8],
   ['/about', 0.6], ['/contact', 0.6], ['/careers', 0.4], ['/help', 0.7],
   ['/legal/privacy', 0.3], ['/legal/terms', 0.3], ['/legal/cookies', 0.3],
   ['/legal/refunds', 0.3], ['/legal/dpa', 0.3], ['/legal/paia', 0.3],

@@ -26,6 +26,32 @@ export const isAddonCurrency = (c: string): c is AddonCurrency => ['ZAR', 'GBP',
 export const LEASE_10: PerCurrency = { ZAR: 1250, GBP: 54, USD: 52, KES: 4499, ZMW: 1069 };
 export const LEASE_25: PerCurrency = { ZAR: 2750, GBP: 119, USD: 115, KES: 9799, ZMW: 2349 };
 
+// ── IFRS 16 Module: Lessee, Lessor, or both ──────────────────────────────────
+// Owner, 2026-11-22: each side is its own tier by the leases held on that side
+// (same prices), and Both is the two added together — two pickers, never a fixed
+// double price. More than 25 leases on a side is quoted.
+export type LeaseSide = 'lessee' | 'lessor';
+/** A tier as a lease count: 10, 25, or 26 for "more than 25" (quoted). */
+export type LeaseTier = 10 | 25 | 26;
+export const LEASE_TIERS: { value: LeaseTier; label: string }[] = [
+  { value: 10, label: 'Up to 10' },
+  { value: 25, label: '11 to 25' },
+  { value: 26, label: 'More than 25' },
+];
+/** Monthly price of one side's tier; null when it is quoted. */
+export function leaseSidePrice(tier: LeaseTier, cur: AddonCurrency): number | null {
+  return tier === 10 ? LEASE_10[cur] : tier === 25 ? LEASE_25[cur] : null;
+}
+/**
+ * Whether each side can be bought in the app TODAY. The app is the source of
+ * truth (LEASES_SCREENS_READY and LESSOR_SCREENS_READY in its config/addons.ts)
+ * and refuses the checkout itself; these only decide what the button says.
+ *   lessee — flip when the app release with the lease screens AND the
+ *            /pricing?addon=leases&leases=N hand-off is live on app.sormalitics.com.
+ *   lessor — flip when the lessor screens and its checkout are live.
+ */
+export const LEASE_SIDE_ON_SALE: Record<LeaseSide, boolean> = { lessee: false, lessor: false };
+
 export const ADDON_CARDS: AddonCard[] = [
   {
     key: 'afs_workspace',

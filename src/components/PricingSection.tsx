@@ -325,9 +325,9 @@ function AddonsBand({ currency }: { currency: string }) {
 
 // ── IFRS 16 Module: Lessee / Lessor / Both ──────────────────────────────────
 // Each side is priced on its own by the leases held on that side (same tiers),
-// and Both is the two added together (owner's decision, 2026-11-22). Not on
-// sale yet: lessee screens are still to ship to main and lessor is in build,
-// so the card prices it honestly and takes a "tell me when" instead of money.
+// and Both is the two added together (owner's decision, 2026-11-22). The card
+// previews the three options; choosing a tier and buying (or "tell me when",
+// until a side is on sale) happens on /pricing/ifrs16.
 type LeaseSide = 'lessee' | 'lessor' | 'both';
 const LEASE_SIDES: { key: LeaseSide; label: string }[] = [
   { key: 'lessee', label: 'Lessee' },
@@ -342,7 +342,6 @@ function Ifrs16Card({ cur }: { cur: AddonCurrency }) {
     lessor: [`Leases you let out: ${tiers}`, 'Finance and operating leases, straight-line income and lease debtors', 'More than 25 leases: quoted'],
     both:   ['Each side counted and priced on its own, then added', `e.g. 8 rented + 20 let out = ${addonMoney(LEASE_10[cur] + LEASE_25[cur], cur)} a month`, 'Subleases need both sides'],
   };
-  const subject = encodeURIComponent(`IFRS 16 Module — ${LEASE_SIDES.find(x => x.key === side)!.label} — tell me when it opens`);
   return (
     <div className="rounded-2xl p-6 flex flex-col gap-3" style={{ border: `1px solid ${RULE}`, background: 'rgba(255,255,255,0.03)' }}>
       <span className="text-[15px] font-bold">IFRS 16 Module</span>
@@ -363,10 +362,11 @@ function Ifrs16Card({ cur }: { cur: AddonCurrency }) {
           <li key={p} className="flex gap-2.5 items-start"><Check className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" style={{ color: GOLD }} />{p}</li>
         ))}
       </ul>
-      <a href={`mailto:support@sormalitics.com?subject=${subject}`}
-        className="inline-flex items-center justify-center gap-2 py-2.5 px-4 text-sm font-semibold rounded-lg transition-colors hover:bg-white/5"
-        style={{ color: MUTED, border: `1px solid ${RULE}` }}>
-        Coming soon — tell me when it opens
+      {/* The module has its own page: pick the tier for each side and see the total. */}
+      <a href={`/pricing/ifrs16?side=${side}&currency=${cur}`}
+        className="inline-flex items-center justify-center gap-2 py-2.5 px-4 text-sm font-semibold rounded-lg transition-colors hover:bg-white/5 hover:text-[#E5C55E]"
+        style={{ color: TEXT, border: `1px solid ${EDGE}` }}>
+        See the options <span aria-hidden="true">→</span>
       </a>
     </div>
   );
