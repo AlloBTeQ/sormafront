@@ -5,7 +5,8 @@
 //   import { getPayrollRunRoute, saveLastRegion, getLastRegion } from '@/lib/payroll/regionRouter';
 //   router.push(getPayrollRunRoute('RSA'));
 
-export type PayrollRegion = 'RSA' | 'UK' | 'US' | 'KE' | 'UG' | 'BW' | 'ZM' | 'ZW' | 'NA' | 'SZ' | 'LS' | 'RW' | 'AO' | 'MZ';
+import type { PayrollRegion } from '@/lib/regions';
+export type { PayrollRegion } from '@/lib/regions';
 
 const STORAGE_KEY = 'sormalitics:lastPayrollRegion';
 
@@ -42,6 +43,20 @@ export function getPayrollRunRoute(region: PayrollRegion): string {
  */
 export function getDirectRunRoute(region: PayrollRegion): string {
   return `/dashboard/payroll/runs/new?region=${region}`;
+}
+
+/**
+ * The single on-demand payslip generator for a region (these used to sit on
+ * the Payslip Generator page, which is now the Employee File Cabinet).
+ * South Africa and the UK have their own full-engine generators; every other
+ * region uses the standard, flexible-format generator.
+ */
+export function getSinglePayslipRoute(region?: PayrollRegion | string | null): string {
+  // /api/payroll/regions answers with the store code ('ZA'), the UI with 'RSA'.
+  const r = String(region ?? '').toUpperCase();
+  if (r === 'RSA' || r === 'ZA') return '/dashboard/payroll/payslip/rsapayslip';
+  if (r === 'UK' || r === 'GB') return '/dashboard/payroll/payslip/ukpayslip';
+  return '/dashboard/payroll/payslip/standard';
 }
 
 /**

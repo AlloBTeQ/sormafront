@@ -23,8 +23,8 @@ export const addonMoney = (n: number, cur: AddonCurrency) =>
   `${SYMBOL[cur]}${n.toLocaleString('en-US', { maximumFractionDigits: 2 })}`;
 export const isAddonCurrency = (c: string): c is AddonCurrency => ['ZAR', 'GBP', 'USD', 'KES', 'ZMW'].includes(c);
 
-const LEASE_10: PerCurrency = { ZAR: 1250, GBP: 54, USD: 52, KES: 4499, ZMW: 1069 };
-const LEASE_25: PerCurrency = { ZAR: 2750, GBP: 119, USD: 115, KES: 9799, ZMW: 2349 };
+export const LEASE_10: PerCurrency = { ZAR: 1250, GBP: 54, USD: 52, KES: 4499, ZMW: 1069 };
+export const LEASE_25: PerCurrency = { ZAR: 2750, GBP: 119, USD: 115, KES: 9799, ZMW: 2349 };
 
 export const ADDON_CARDS: AddonCard[] = [
   {
@@ -53,9 +53,9 @@ export const ADDON_CARDS: AddonCard[] = [
   },
   {
     key: 'leases',
-    name: 'IFRS 16 Leases',
+    name: 'IFRS 16 Module',
     amount: LEASE_10, from: true, per: 'per month',
-    blurb: 'Lessee lease register with IFRS 16 schedules, monthly balances and journals.',
+    blurb: 'Lessee, lessor, or both — priced per side. Lease register, IFRS 16 schedules, monthly balances and journals.',
     points: cur => [`Up to 10 leases ${addonMoney(LEASE_10[cur], cur)} · 11 to 25 leases ${addonMoney(LEASE_25[cur], cur)}`, 'More than 25 leases: enterprise pricing', 'Reported months are never rewritten'],
     onSale: false,
   },

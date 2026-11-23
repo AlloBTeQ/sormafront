@@ -3,12 +3,12 @@
 import React, { useEffect, useState } from 'react';
 import { Check } from 'lucide-react';
 import { TIERS, CURRENCIES } from '@/config/plans';
-import { OFFERED_CURRENCIES, billingCurrencyFor, formatPrice, planFeatures } from '@/lib/plans';
+import { OFFERED_CURRENCIES, billingCurrencyFor, formatPrice, planFeatures, schoolTierPrice } from '@/lib/plans';
 import type { SupportedCurrency } from '@/config/plans';
 import { app, checkoutHref } from '@/lib/site';
 import { activeTrialPromotion, promotionEndLabel, type TrialPromotion } from '@/lib/billing/promotions';
 import { likelyCountry } from '@/lib/geo/likelyCountry';
-import { ADDON_CARDS, addonMoney, isAddonCurrency } from '@/config/addons';
+import { ADDON_CARDS, addonMoney, isAddonCurrency, LEASE_10, LEASE_25, type AddonCurrency } from '@/config/addons';
 
 const NAVY = '#143152';
 const TEXT = '#FBF7EA';
@@ -89,7 +89,7 @@ export function PricingSection({ asPage = false }: { asPage?: boolean }) {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 items-stretch">
-            {TIERS.filter(t => t.id !== 'cooperative').map((tier) => {
+            {TIERS.filter(t => t.id !== 'cooperative' && t.id !== 'school').map((tier) => {
               const isFree = tier.id === 'free';
               const featured = tier.id === 'professional';
               const price = period === 'yearly' ? tier.price.annual[currency] : tier.price.monthly[currency];
@@ -157,6 +157,7 @@ export function PricingSection({ asPage = false }: { asPage?: boolean }) {
             })}
           </div>
           <CooperativeBand period={period} promo={promo} />
+          <SchoolBand period={period} />
           <AddonsBand currency={currency} />
           <p className="mt-6 text-xs" style={{ ...MONO, color: MUTED }}>
             {CURRENCY_NOTE[currency]} {OFFERED_CURRENCIES.length > 1 ? 'Your company is billed in the currency of the country it is registered in; the selector is for comparison. ' : ''}Cards in other currencies are converted by your card provider, who may charge a fee. SORMALITICS produces reports and schedules to support your tax filings — you review them, and you remain responsible for what you submit.
@@ -217,6 +218,61 @@ function CooperativeBand({ period, promo }: { period: BillingPeriod; promo: Tria
   );
 }
 
+// ── School (South Africa, rand) ──────────────────────────────────────────────
+// Priced by learners on the register. The count travels to the app's checkout
+// as ?learners=N, which picks the band (≤300, 301–599); 600 or more goes to
+// support for a quote, as the app does.
+function SchoolBand({ period }: { period: BillingPeriod }) {
+  const tier = TIERS.find(t => t.id === 'school');
+  const [learners, setLearners] = useState('');
+  if (!tier) return null;
+  const cycle = period === 'yearly' ? 'annual' : 'monthly';
+  const per = period === 'yearly' ? '/yr' : '/mo';
+  const n = Math.floor(Number(learners));
+  const ok = n >= 1;
+  const quoted = ok && n >= 600;
+  const band = ok && !quoted ? (n <= 300 ? 300 : 599) : null;
+  const shown = schoolTierPrice(band ?? 300, cycle) ?? 0;
+  const features = planFeatures('school', 'ZAR').filter(f => f !== 'Everything in Business');
+  const href = quoted
+    ? 'mailto:support@sormalitics.com?subject=SORMALITICS%20School%20plan%20custom%20pricing%20(600%2B%20learners)'
+    : `${checkoutHref('school', period, 'ZAR')}${ok ? `&learners=${n}` : ''}`;
+  return (
+    <div className="mt-5 rounded-2xl p-7 lg:p-8 grid grid-cols-1 lg:grid-cols-[1.1fr_1.6fr_auto] gap-6 lg:gap-10 items-center"
+      style={{ border: `1px solid ${RULE}`, background: 'rgba(255,255,255,0.03)' }}>
+      <div className="flex flex-col gap-2">
+        <span className="text-xs tracking-[0.08em]" style={{ ...MONO, color: GOLD }}>SCHOOL · SOUTH AFRICA</span>
+        <span className="text-[38px] font-extrabold leading-none tracking-[-0.02em]">
+          {quoted ? 'Quoted' : <>{band ? '' : 'From '}{formatPrice(shown, 'ZAR')}<span className="text-sm font-normal tracking-normal" style={{ color: MUTED }}>{per}</span></>}
+        </span>
+        <span className="text-sm" style={{ color: BODY }}>
+          For independent schools: fee billing, statements and subsidy accounting. Everything in Business, plus:
+        </span>
+      </div>
+      <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 text-[13px]" style={{ color: BODY }}>
+        {features.map(f => (
+          <li key={f} className="flex gap-2.5 items-start">
+            <Check className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" style={{ color: GOLD }} />{f}
+          </li>
+        ))}
+      </ul>
+      <div className="flex flex-col gap-2 lg:w-[200px]">
+        <label className="text-[11px]" style={{ ...MONO, color: MUTED }} htmlFor="school-learners">Learners on your register</label>
+        <input id="school-learners" type="number" min={1} inputMode="numeric" value={learners}
+          onChange={e => setLearners(e.target.value)} placeholder="e.g. 240"
+          className="px-3 py-2.5 text-sm rounded-lg bg-transparent outline-none"
+          style={{ border: `1px solid ${EDGE}`, color: TEXT }} />
+        <a href={href}
+          className="inline-flex items-center justify-center gap-2 py-3 px-5 text-sm font-semibold rounded-lg transition-colors hover:bg-white/5 hover:text-[#E5C55E]"
+          style={{ color: TEXT, border: `1px solid ${EDGE}` }}>
+          {quoted ? 'Talk to us' : 'Get started'} <span aria-hidden="true">→</span>
+        </a>
+        <span className="text-[11px] text-center" style={{ ...MONO, color: MUTED }}>Billed in rand</span>
+      </div>
+    </div>
+  );
+}
+
 // ── Add-ons ───────────────────────────────────────────────────────────────────
 // Bought on their own or with any plan. The plans that include reporting
 // already include AFS workspaces; these are for everyone else — the preparer
@@ -232,7 +288,7 @@ function AddonsBand({ currency }: { currency: string }) {
         </span>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-        {ADDON_CARDS.map(a => (
+        {ADDON_CARDS.map(a => a.key === 'leases' ? <Ifrs16Card key={a.key} cur={cur} /> : (
           <div key={a.key} className="rounded-2xl p-6 flex flex-col gap-3" style={{ border: `1px solid ${RULE}`, background: 'rgba(255,255,255,0.03)' }}>
             <span className="text-[15px] font-bold">{a.name}</span>
             <span className="text-[28px] font-extrabold leading-none tracking-[-0.02em]">
@@ -263,6 +319,55 @@ function AddonsBand({ currency }: { currency: string }) {
         ))}
       </div>
       <p className="mt-3 text-[11px]" style={{ ...MONO, color: MUTED }}>Add-ons are charged in your company&apos;s billing currency, like the plans.</p>
+    </div>
+  );
+}
+
+// ── IFRS 16 Module: Lessee / Lessor / Both ──────────────────────────────────
+// Each side is priced on its own by the leases held on that side (same tiers),
+// and Both is the two added together (owner's decision, 2026-11-22). Not on
+// sale yet: lessee screens are still to ship to main and lessor is in build,
+// so the card prices it honestly and takes a "tell me when" instead of money.
+type LeaseSide = 'lessee' | 'lessor' | 'both';
+const LEASE_SIDES: { key: LeaseSide; label: string }[] = [
+  { key: 'lessee', label: 'Lessee' },
+  { key: 'lessor', label: 'Lessor' },
+  { key: 'both',   label: 'Both' },
+];
+function Ifrs16Card({ cur }: { cur: AddonCurrency }) {
+  const [side, setSide] = useState<LeaseSide>('lessee');
+  const tiers = `Up to 10 leases ${addonMoney(LEASE_10[cur], cur)} · 11 to 25 ${addonMoney(LEASE_25[cur], cur)}`;
+  const lines: Record<LeaseSide, string[]> = {
+    lessee: [`Leases you rent: ${tiers}`, 'Right-of-use assets, lease liabilities and the monthly journals', 'More than 25 leases: quoted'],
+    lessor: [`Leases you let out: ${tiers}`, 'Finance and operating leases, straight-line income and lease debtors', 'More than 25 leases: quoted'],
+    both:   ['Each side counted and priced on its own, then added', `e.g. 8 rented + 20 let out = ${addonMoney(LEASE_10[cur] + LEASE_25[cur], cur)} a month`, 'Subleases need both sides'],
+  };
+  const subject = encodeURIComponent(`IFRS 16 Module — ${LEASE_SIDES.find(x => x.key === side)!.label} — tell me when it opens`);
+  return (
+    <div className="rounded-2xl p-6 flex flex-col gap-3" style={{ border: `1px solid ${RULE}`, background: 'rgba(255,255,255,0.03)' }}>
+      <span className="text-[15px] font-bold">IFRS 16 Module</span>
+      <span className="text-[28px] font-extrabold leading-none tracking-[-0.02em]">
+        {side === 'both' ? 'Per side' : <>From {addonMoney(LEASE_10[cur], cur)}<span className="text-sm font-normal tracking-normal" style={{ color: MUTED }}> per month</span></>}
+      </span>
+      <div className="flex text-xs" role="tablist" aria-label="IFRS 16 side" style={{ ...MONO, border: `1px solid ${RULE}` }}>
+        {LEASE_SIDES.map(o => (
+          <button key={o.key} type="button" role="tab" aria-selected={side === o.key} onClick={() => setSide(o.key)}
+            className="flex-1 px-2 py-2 transition-colors"
+            style={side === o.key ? { background: TEXT, color: NAVY } : { color: BODY }}>
+            {o.label}
+          </button>
+        ))}
+      </div>
+      <ul className="flex flex-col gap-1.5 text-[13px] flex-1" style={{ color: BODY }}>
+        {lines[side].map(p => (
+          <li key={p} className="flex gap-2.5 items-start"><Check className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" style={{ color: GOLD }} />{p}</li>
+        ))}
+      </ul>
+      <a href={`mailto:support@sormalitics.com?subject=${subject}`}
+        className="inline-flex items-center justify-center gap-2 py-2.5 px-4 text-sm font-semibold rounded-lg transition-colors hover:bg-white/5"
+        style={{ color: MUTED, border: `1px solid ${RULE}` }}>
+        Coming soon — tell me when it opens
+      </a>
     </div>
   );
 }

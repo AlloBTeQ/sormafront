@@ -74,6 +74,15 @@ export interface UKTaxConfig {
   nicEmployerRate: number;
 
   /**
+   * HMRC's PUBLISHED monthly thresholds. They are the annual figure divided by
+   * twelve and rounded, not the weekly figure × 52/12: PT £1,048 (not
+   * £1,048.67), ST £417 (not £416), UEL £4,189 (not £4,190.33). Payroll
+   * software is expected to use these; deriving them from the weekly figure put
+   * monthly NI a few pence off on every payslip.
+   */
+  nicMonthly: { primaryThreshold: number; upperEarningsLimit: number; secondaryThreshold: number };
+
+  /**
    * Rest-of-UK bands. Derived from the scalar fields above and kept beside them
    * so both the three-band and the six-band (Scottish) paths run through one
    * piece of arithmetic.
@@ -161,6 +170,7 @@ export const UK_TAX_CONFIG_2024_25: UKTaxConfig = {
   // National Insurance Employer (Weekly)
   nicSecondaryThreshold: 175,      // £9,100/year
   nicEmployerRate: 0.138,          // 13.8%
+  nicMonthly: { primaryThreshold: 1048, upperEarningsLimit: 4189, secondaryThreshold: 758 },
 
   // Student Loans (Annual thresholds)
   // rUK bands, taxable-relative. Identical arithmetic to the scalar fields.
@@ -245,8 +255,8 @@ export const UK_TAX_CONFIG_2026_27: UKTaxConfig = {
     { upTo: null,   rate: 0.48, label: 'Top' },
   ],
 
-  // National Insurance Employee (Weekly) — unchanged
-  nicLowerEarningsLimit: 123,
+  // National Insurance Employee (Weekly) — LEL rises to £129 (£6,708/yr); the rest unchanged
+  nicLowerEarningsLimit: 129,
   nicPrimaryThreshold: 242,        // £12,570/year
   nicUpperEarningsLimit: 967,      // £50,270/year
   nicMainRate: 0.08,
@@ -255,6 +265,8 @@ export const UK_TAX_CONFIG_2026_27: UKTaxConfig = {
   // National Insurance Employer (Weekly) — BOTH CHANGED from 6 April 2025
   nicSecondaryThreshold: 96,       // £5,000/year, down from £9,100
   nicEmployerRate: 0.15,           // 15%, up from 13.8%
+  // HMRC, Rates and thresholds for employers 2026 to 2027.
+  nicMonthly: { primaryThreshold: 1048, upperEarningsLimit: 4189, secondaryThreshold: 417 },
 
   employmentAllowance: 10500,      // up from £5,000
 
@@ -723,9 +735,10 @@ export class UKTaxEngine {
   ): { ni: number; breakdown: { main: number; upper: number } } {
     // Convert weekly thresholds to period amounts
     const weeksPerPeriod = payPeriod === 'weekly' ? 1 : payPeriod === 'bi_weekly' ? 2 : 52 / 12;
+    const monthly = payPeriod === 'monthly' ? this.config.nicMonthly : undefined;
 
-    const primaryThreshold = this.config.nicPrimaryThreshold * weeksPerPeriod;
-    const upperLimit = this.config.nicUpperEarningsLimit * weeksPerPeriod;
+    const primaryThreshold = monthly?.primaryThreshold ?? this.config.nicPrimaryThreshold * weeksPerPeriod;
+    const upperLimit = monthly?.upperEarningsLimit ?? this.config.nicUpperEarningsLimit * weeksPerPeriod;
 
     let mainNI = 0;
     let upperNI = 0;
@@ -760,7 +773,9 @@ export class UKTaxEngine {
     payPeriod: 'weekly' | 'bi_weekly' | 'monthly' = 'monthly'
   ): number {
     const weeksPerPeriod = payPeriod === 'weekly' ? 1 : payPeriod === 'bi_weekly' ? 2 : 52 / 12;
-    const secondaryThreshold = this.config.nicSecondaryThreshold * weeksPerPeriod;
+    const secondaryThreshold = payPeriod === 'monthly' && this.config.nicMonthly
+      ? this.config.nicMonthly.secondaryThreshold
+      : this.config.nicSecondaryThreshold * weeksPerPeriod;
 
     if (periodGross <= secondaryThreshold) {
       return 0;

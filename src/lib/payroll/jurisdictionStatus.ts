@@ -75,9 +75,18 @@
 //                             end-to-end from a real saved run on a real
 //                             database.
 //
-// So ZW sits exactly where UK sits: two of three, blocked on the same
+// So ZW sat exactly where UK sits: two of three, blocked on the same
 // operational act, not on code. See READINESS below, which records this in data
 // rather than prose so it cannot quietly go stale.
+//
+// ── Zimbabwe promoted, 20 October 2026 ───────────────────────────────────────
+// The operational act happened on 19 October 2026, on the local database, as the
+// ZW business test tenant: two USD runs (Aug, Sep 2026) prepared by the owner and
+// approved by the seeded payroll approver under segregation of duties; the P2
+// generated from them tied to the payslips (PAYE 548.48, NSSA 51.75 + 51.75,
+// ZIMDEF 23.02 per month); the ITF16 reported "nothing declared" rather than a
+// false balance; the P6 rendered from the same runs. Live as of this change.
+// Open practitioner sign-offs are NOT closed by this — see READINESS.ZW.note.
 //
 // ── One thing that is NOT a per-region caveat ────────────────────────────────
 // SORMALITICS does not submit to ANY revenue authority. Not SARS eFiling, not
@@ -135,14 +144,136 @@ export const READINESS: Partial<Record<PayrollRegion, JurisdictionReadiness>> = 
   RSA: { runPersists: true, testSuite: true, outputsGenerated: true },
   BW:  { runPersists: true, testSuite: true, outputsGenerated: true },
   ZM:  { runPersists: true, testSuite: true, outputsGenerated: true },
-  ZW: { runPersists: true, testSuite: true, outputsGenerated: true, note: 'P2, ITF16 and P6 from real saved runs, 2026-10-19.' },
-  NA: { runPersists: true, testSuite: true, outputsGenerated: true, note: 'ETX, SSC and PAYE 5 from real saved runs, 2026-10-21.' },
-  SZ: { runPersists: true, testSuite: true, outputsGenerated: true, note: 'PAYE and ENPF schedules and PAYE05 from real saved runs, 2026-10-25.' },
-  LS: { runPersists: true, testSuite: true, outputsGenerated: true, note: 'PAYE schedule and P.16 from real saved runs, 2026-10-25.' },
-  KE: { runPersists: true, testSuite: true, outputsGenerated: true, note: 'PAYE, NSSF, SHIF and housing levy schedules and P9A from real saved runs, 2026-10-25.' },
-  RW: { runPersists: true, testSuite: true, outputsGenerated: true, note: 'Unified PAYE + RSSB schedule from real saved runs, 2026-10-27; promoted 2026-10-28.' },
-  AO: { runPersists: true, testSuite: true, outputsGenerated: true, note: 'IRT and INSS schedules and the Modelo 2 summary from real saved runs, 2026-10-27; promoted 2026-10-28.' },
-  MZ: { runPersists: true, testSuite: true, outputsGenerated: true, note: 'IRPS (M/19) and INSS schedules and employee certificates from real saved runs, 2026-10-27; promoted 2026-10-28.' },
+  ZW: {
+    runPersists: true,
+    testSuite: true,
+    outputsGenerated: true,
+    note:
+      'P2 produced end-to-end from approved runs on a real database on 2026-10-19 ' +
+      '(ZW business tenant, Aug and Sep 2026, tied to the payslips); ITF16 and P6 ' +
+      'rendered from the same runs. NSSA deductibility RESOLVED 2026-10-20 from ' +
+      'ZIMRA\'s FDS Guide (deducted before the tables, shared USD 5,400 cap with ' +
+      'pension). Still awaiting a Zimbabwean practitioner on: the NSSA ZiG ceiling ' +
+      'and the pro-rata basis for mixed-currency remittances.',
+  },
+  SZ: {
+    runPersists: true,
+    testSuite: true,
+    outputsGenerated: true,
+    note:
+      'PROMOTED 2026-10-26 on the owner\'s sign-off (Mvelase). Walked live on a real database 2026-10-21 and ' +
+      'again 2026-10-25 (SZ business tenant, Nov 2026: four employees incl. pension over the 15% cap): ' +
+      'payslips, ERS PAYE and ENPF schedules, the declaration of record (ENPF split stored, 47e44bb), PAYE05 ' +
+      'certificates reconciled to the months, and the ledger all tied to hand-worked figures. ' +
+      'Engine, ledger regime and schedules built and unit-green (2026-10-21, feat/sadc-expansion). ' +
+      'Checked at source 2026-10-23: bands and rebate unchanged for 2026/27 (ERS; Budget 2026); ENPF base is ' +
+      'gross cash wages (ENPF Order s2); employee ENPF deducted before tax (ERS lists SNPF as allowable); ' +
+      'approved pension deductible to 15% of pensionable salary (LN 69 of 2024, via PaySpace/Sage); PAYE paid ' +
+      'before the 7th, PAYE 04 return by the 7th (ERS); ENPF within 21 days (s14(3)); monthly TaxEase ' +
+      'schedules replace the year-end recon from 2024/25; PAYE05 within 14 days of 30 June (Sage). ' +
+      'Declarations of record built (c506e61). Open: TaxEase schedule columns, benefits in kind (IT/01/23 ' +
+      'from 1 Sep 2026), contract profile, a live walk.',
+  },
+  LS: {
+    runPersists: true,
+    testSuite: true,
+    outputsGenerated: true,
+    note:
+      'PROMOTED 2026-10-26 on the owner\'s sign-off (Mvelase). Walked live on a real database 2026-10-21 and ' +
+      'again 2026-10-25 (LS business tenant, Nov 2026: four employees incl. pension over the 20% cap): payslips, ' +
+      'the RSL PAYE schedule, the declaration of record, P.16 certificates reconciled to the months, a leaver\'s ' +
+      '7-day P.16, and the ledger all tied to hand-worked figures. Employer pension over s95\'s combined 20% is ' +
+      'the employer\'s lost deduction, not employee PAYE (s95(3)); FBT is still not built. ' +
+      'Engine and schedules built and unit-green (2026-10-21, feat/sadc-expansion). Tables from RSL (Legal Notice 24 of 2026). ' +
+      'Checked at source 2026-10-23: superannuation deductible before tax to 20% of employment income (RSL return ' +
+      'instructions; P.16 line (e)); bonus taxed in the month paid — RSL publishes no averaging, over-withholding is ' +
+      'refunded on assessment; year-end: Form P.16 to each employee and the statement to RSL within 28 days of 31 March, a leaver\'s P.16 within 7 days (ITO 1993 s163-164; Sage says end-June). ' +
+      'Fringe benefits are an EMPLOYER tax (FBT, quarterly) outside PAYE — not built: rate 40% (RSL ruling 2011, Sage) ' +
+      'vs 30% (ACCA 2025); the 1993 Fourth Schedule says 40%. Terminal-benefit 25% exemption not modelled. Declarations of record built (c506e61). ' +
+      'Contract profile from the Labour Act 3 of 2024 (2026-10-23). Open: FBT rate, a live walk (the October run sits in review).',
+  },
+  RW: {
+    runPersists: true,
+    testSuite: true,
+    outputsGenerated: true,
+    note:
+      'PROMOTED 2026-10-28 on the owner\'s sign-off (Mvelase). WALKED LIVE 2026-10-27 on the local database (Kigali Business Ltd, Oct 2026, four employees incl. PwC\'s ' +
+      'car + housing case, a second job and a low earner): prepared by the owner, approved by the seeded payroll ' +
+      'approver; payslips, the unified PAYE + RSSB schedule (FRW 2,475,137 due 15 Nov), the ledger (one RSSB ' +
+      'payable 851,237, balanced, nothing in 2300) all tied to hand-worked figures. Fixed on the walk: deemed ' +
+      'car/housing no longer counted as employer cost; tax year shown as 2026; whole francs; payslip shows taxable ' +
+      'benefits and taxable income. Awaiting the owner\'s sign-off to promote. ' +
+      'Built 2026-10-27 on feat/sadc-expansion (memos/RW-RECON-1.md). Engine ties PwC\'s worked sample to the franc ' +
+      '(PAYE, pension, maternity, occupational hazards, CBHI). Checked at source: monthly bands 60k/100k/200k (RRA ' +
+      'Calculate PAYE); pension 6% + 6% (RRA), dated table to 10% + 10% in 2030; no PAYE relief for RSSB. ' +
+      'Not built: e-Tax upload file (layout unpublished), declaration of record, contract profile (agreements fall ' +
+      'back), quarterly filing. Open: RSSB base for bonus, casual-labourer reading, MIFOTRA Q4 2026 laws.',
+  },
+  AO: {
+    runPersists: true,
+    testSuite: true,
+    outputsGenerated: true,
+    note:
+      'PROMOTED 2026-10-28 on the owner\'s sign-off (Mvelase). WALKED LIVE 2026-10-27 on the local database (Luanda Business Lda, Oct 2026, four employees incl. the meal + ' +
+      'transport allowance case and one just over the 150,000 cliff): owner prepared, approver released; IRT ' +
+      'Kz 553,505.50 (due 30 Nov) and INSS 343,200 (due 10 Nov) schedules, the declaration of record (calendar shows ' +
+      'filed), the Modelo 2 summary (zero variance) and the ledger all tied. Awaiting the owner\'s sign-off to promote. ' +
+      'Built 2026-10-27 on feat/sadc-expansion (memos/AO-RECON-1.md). IRT on the Lei 14/25 table (from 1 Jan 2026; ' +
+      'verified against PwC), cliffs at 150,000 and 200,000 kept as the law has them; AGT\'s own example ties ' +
+      '(175,000 → 16,500). INSS 3% + 8% (DP 227/18). IRT is replaced by IRPS from 1 Jan 2027 — a 2027 table is ' +
+      'needed before January. Not built: upload layouts, contract profile. Open: holiday subsidy outside INSS ' +
+      'needs its own pay line; INSS 5% + 10% if decreed.',
+  },
+  MZ: {
+    runPersists: true,
+    testSuite: true,
+    outputsGenerated: true,
+    note:
+      'PROMOTED 2026-10-28 on the owner\'s sign-off (Mvelase). WALKED LIVE 2026-10-27 on the local database (Maputo Business Lda, Oct 2026, five employees incl. 2 and 1 ' +
+      'dependants and the OCAM and Mercans cases): owner prepared, approver released; IRPS MT 81,867.50 (due 20 Nov) ' +
+      'and INSS 31,885 (due 10 Nov), the declaration of record, the certificates (zero variance) and the ledger all ' +
+      'tied. Fixed on the walk: a stale schedule response overwrote the selected month (shared with SZ/LS). ' +
+      'Awaiting the owner\'s sign-off to promote. ' +
+      'Built 2026-10-27 on feat/sadc-expansion (memos/MZ-RECON-1.md). Withholding table on gross by dependants ' +
+      '(OCAM and Mercans examples tie; two printing errors corrected by continuity). INSS 3% + 4%, not deducted ' +
+      'before IRPS. Lei 11/2025: withholding no longer final from 2026, employees file Modelo 10 — the annual ' +
+      'certificates support it. Not built: M/19 and SISSMO layouts, contract profile. Open: IRPS regulations ' +
+      'under Lei 11/2025, 13th-month method.',
+  },
+  NA: {
+    runPersists: true,
+    testSuite: true,
+    outputsGenerated: true,
+    note:
+      'PROMOTED 2026-10-22 on the owner\'s sign-off (Mvelase): bonus and commission stay OUT of the ' +
+      'SSC base, the last open judgement call. ' +
+      'Walked live 2026-10-21 on a real database (NA business tenant, Sep and Oct 2026, bonus, ' +
+      'commission, overtime, allowance and pension): payslips, ETX/SSC/VET schedules, PAYE 5, ' +
+      'declarations and the ledger all tied to hand-worked figures. Researched at source 2026-10-21: ' +
+      'SSC basic wage per SS regs reg 1 (allowances, overtime, premiums excluded by name); N$12,500 ' +
+      'ceiling from 1 Sep 2026 per the SSC despite GN 236/2026 saying 1 Mar; bonus taxed at the margin ' +
+      '(NamRA withholds on the balance of remuneration, no separate method published); ECF is an ' +
+      'employer assessment by industry class, E.As.6 by 31 Mar, N$101,625 cover ceiling. Year-end: ' +
+      'ITAS FAQ Q7 — the detailed monthly ETX returns accumulate, NO annual recon is filed; PAYE 5 ' +
+      'to each employee (30 days after Feb; 14 days after a leaver; 7 if the employer ceases). ' +
+      'ETX upload file built 2026-10-22 on NamRA\'s own ETX_Template_Version_2 (pension / RA fund names ' +
+      'and registration numbers entered once on the employer profile / employee record, d181e3c). ' +
+      'Built 2026-10-23: fringe benefits (car, housing, loans) and the approved-housing-scheme third ' +
+      '(b87d02f); leavers with the 14-day PAYE 5 and PAYE 5 PDFs (3935e3c). ' +
+      'Still not modelled: per-km travel (on PAYE 5, no PAYE — Practice Note 3), the 18% part-time rate. ' +
+      'Not yet proven: an ETX file uploaded to ITAS.',
+  },
+  KE: {
+    runPersists: true,
+    testSuite: true,
+    outputsGenerated: true,
+    note:
+      'PROMOTED 2026-10-26 on the owner\'s sign-off (Mvelase). Walked live on a real database 2026-10-25 ' +
+      '(KE business tenant, Oct 2026): PAYE with SHIF, NSSF and the housing levy deducted first, the KRA PAYE, ' +
+      'NSSF, SHIF and AHL schedules, and a leaver\'s P9A tied to hand-worked figures. Engine rebuilt to the ' +
+      'researched spec 2026-10-23 (SHIF replaces NHIF; NSSF Third Schedule limits dated to Feb 2027). ' +
+      'Not yet built: a Kenya ledger regime (approvals post to the generic accounts), the KRA iTax P10 file.',
+  },
   UK: {
     runPersists: true,
     testSuite: true,
@@ -188,9 +319,6 @@ const FILING_PORTAL: Partial<Record<PayrollRegion, string>> = {
   SZ:  'ERS (ENPF separately)',
   LS:  'RSL',
   KE:  'KRA iTax (NSSF and SHA separately)',
-  RW:  'RRA e-Tax (PAYE and RSSB on one return)',
-  AO:  'the AGT Portal do Contribuinte (INSS separately)',
-  MZ:  'AT e-Declaração (INSS on SISSMO separately)',
 };
 
 /** e.g. "Generate the P2 and supporting schedules — you file with ZIMRA TaRMS yourself." */

@@ -30,13 +30,13 @@ export const categories: Category[] = [
   {
     slug: 'payroll',
     title: 'Payroll & Tax',
-    description: 'Run payroll in eight African countries, with PAYE and each country\'s social security and levies worked out for you.',
+    description: 'Run payroll with PAYE and statutory deductions calculated for you — live in South Africa, Botswana, Zambia, Zimbabwe and Namibia.',
     icon: '💰',
   },
   {
     slug: 'invoicing',
     title: 'Invoicing',
-    description: 'Create VAT invoices with multi-currency support and automatic VAT calculations.',
+    description: 'Create tax-compliant invoices with multi-currency support and automatic VAT calculations.',
     icon: '📄',
   },
   {
@@ -84,13 +84,13 @@ export const faqs: FAQ[] = [
   {
     question: 'Which countries does SORMALITICS support for payroll?',
     answer:
-      'Payroll is live in eleven countries: South Africa (SARS), Botswana (BURS), Zambia (ZRA), Zimbabwe (ZIMRA), Namibia (NamRA), Eswatini (ERS), Lesotho (RSL), Kenya (KRA), Rwanda (RRA), Angola (AGT) and Mozambique (AT). Each country has its own tax engine and its own monthly schedules and year-end certificates. Your company is set up for one country when you register.',
+      'Payroll is live in eleven countries: South Africa (SARS), Kenya (KRA), Botswana (BURS), Zambia (ZRA), Zimbabwe (ZIMRA), Namibia (NamRA), Eswatini (ERS), Lesotho (RSL), Rwanda (RRA), Angola (AGT) and Mozambique (AT). In development: the United Kingdom (HMRC) and the United States (IRS); Uganda (URA) is planned. Each country has its own tax engine, kept to that authority\'s current published rates.',
     categorySlug: 'payroll',
   },
   {
     question: 'How accurate are the tax calculations?',
     answer:
-      "Our tax engines use the latest published statutory rates from each authority. For South Africa this includes the current PAYE tables, UIF (1%) and SDL (1%). Engines are reviewed annually when new rates are published. We recommend confirming generated figures with a qualified accountant before submission.",
+      "Our tax engines use the latest published statutory rates from each authority. For South Africa this includes the current year's PAYE tables, UIF (1%), and SDL (1%). Engines are reviewed annually when new rates are published. We recommend confirming generated figures with a qualified accountant before submission.",
     categorySlug: 'payroll',
   },
   {
@@ -124,7 +124,7 @@ export const faqs: FAQ[] = [
   {
     question: 'What is an EMP201 and when do I need to submit it?',
     answer:
-      'The EMP201 is a South African monthly employer declaration submitted to SARS. It declares the PAYE, UIF, and SDL withheld and owed for the month. It must be filed and paid by the 7th of the following month. SORMALITICS generates an EMP201 schedule from your approved payroll run, for you to check and submit on eFiling.',
+      'The EMP201 is a South African monthly employer declaration submitted to SARS. It declares the PAYE, UIF, and SDL withheld and owed for the month. It must be filed and paid by the 7th of the following month. SORMALITICS generates a pre-filled EMP201 from your approved payroll run.',
     categorySlug: 'tax-compliance',
   },
   {
@@ -217,10 +217,10 @@ export const articles: Article[] = [
     slug: 'multi-region-tax-calculations',
     title: 'Understanding Multi-Region Tax Calculations',
     summary:
-      "How SORMALITICS's dedicated tax engines handle PAYE, social security and statutory deductions in each country we support.",
+      "How SORMALITICS's dedicated tax engines handle PAYE, NICs, Social Security, and statutory deductions across thirteen jurisdictions.",
     body: [
-      'SORMALITICS runs a separate tax engine for each supported country. Each engine uses the current tax year\'s rates and thresholds, checked against the relevant authority — SARS, BURS, ZRA, ZIMRA, NamRA, ERS, RSL and KRA.',
-      'For South Africa, the engine applies the progressive PAYE tables to the annualised income, calculates monthly UIF (1% employee + 1% employer, capped at the statutory threshold), and SDL (1% employer levy on gross payroll). The primary rebate for the tax year reduces the annual tax before the monthly figure is derived.',
+      'SORMALITICS runs a separate tax engine for each of the eleven supported jurisdictions. Each engine is maintained with the current tax year\'s statutory rates and thresholds, sourced directly from the relevant authority — SARS, HMRC, IRS, KRA, URA, BURS, ZRA, ZIMRA, NamRA, ERS and RSL.',
+      'For South Africa, the engine applies the progressive PAYE tables to the annualised income, calculates monthly UIF (1% employee + 1% employer, capped at the statutory threshold), and SDL (1% employer levy on gross payroll). The primary rebate (and the secondary and tertiary rebates for older employees) reduces the annual tax before the monthly figure is derived.',
       'For the United Kingdom, the engine applies Income Tax bands (20%, 40%, 45%) above the personal allowance of £12,570. National Insurance is calculated at 8% (employee) above the Primary Threshold and 15% (employer) above the Secondary Threshold, which fell to £5,000 a year from April 2025. Scottish taxpayers (an S tax code) are charged Scotland’s own six bands instead. Student loan deductions (Plan 1, 2, 4 or 5, and postgraduate loans) are applied if flagged on the employee record.',
       'All engines output a consistent structure: gross pay, itemised deductions, employer contributions, and net pay. You can run a mixed-jurisdiction payroll — UK and South African employees in the same month — and SORMALITICS handles each correctly, generating the appropriate statutory form per region.',
     ],
@@ -245,11 +245,11 @@ export const articles: Article[] = [
   // Invoicing
   {
     slug: 'tax-compliant-invoices-vat',
-    title: 'Creating VAT Invoices',
+    title: 'Creating Tax-Compliant Invoices with VAT',
     summary:
       'Configure VAT rates, apply reverse charge for cross-border transactions, and ensure your invoices meet local requirements.',
     body: [
-      'A VAT invoice has to carry specific information, and the list differs by jurisdiction. SORMALITICS\'s invoice generator fills in the fields most VAT invoices require based on your country setting — VAT number placement, invoice number sequencing, and the appropriate tax label (VAT, GST, or Sales Tax).',
+      'A tax-compliant invoice must include specific information required by each jurisdiction. SORMALITICS\'s invoice generator automatically populates mandatory fields based on your country setting — VAT number placement, invoice number sequencing, and the appropriate tax label (VAT, GST, or Sales Tax).',
       'To create a new invoice, go to Invoice → New invoice. Select your client, add line items, and choose the tax jurisdiction from the dropdown. SORMALITICS applies the correct rate — 15% for South Africa, 20% for the UK, 16% for Kenya. For cross-border sales to VAT-registered businesses, tick "Reverse charge" to apply the zero-rate rule.',
       'Each line item can carry its own tax code, useful when your invoice includes both taxable and exempt supplies. The invoice total, VAT subtotal, and amount due are calculated automatically and update in real time as you edit.',
       'Click "Generate PDF" when ready. The PDF is created server-side with your logo, company details, and client information. Download it directly or send it to the client by email using the built-in delivery feature. All sent invoices are logged in document history with timestamps.',
@@ -279,7 +279,7 @@ export const articles: Article[] = [
     summary:
       'Produce a pre-filled EMP201 monthly PAYE declaration from your approved South African payroll run.',
     body: [
-      'The EMP201 is a mandatory monthly return submitted to SARS declaring the PAYE, UIF, and SDL withheld from employees and owed by the employer. It must be filed and paid by the 7th of the month following the payroll period. SORMALITICS generates an EMP201 schedule directly from your approved payroll run.',
+      'The EMP201 is a mandatory monthly return submitted to SARS declaring the PAYE, UIF, and SDL withheld from employees and owed by the employer. It must be filed and paid by the 7th of the month following the payroll period. SORMALITICS generates a pre-filled EMP201 directly from your approved payroll run.',
       'To generate the EMP201, ensure your payroll run for the relevant month is in Approved status. Navigate to Payroll → Tax Compliance → EMP201, select the period (e.g. May 2025), and click "Generate". SORMALITICS pulls the approved figures and maps them to the correct EMP201 fields automatically.',
       'The generated form shows your employer PAYE reference number, the total PAYE deducted, employer and employee UIF contributions, and the SDL levy. Verify these figures against your payroll summary before submission. If any figure looks incorrect, check the underlying payroll run — you cannot edit the EMP201 directly.',
       'Download the EMP201 as a PDF for your records. You must submit the actual return via SARS eFiling — SORMALITICS does not connect directly to eFiling. The generated PDF serves as a reference to ensure you enter the correct amounts on eFiling. After submission, upload the SARS receipt to your compliance document history.',
@@ -291,12 +291,12 @@ export const articles: Article[] = [
     slug: 'paye-filing-deadlines',
     title: 'PAYE Filing Deadlines by Region',
     summary:
-      'A reference guide to statutory filing dates for PAYE and employer returns across all 7 SORMALITICS-supported jurisdictions.',
+      'A reference guide to statutory filing dates for PAYE and employer returns across the SORMALITICS-supported jurisdictions.',
     body: [
       'Missing a PAYE filing deadline results in statutory penalties and interest from the tax authority. SORMALITICS shows a compliance calendar on your Tax Compliance Hub dashboard, but understanding the underlying deadlines helps you plan payroll processing well in advance.',
-      'South Africa (SARS): EMP201 paid and filed by the 7th of the following month; EMP501 reconciliation by 31 October (interim) and 31 May (annual), with IRP5 certificates for each employee. Botswana (BURS): PAYE remitted by the 15th; ITW10 one month after the 30 June year end, with an ITW8 for each employee. Zambia (ZRA): monthly PAYE return, with NAPSA and NHIMA, by the 10th.',
-      'Zimbabwe (ZIMRA): P2 and NSSA by the 10th, ZIMDEF by the 15th, ITF16 within 30 days of 31 December. Namibia (NamRA): PAYE (ETX) by the 20th, Social Security within 30 days, and a PAYE 5 for each employee after the February year end. Eswatini (ERS): PAYE before the 7th, ENPF within 21 days, PAYE05 certificates within 14 days of 30 June.',
-      "Lesotho (RSL): PAYE by the 15th; a P.16 for each employee within 28 days of 31 March, and within 7 days when someone leaves. Kenya (KRA): PAYE, NSSF, SHIF and the housing levy by the 9th; a P9A for each employee by the end of February. SORMALITICS's compliance calendar shows the upcoming deadlines for your company's country.",
+      'South Africa (SARS): EMP201 must be filed and paid by the 7th of the following month. The bi-annual EMP501 reconciliation is due 31 October and 31 May. IRP5 certificates must be issued to employees by the same dates. United Kingdom (HMRC): PAYE and National Insurance are paid by the 22nd of the following tax month (19th if paying by post); the P32 is your record of those payments. Pay is reported to HMRC under RTI on or before each payday, through your RTI software. P60 certificates must reach employees by 31 May.',
+      'United States (IRS): Form 941 (quarterly federal tax return) is due the last day of the month following each quarter — April 30, July 31, October 31, and January 31. FUTA (Form 940) is filed annually by January 31. Kenya (KRA): Monthly PAYE returns are due by the 9th of the following month. The annual P9A certificate is due by end of February.',
+      "Uganda (URA): Monthly PAYE returns are due by the 15th of the following month. Botswana (BURS): monthly PAYE is remitted by the 15th of the following month; the ITW10 annual return is due one month after the 30 June year-end, with ITW8 certificates for each employee. Zambia (ZRA): the monthly PAYE return, with NAPSA and NHIMA, is due by the 10th of the following month. Zimbabwe (ZIMRA): the P2 PAYE return and NSSA are due by the 10th, ZIMDEF by the 15th, and the ITF16 annual return within 30 days of 31 December. SORMALITICS's compliance calendar highlights all upcoming deadlines based on your active payroll regions.",
     ],
     categorySlug: 'tax-compliance',
     tags: ['deadlines', 'PAYE', 'EMP201', 'P32', 'Form 941', 'KRA', 'filing dates', 'compliance'],
@@ -309,9 +309,10 @@ export const articles: Article[] = [
     summary:
       'A side-by-side breakdown of what each SORMALITICS plan includes — documents, regions, team seats, and features.',
     body: [
-      'SORMALITICS offers four plans: Free, Professional, Business and Practitioner. The right one depends on how many people will use it, whether you run payroll, and whether you look after clients as a practice.',
-      'Free is for trying the platform on your own. Professional is for a single business with up to three users. Business adds teams — Finance, Payroll and Exco each see their own work, with segregation of duties between preparing and approving. Practitioner is for accounting practices and is billed per client.',
-      'Limits, features and prices change as the product grows, so the Pricing page is always the current reference for what each plan includes.',
+      'SORMALITICS offers four tiers: Free, Professional, Business, and Enterprise. The right plan depends on how many documents you generate per month, whether you need multi-region payroll, and whether you need team access.',
+      'The Free plan is a once-off trial: 3 invoices, 2 quotations, 1 payslip and 1 agreement, so you can see the quality of what SORMALITICS produces on your own data. It does not reset each month, and deleting a document does not give it back. Email delivery, tax compliance forms, and multi-region payroll are not included on Free.',
+      'Professional gives you 50 documents per month, all 7 payroll regions, full invoice generator with email delivery, custom templates, and tax form generation (EMP201, P32, P60, Form 941). This tier is designed for solo operators and small businesses with a single user.',
+      'Business unlocks 200 documents per month, 5 team seats, payroll run management, all 7 tax compliance forms, advanced financial reporting, and unlimited document history. Enterprise removes all limits and adds API access, white-label options, custom integrations, and dedicated support with SLA guarantees.',
     ],
     categorySlug: 'billing-plans',
     tags: ['plans', 'Free', 'Professional', 'Business', 'Enterprise', 'pricing', 'comparison'],

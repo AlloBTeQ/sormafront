@@ -37,7 +37,10 @@ import {
 // Canonical ladder: free → professional → business → practitioner, with
 // `cooperative` beside Business: the same company toolkit plus the member
 // ledger and the Prudential Authority returns, for South African SACCOs and
-// co-operative banks (owner's decision, 2026-11-03).
+// co-operative banks (owner's decision, 2026-11-03). `school` likewise beside
+// Business: the company toolkit plus Sormalitics Edu (owner's decision,
+// 2026-11-21 — the School plan is a plan of its own; Business no longer
+// carries the school module), priced by learner tiers chosen at checkout.
 // `team`/`enterprise` are retained as legacy aliases so historical User
 // documents still validate; they are not sold.
 export type Plan =
@@ -45,12 +48,13 @@ export type Plan =
   | 'professional'
   | 'business'
   | 'cooperative'
+  | 'school'
   | 'practitioner'
   | 'team'
   | 'enterprise';
 
 /** Plans a customer can actually buy today, in ladder order. */
-export const PURCHASABLE_PLANS = ['free', 'professional', 'business', 'cooperative', 'practitioner'] as const;
+export const PURCHASABLE_PLANS = ['free', 'professional', 'business', 'cooperative', 'school', 'practitioner'] as const;
 export type PurchasablePlan = (typeof PURCHASABLE_PLANS)[number];
 
 /**
@@ -60,7 +64,7 @@ export type PurchasablePlan = (typeof PURCHASABLE_PLANS)[number];
  * starts at the minimum quantity and the count is reconciled automatically as
  * clients are added/removed, so it is self-serve like the others.
  */
-export const SELF_SERVE_PLANS = ['professional', 'business', 'cooperative', 'practitioner'] as const;
+export const SELF_SERVE_PLANS = ['professional', 'business', 'cooperative', 'school', 'practitioner'] as const;
 export type SelfServePlan = (typeof SELF_SERVE_PLANS)[number];
 
 export type BillingCycle = 'monthly' | 'annual';
@@ -96,15 +100,9 @@ export const SUPPORTED_CURRENCIES: SupportedCurrency[] = ['ZAR', 'GBP', 'USD', '
 //   1. add the currency to each Price's currency_options in Stripe;
 //   2. set BILLING_OFFERED_CURRENCIES (e.g. "ZAR,USD,KES,ZMW") in Vercel;
 //   3. redeploy.
-// Unknown codes are ignored; ZAR is always present.
-//
-// 2026-10-28: USD, KES and ZMW currency_options are on all six Stripe Prices
-// (owner confirmed), so this static site now shows all four by default — the
-// list is baked in at build time and .env* is not committed. The variable still
-// overrides it. Charging is guarded separately, in the app, which bills in the
-// currency of the company's registered country.
+// Unset, it is ZAR only. Unknown codes are ignored; ZAR is always present.
 function readOfferedCurrencies(): SupportedCurrency[] {
-  const raw = (process.env.BILLING_OFFERED_CURRENCIES ?? process.env.NEXT_PUBLIC_BILLING_OFFERED_CURRENCIES ?? 'ZAR,USD,KES,ZMW')
+  const raw = (process.env.BILLING_OFFERED_CURRENCIES ?? process.env.NEXT_PUBLIC_BILLING_OFFERED_CURRENCIES ?? 'ZAR')
     .split(',').map(c => c.trim().toUpperCase()).filter(Boolean);
   const list = raw.filter((c): c is SupportedCurrency => (SUPPORTED_CURRENCIES as string[]).includes(c));
   return list.includes('ZAR') ? list : ['ZAR', ...list];
@@ -154,7 +152,14 @@ export type ModuleKey =
    * Cooperative has it; Practitioner and Enterprise have it so a practice can
    * prepare a SACCO client's returns.
    */
-  | 'regulatory';
+  | 'regulatory'
+  /**
+   * Sormalitics Edu — school fee debtors, billing runs and statements. Shown
+   * only on a school's books (lib/edu/isSchoolBooks.ts). The School plan
+   * carries it; Practitioner and Enterprise too, so a practice can run a
+   * school client's books. Business does not (owner's decision, 2026-11-21).
+   */
+  | 'school';
 
 // ─── Limits ──────────────────────────────────────────────────────────────────
 
@@ -334,7 +339,9 @@ export interface PlanDefinition {
    * add-on market of £1.50–£2.00 because our seat also carries distribution
    * and statutory filing. Applying the 23× ratio would put ZAR at R69, roughly
    * three times what South African vendors charge per head, and we would lose
-   * the deal on one line item. R39 is priced to its own market on purpose.
+   * the deal on one line item. The rand rate is priced to its own market on
+   * purpose: R19.99 from 2026-11-11 (was R39), level with SimplePay (~R18.25 ex
+   * VAT) and PaySpace (from R21.49).
    *
    * Anyone "fixing the inconsistency" by rescaling this row is reintroducing
    * the bug. It is inconsistent on purpose.
@@ -354,6 +361,11 @@ export interface PlanDefinition {
    * reported to the customer and to us, not charged.
    */
   memberOverage?: Record<SupportedCurrency, number> | null;
+  /**
+   * School: the monthly price by learners on the register (rand). The first
+   * tier whose `upTo` covers the count applies; above the last, quoted.
+   */
+  learnerTiers?: readonly { upTo: number; monthly: number }[];
 }
 
 /**
@@ -442,6 +454,7 @@ export const PLANS: Record<Plan, PlanDefinition> = {
     // 'full' since 2026-11-11 — was 'draft'. See the note on `limits` above.
     payrollMode: 'full',
     // 2026-11-11 price list v3 (excl. VAT; the seller is not VAT-registered).
+    // R299.99 sits under Sage Start + Sage Payroll (R367 incl. VAT, ~R319 ex).
     monthlyPrice: { ZAR: 299.99, GBP: 17.99, USD: 15.99, EUR: 20.99, KES: 1499, ZMW: 339 },
     annualMonths: 10,
     features: [
@@ -484,7 +497,8 @@ export const PLANS: Record<Plan, PlanDefinition> = {
     },
     access: ['invoicing', 'accounting', 'agreements', 'tax', 'payroll', 'reporting'],
     payrollMode: 'full',
-    // 2026-11-11 price list v3: R699.99 (was R899.99).
+    // 2026-11-11 price list v3: R699.99 (was R899.99), under Sage Standard +
+    // Sage Payroll for 10 staff (R920 incl. VAT, ~R800 ex).
     monthlyPrice: { ZAR: 699.99, GBP: 39.99, USD: 39.00, EUR: 44.99, KES: 2999, ZMW: 799 },
     // £39.99 ÷ 10 included employees is £4.00 a head, so £2.99 for employee 11
     // is a volume step down rather than a penalty. Read the comment on
@@ -514,7 +528,8 @@ export const PLANS: Record<Plan, PlanDefinition> = {
     tagline: 'For SACCOs and co-operative banks — member ledger and PA returns',
     badge:   'PA RETURNS',
     // Business's limits, plus the member allowance. Owner's decisions,
-    // 2026-11-03: R999.99 a month — the PA returns are quarterly, so the price
+    // 2026-11-03: priced for quarterly PA returns (R999.99 then; R849.99 from
+    // the 2026-11-11 price list v3, i.e. Business + R150) — the price
     // is set for a book that is busy four times a year, not every day — South
     // Africa only, and nothing extra for members until the register passes 750.
     limits: {
@@ -528,7 +543,6 @@ export const PLANS: Record<Plan, PlanDefinition> = {
     // Rand only. The other currencies are placeholders the type requires and
     // are never quoted: `soldIn` refuses every jurisdiction but South Africa,
     // and `monthlyPrice()` returns null outside it (see below).
-    // 2026-11-11 price list v3: R849.99 (was R999.99).
     monthlyPrice: { ZAR: 849.99, GBP: 0, USD: 0, EUR: 0, KES: 0, ZMW: 0 },
     employeeOverage: { ZAR: 19.99, GBP: 0, USD: 0, EUR: 0, KES: 0, ZMW: 0 },
     // Not set yet: above 750 members the excess is shown, not billed.
@@ -552,6 +566,52 @@ export const PLANS: Record<Plan, PlanDefinition> = {
     },
   },
 
+  school: {
+    key:     'school',
+    name:    'School',
+    tagline: 'For independent schools — fee billing, statements and subsidy accounting',
+    badge:   'SCHOOLS',
+    // Business's limits. Priced by learners on the register (owner's decision,
+    // 2026-11-21): R1,250 a month to 300 learners, R1,750 to 599, custom from 600
+    // — the same shape as the IFRS 16 Leases tiers. Self-serve: the
+    // buyer picks the tier at checkout; the register is held to it
+    // (lib/edu/learnerCap.ts) and the tier can be changed from Billing.
+    limits: {
+      invoices: UNLIMITED, quotes: UNLIMITED, payslips: UNLIMITED, agreements: UNLIMITED,
+      issuers: 1, employees: 10, teamMembers: 15,
+      reportExports: UNLIMITED, pdfUploads: UNLIMITED, signatureRequests: UNLIMITED, templates: UNLIMITED, members: UNLIMITED,
+    },
+    access: ['invoicing', 'accounting', 'agreements', 'tax', 'payroll', 'reporting', 'school'],
+    payrollMode: 'full',
+    // The first tier's price — what "from" shows. Rand only, as Co-operative.
+    monthlyPrice: { ZAR: 1250, GBP: 0, USD: 0, EUR: 0, KES: 0, ZMW: 0 },
+    // Owner, 2026-11-21: 1–300 R1,250, 301–599 R1,750, 600+ custom pricing.
+    learnerTiers: [
+      { upTo: 300, monthly: 1250 },
+      { upTo: 599, monthly: 1750 },
+    ],
+    // One Volume-tiered Stripe price per cycle; the subscription quantity is
+    // the learners covered (300 or 599) and Stripe picks the band. The price
+    // also carries a 600+ band (SCHOOL_STRIPE_TOP_BAND) for completeness, but
+    // the app never sends 600 or more — those schools are quoted.
+    stripePriceEnv: { monthly: 'STRIPE_PRICE_SCHOOL_MONTHLY', annual: 'STRIPE_PRICE_SCHOOL_ANNUAL' },
+    employeeOverage: { ZAR: 19.99, GBP: 0, USD: 0, EUR: 0, KES: 0, ZMW: 0 },
+    soldIn: ['ZA'],
+    annualMonths: 10,
+    features: [
+      'Everything in Business',
+      'Up to 300 learners: R1,250 a month',
+      '301 to 599 learners: R1,750 a month',
+      '600 learners or more: custom pricing',
+      'Family accounts, learner register and monthly billing run',
+      'Statements by e-mail, bank statement import and cash receipting',
+      'Age analysis, approvals and payment arrangements',
+      'Subsidy fund accounting and the quarterly subsidy report',
+    ],
+    cta:    'Get Started',
+    accent: 'sky',
+  },
+
   practitioner: {
     key:     'practitioner',
     name:    'Practitioner',
@@ -570,7 +630,7 @@ export const PLANS: Record<Plan, PlanDefinition> = {
       issuers: UNLIMITED, employees: 10, teamMembers: UNLIMITED,
       reportExports: UNLIMITED, pdfUploads: UNLIMITED, signatureRequests: UNLIMITED, templates: UNLIMITED, members: UNLIMITED,
     },
-    access: ['invoicing', 'accounting', 'agreements', 'tax', 'payroll', 'reporting', 'practice', 'regulatory'],
+    access: ['invoicing', 'accounting', 'agreements', 'tax', 'payroll', 'reporting', 'practice', 'regulatory', 'school'],
     payrollMode: 'full',
     // The FIRST tier's rate, and it must stay equal to volumeTiers[0].rate —
     // this is what the pricing card quotes as the headline "per client" price.
@@ -616,7 +676,9 @@ export const PLANS: Record<Plan, PlanDefinition> = {
       // these two numbers may never move independently.
       // `practitionerBillingMath.test.ts` asserts the inequality directly.
       volumeTiers: [
-        // 2026-11-11 price list v3; the 2-client floor stays above Business in every currency.
+      //   2026-11-11 (price list v3), per currency — floor vs Business:
+      //     ZAR 2 x 469.99 = 939.98 vs 699.99 · USD 52 vs 39 · KES 4,998 vs 2,999
+      //     ZMW 1,058 vs 799 · GBP 59.98 vs 39.99 · EUR 69.98 vs 44.99
         { upTo: 5,    rate: { ZAR: 469.99, GBP: 29.99, USD: 26.00, EUR: 34.99, KES: 2499, ZMW: 529 } },
         { upTo: 20,   rate: { ZAR: 379.99, GBP: 24.99, USD: 21.00, EUR: 29.99, KES: 1999, ZMW: 429 } },
         { upTo: null, rate: { ZAR: 309.99, GBP: 19.99, USD: 17.00, EUR: 21.99, KES: 1599, ZMW: 349 } },
@@ -655,7 +717,7 @@ export const PLANS: Record<Plan, PlanDefinition> = {
       issuers: UNLIMITED, employees: UNLIMITED, teamMembers: UNLIMITED,
       reportExports: UNLIMITED, pdfUploads: UNLIMITED, signatureRequests: UNLIMITED, templates: UNLIMITED, members: UNLIMITED,
     },
-    access: ['invoicing', 'accounting', 'agreements', 'tax', 'payroll', 'reporting', 'practice', 'regulatory'],
+    access: ['invoicing', 'accounting', 'agreements', 'tax', 'payroll', 'reporting', 'practice', 'regulatory', 'school'],
     monthlyPrice: null,
     annualMonths: 10,
     features: [],
@@ -708,6 +770,43 @@ export function planDisplayName(plan: string | null | undefined): string {
 /** Plans shown on the pricing page, in ladder order. */
 export const PRICING_PLANS: PlanDefinition[] =
   PURCHASABLE_PLANS.map(key => PLANS[key]);
+
+/**
+ * The School plan's monthly price for a register of `learners`, or null above
+ * the last tier (quoted). Learners are those on the register now.
+ */
+export function schoolTierFor(learners: number): { upTo: number; monthly: number; index: number } | null {
+  const tiers = PLANS.school.learnerTiers ?? [];
+  const i = tiers.findIndex(t => learners <= t.upTo);
+  return i < 0 ? null : { ...tiers[i], index: i };
+}
+
+export const SCHOOL_TIER_SIZES = [300, 599] as const;
+export type SchoolTierSize = (typeof SCHOOL_TIER_SIZES)[number];
+/** From this many learners the School plan is custom-priced (contact support). */
+export const SCHOOL_QUOTED_FROM = 600;
+/** The 600+ band on the Stripe price, monthly rand — never charged by the app. */
+export const SCHOOL_STRIPE_TOP_BAND = 2500;
+
+/** The School tier a subscription quantity sits in (Volume: the first band at or above it). */
+export function schoolTierOfQuantity(q: number | null | undefined): SchoolTierSize | null {
+  if (!q || q < 1 || q >= SCHOOL_QUOTED_FROM) return null;
+  return q <= 300 ? 300 : 599;
+}
+
+/** The monthly (or annual) price of a School tier, rand. */
+export function schoolTierPrice(upTo: number, cycle: BillingCycle): number | null {
+  const t = (PLANS.school.learnerTiers ?? []).find(x => x.upTo === upTo);
+  if (!t) return null;
+  return cycle === 'annual' ? t.monthly * PLANS.school.annualMonths : t.monthly;
+}
+
+/** Why a plan cannot be bought from a company's country. */
+export function notSoldInMessage(plan: string): string {
+  if (plan === 'school') return 'The School plan is for South African schools.';
+  if (plan === 'cooperative') return 'The Co-operative plan is for South African co-operatives registered with the Prudential Authority.';
+  return 'This plan is not sold in your company\'s country.';
+}
 
 export function isSelfServe(plan: string): plan is SelfServePlan {
   return (SELF_SERVE_PLANS as readonly string[]).includes(plan);
@@ -907,10 +1006,17 @@ export function planFeatures(plan: string | null | undefined, currency: Supporte
  * Returns null when the env var is unset — Stripe is simply not configured yet,
  * which the caller should surface as a 503, not a crash.
  */
+/** Other env names a plan's price is read from — the names the owner set in Vercel. */
+const STRIPE_PRICE_ENV_ALIASES: Partial<Record<Plan, Record<BillingCycle, string>>> = {
+  // Owner, 2026-11-21: the School prices were set under these names.
+  school: { monthly: 'STRIPE_PRICE_SCHOOL_300_MONTHLY', annual: 'STRIPE_PRICE_SCHOOL_600_ANNUAL' },
+};
+
 export function resolveStripePriceId(plan: SelfServePlan, cycle: BillingCycle): string | null {
   const envKey = PLANS[plan].stripePriceEnv?.[cycle];
   if (!envKey) return null;
-  return process.env[envKey] ?? null;
+  const alias = STRIPE_PRICE_ENV_ALIASES[plan]?.[cycle];
+  return process.env[envKey]?.trim() || (alias ? process.env[alias]?.trim() : undefined) || null;
 }
 
 /**
@@ -923,6 +1029,9 @@ export function planFromStripePriceId(
   priceId: string | null | undefined,
 ): { plan: Plan; cycle: BillingCycle } | null {
   if (!priceId) return null;
+  // A practitioner's per-zone client line is still the Practitioner plan.
+  const zoned = practitionerZoneOfPrice(priceId);
+  if (zoned) return { plan: 'practitioner', cycle: zoned.cycle };
   for (const plan of Object.keys(PLANS) as Plan[]) {
     for (const cycle of ['monthly', 'annual'] as BillingCycle[]) {
       if (!PLANS[plan].stripePriceEnv?.[cycle]) continue;
@@ -933,6 +1042,76 @@ export function planFromStripePriceId(
   }
   return null;
 }
+
+// ─── Practitioner client price zones ─────────────────────────────────────────
+//
+// A practitioner client is priced by the country its payroll runs in, not by
+// where the practice registered (owner's decision, 2026-10-30). Without this a
+// practice could register in Kenya, pay the KES slot price and run rand
+// payrolls on it — the arbitrage the 2026-10-28 billing rule closed for
+// companies.
+//
+// The ZONE is the billing currency of the client's country, as
+// `billingCurrencyFor` decides it: South Africa, Botswana, Eswatini, Lesotho,
+// Namibia, Rwanda, Angola, Mozambique and Uganda are the ZAR zone; Kenya is
+// KES; Zambia ZMW; Zimbabwe and the US are USD; the UK is GBP. A currency that
+// is not yet OFFERED folds back into ZAR, exactly as it does for a company.
+//
+// Stripe will not let one customer hold live subscriptions in two currencies,
+// so every zone is a LINE on the practitioner's one subscription, in the
+// practitioner's own currency:
+//
+//   - the client's zone IS the practitioner's currency → the existing
+//     Practitioner price (STRIPE_PRICE_PRACTITIONER_*), already on the
+//     subscription, at its local amount;
+//   - any other zone → a per-zone Price, STRIPE_PRICE_PRACTITIONER_ZONE_<CCY>_
+//     MONTHLY / _ANNUAL, whose base currency is the zone's own and whose
+//     currency_options carry what that client costs in every other billing
+//     currency. Those amounts are set in Stripe, by us, deliberately.
+//
+// A zone whose Price is missing — or lacks an amount in the practitioner's
+// currency — cannot be sold. That fails CLOSED: the client is refused with a
+// plain reason rather than slipped onto the cheaper home line.
+
+/** Env var holding the per-zone Practitioner Price for `zone` and `cycle`. */
+export function practitionerZonePriceEnv(zone: SupportedCurrency, cycle: BillingCycle): string {
+  return `STRIPE_PRICE_PRACTITIONER_ZONE_${zone}_${cycle === 'annual' ? 'ANNUAL' : 'MONTHLY'}`;
+}
+
+/** The per-zone Price id, or null when that zone is not configured. */
+export function resolvePractitionerZonePriceId(zone: SupportedCurrency, cycle: BillingCycle): string | null {
+  return process.env[practitionerZonePriceEnv(zone, cycle)] || null;
+}
+
+/** Which zone and cycle a per-zone Price belongs to; null for any other price. */
+export function practitionerZoneOfPrice(
+  priceId: string | null | undefined,
+): { zone: SupportedCurrency; cycle: BillingCycle } | null {
+  if (!priceId) return null;
+  for (const zone of SUPPORTED_CURRENCIES) {
+    for (const cycle of ['monthly', 'annual'] as BillingCycle[]) {
+      if (resolvePractitionerZonePriceId(zone, cycle) === priceId) return { zone, cycle };
+    }
+  }
+  return null;
+}
+
+/** The price zone of a client company's payroll country. */
+export function practitionerZoneFor(payrollRegion: string | null | undefined): SupportedCurrency {
+  // `RSA` is the payroll-region spelling of South Africa; billingCurrencyFor
+  // keys on the exceptions only, so anything unlisted is the ZAR zone.
+  return billingCurrencyFor(payrollRegion ?? null);
+}
+
+/** "South Africa-priced" style label for a zone, for quotes and errors. */
+export const PRACTITIONER_ZONE_LABEL: Record<SupportedCurrency, string> = {
+  ZAR: 'Southern Africa (rand)',
+  KES: 'Kenya (shilling)',
+  ZMW: 'Zambia (kwacha)',
+  USD: 'Zimbabwe & US (dollar)',
+  GBP: 'United Kingdom (pound)',
+  EUR: 'Euro',
+};
 
 // ─── Quota helpers ───────────────────────────────────────────────────────────
 
