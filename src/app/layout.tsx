@@ -31,14 +31,14 @@ export const metadata: Metadata = {
     alternateLocale: ['en_GB', 'en_US'],
     url: SITE_URL,
     siteName: 'SORMALITICS',
-    title: 'SORMALITICS — Nothing posts until someone signs for it',
+    title: 'SORMALITICS — Finance work, done faster and done properly',
     description: 'Invoicing, payroll, accounting and agreements with approvals and an audit trail built in.',
     images: [{ url: '/og-image.jpg', width: 1200, height: 630, alt: 'SORMALITICS' }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'SORMALITICS',
-    description: 'The finance stack for teams that get audited.',
+    description: 'Invoicing, payroll, accounting and agreements in one place.',
     images: ['/twitter-image.jpg'],
   },
   icons: {

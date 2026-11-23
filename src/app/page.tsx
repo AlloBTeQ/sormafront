@@ -91,12 +91,12 @@ export default function SORMALITICSLanding() {
             <h1 id="intro-h" className="font-extrabold mb-7"
               style={{ fontSize: 'clamp(38px, 5.4vw, 76px)', lineHeight: 1.02, letterSpacing: '-0.03em' }}>
               Everyone&rsquo;s chasing the next R,&nbsp;$, £ and&nbsp;KSh.{' '}
-              <span style={{ color: GOLD }}>We keep the records that survive scrutiny.</span>
+              <span style={{ color: GOLD }}>We make the paperwork behind it quicker.</span>
             </h1>
             <p className="text-lg sm:text-[19px] leading-relaxed mb-5 max-w-[620px]" style={{ color: BODY }}>
-              In the rush to earn, the paperwork is what gets skipped — until a quality assurer, a counterparty
-              or SARS asks for it. SORMALITICS keeps invoicing, contracts, budgets, financial reporting and payroll
-              connected on one ledger, with the audit trail intact from the first quote to the signed statements.
+              In the rush to earn, the paperwork is what gets skipped. SORMALITICS keeps invoicing, contracts,
+              budgets, financial reporting and payroll on one ledger — a quote becomes the invoice, the invoice
+              becomes the journal, and year-end isn&rsquo;t a rebuild. The trail is kept as you go.
             </p>
             <p className="text-xs mb-9" style={{ ...MONO, color: MUTED }}>
               For finance teams — and for the business owner who means to keep clean books.
@@ -150,11 +150,11 @@ export default function SORMALITICSLanding() {
           </div>
           <h2 className="font-extrabold mb-6 max-w-[1000px]"
             style={{ fontSize: 'clamp(40px, 6vw, 84px)', lineHeight: 0.98, letterSpacing: '-0.03em' }}>
-            Nothing posts until<br />someone <span style={{ color: GOLD }}>signs for it.</span>
+            Quick to run.<br /><span style={{ color: GOLD }}>Clear on who signed off.</span>
           </h2>
           <p className="text-lg sm:text-[19px] leading-relaxed mb-2 max-w-[600px]" style={{ color: BODY }}>
-            The finance stack for teams that get audited, wherever they operate. Accountants prepare, the finance manager
-            approves, payroll is run by one person and released by another — and every step is on the record.
+            Accountants prepare, the finance manager approves, payroll is run by one person and released by
+            another — and each step is recorded, without slowing the work down.
           </p>
         </div>
 
@@ -259,7 +259,7 @@ export default function SORMALITICSLanding() {
           <div>
             <p className="text-xs tracking-[0.12em] mb-3" style={{ ...MONO, color: GOLD }}>AUDIT TRAIL</p>
             <h2 className="font-extrabold mb-4" style={{ fontSize: 'clamp(30px, 3.6vw, 46px)', letterSpacing: '-0.025em', lineHeight: 1.08 }}>
-              Your auditor&rsquo;s first question, already answered.
+              Who did what, and when — on record.
             </h2>
             <p className="text-[17px] leading-relaxed" style={{ color: BODY }}>
               Who raised it, who checked it, who approved it, when. Every posting carries its trail
@@ -297,7 +297,7 @@ export default function SORMALITICSLanding() {
       <section className="py-16 lg:py-24" style={{ borderTop: `1px solid ${RULE}` }}>
         <div className={WRAP}>
           <h2 className="font-extrabold mb-7" style={{ fontSize: 'clamp(36px, 5.4vw, 76px)', letterSpacing: '-0.03em', lineHeight: 1 }}>
-            Run it. Approve it.<br /><span style={{ color: GOLD }}>Sleep through the audit.</span>
+            Run it. Approve it.<br /><span style={{ color: GOLD }}>Get on with your day.</span>
           </h2>
           <a href={app('/auth/register')} className="inline-flex items-center gap-2 px-7 py-4 text-[15px] font-semibold"
             style={{ background: GOLD, color: NAVY }}>
