@@ -129,7 +129,13 @@ export const SormaliticsFooter: React.FC = () => {
 
       <div style={{ borderTop: `1px solid ${RULE}` }}>
         <div className="max-w-[1240px] mx-auto px-4 sm:px-8 lg:px-12 py-5 flex flex-col sm:flex-row flex-wrap items-center justify-between gap-3 text-xs" style={{ color: MUTED }}>
-          <p>© {new Date().getFullYear()} SORMALITICS. All rights reserved.</p>
+          <div>
+            <p>© {new Date().getFullYear()} SORMALITICS. All rights reserved.</p>
+            {/* The operating company, as registered with CIPC — Meta business verification checks it here. */}
+            <p className="mt-1">
+              SORMALITICS is operated by AlloBTeQ (Pty) Ltd, registration number 2023/270245/07 · Anrickle Place, Kiaat Street, Noordwyk, Midrand, Johannesburg, 1687, South Africa · <a href="tel:+27679211947" className="hover:text-[#FBF7EA] transition-colors">+27 67 921 1947</a>
+            </p>
+          </div>
           <div className="flex flex-wrap items-center gap-4">
             {LEGAL.map(({ label, href }) => (
               <a key={label} href={href} className="hover:text-[#FBF7EA] transition-colors">{label}</a>
